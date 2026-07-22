@@ -13,9 +13,14 @@ from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL
 DIFF = {"Easy": "#0ca30c", "Moderate": "#fab219", "Hard": "#ec835a", "Very Hard": "#d03b3b"}
 SURF = {"pavement": "#2a78d6", "gravel": "#eb6834", "trail": "#1baf7a"}
 
-ELEV = {}
-if os.path.exists("out/elev.json"):
-    ELEV = {int(k): v for k, v in json.load(open("out/elev.json")).items()}
+ELEV, ELEV_META = {}, {}
+for p in ("out/elev.json", "elev.json"):
+    if os.path.exists(p):
+        ELEV = {int(k): v for k, v in json.load(open(p)).items()}
+        mp = p.replace("elev.json", "elev_meta.json")
+        if os.path.exists(mp):
+            ELEV_META = {int(k): v for k, v in json.load(open(mp)).items()}
+        break
 
 def qr_datauri(url, box=4):
     q = qrcode.QRCode(border=2, box_size=box)
@@ -96,7 +101,7 @@ def profile_svg(n):
         m += 1
     parts.append(f'<text x="{PL-4}" y="{PT+2}" text-anchor="end" font-size="7" fill="var(--muted)">ft</text>')
     parts.append("</svg>")
-    return f'<div class="profile">{"".join(parts)}<div class="proflabel">Elevation profile · {lo:,.0f}–{hi:,.0f} ft <span class="tiny">(from Strava route)</span></div></div>'
+    return f'<div class="profile">{"".join(parts)}<div class="proflabel">Elevation profile · {lo:,.0f}–{hi:,.0f} ft <span class="tiny">(current 2026 Strava route)</span></div></div>'
 
 # ---------------- components ----------------
 def badge(label, rating):
@@ -130,6 +135,11 @@ def leg_card(l):
     team_b = badge("team says", l["team"]) if l["team"] else ""
     src_note = ' <span class="tiny">(rating from our sheet — missing in the note)</span>' if l.get("rating_src") else ""
     foot = f'<div class="footnote">ℹ {esc(l["footnote"])}</div>' if l.get("footnote") else ""
+    m = ELEV_META.get(n)
+    if m and abs(m["mi"] - l["dist"]) > 0.15:
+        foot += (f'<div class="footnote">🔄 <b>2026 route update:</b> Strava now measures this leg at ~{m["mi"]:.1f} mi '
+                 f'(our 2025 data: {fmt_mi(l["dist"])} mi / +{l["gain"]:,} ft). The profile below is the current route — '
+                 f'expect the stats to shift a bit.</div>')
     url = strava_url(n)
     return f'''
 <article class="leg" id="leg-{n}" data-slot="{slot}">
@@ -383,8 +393,9 @@ def how_to_read(compact=False):
   Distances, gain, mile markers and climb grades are from the team's 2025 Strava-scraped sheet.</p>
   <p style="margin:.3em 0">🌐 <b>From online:</b> official leg names, Strava routes, exchange stations, dates and night rules
   come from the official race site and 2025 race guide.</p>
-  <p style="margin:.3em 0" class="tiny">⚠ Routes can get tweaked year to year (Strava shows Leg 2 at 7.52 mi / 752 ft vs our 561 ft) —
-  check each leg's Strava route for the current official version.</p>
+  <p style="margin:.3em 0" class="tiny">⚠ Distances/gain on the cards are our 2025 numbers. The elevation profile charts come straight
+  from the current 2026 Strava routes (pulled July 2026). Four legs changed for 2026 — <b>1, 8, 30 and 31</b> — those cards carry a
+  🔄 route-update flag. When in doubt, the Strava link wins.</p>
   <div class="legendrow">Difficulty: {diff_legend()} · Surface: <span class="dotc" style="background:{SURF["pavement"]}"></span>pavement
   <span class="dotc" style="background:{SURF["gravel"]}"></span>gravel <span class="dotc" style="background:{SURF["trail"]}"></span>trail</div>'''
     if compact:

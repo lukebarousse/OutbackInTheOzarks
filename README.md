@@ -20,7 +20,7 @@ Static two-page site + print PDF for the 2026 OTO 205-mile relay.
 
 - **Runner names:** edit the `RUNNERS` const near the bottom of `index.html` and `overview.html` (e.g. `{1:"Luke", 2:"Jake", ...}`) — filter buttons and leg cards pick the names up automatically. Or set them in `builder/build.py` and rebuild.
 - **Rebuild from source:** `pip install qrcode pillow` then `python3 builder/build.py` (run from `builder/`; outputs land in `builder/out/`, copy to repo root).
-- **Elevation profiles:** `builder/out/elev.json` (per-leg distance/elevation arrays pulled from the team's Strava routes) gets baked in as SVG charts automatically when present.
+- **Elevation profiles:** `builder/elev.json` holds per-leg distance/elevation arrays pulled from the official Strava routes (July 2026); `build.py` bakes them in as SVG charts. `builder/elev_meta.json` carries the 2026 route distances used for the 🔄 route-change flags on legs 1, 8, 30, 31.
 
 ## Data sources
 
