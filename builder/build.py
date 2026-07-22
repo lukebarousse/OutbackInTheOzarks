@@ -611,7 +611,7 @@ def build_index():
 def build_overview():
     nav = f'''<nav class="top">
   {nav_tabs("overview")}
-  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#map">Map</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
+  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#map">Map</a><a href="#sections">Sections</a><a href="#index">All legs</a><a href="#plan">Planner</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
 </nav>'''
     body = f'''
 {hero()}
@@ -632,14 +632,14 @@ def build_overview():
     <thead><tr><th>Sec</th><th>Legs</th><th>Runs to</th><th class="r">Miles</th><th class="r">Climb</th><th class="r">Race mi at exchange</th></tr></thead>
     <tbody>{sec_overview_rows()}</tbody></table></div>
 </div>
+<div class="panel" id="index">
+  <h2>Every leg on one page</h2>
+  {index_table()}
+</div>
 <div class="panel" id="plan">
   <h2>Runner planner — who takes which rotation slot?</h2>
   <p class="tiny" style="margin:.2em 0 .6em">With 6 runners, slot <i>N</i> runs legs <i>N, N+6, N+12, N+18, N+24, N+30</i>.</p>
   {planner_table()}
-</div>
-<div class="panel" id="index">
-  <h2>Every leg on one page</h2>
-  {index_table()}
 </div>
 {watch_panel()}
 {rules_panel(with_qr=False)}'''
