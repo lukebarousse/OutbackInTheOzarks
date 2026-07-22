@@ -608,7 +608,7 @@ def build_index():
 def build_overview():
     nav = f'''<nav class="top">
   {nav_tabs("overview")}
-  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
+  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#map">Map</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
 </nav>'''
     body = f'''
 {hero()}
@@ -616,6 +616,12 @@ def build_overview():
   <h2>The whole course at a glance — steepness of every leg</h2>
   {skyline_svg()}
   <div class="legendrow">Bar height = climb per mile (ft/mi) · color = official difficulty: {diff_legend()} · tap a bar to open that leg</div>
+</div>
+<div class="panel" id="map">
+  <h2>Full course map <span class="tiny">(the race's official all-legs Strava route)</span></h2>
+  <div class="strava-embed-placeholder" data-embed-type="route" data-embed-id="3386113643310609494" data-style="standard" data-map-hash="7.42/36.048/-93.997" data-club-id="1634354" data-from-embed="true"></div>
+  <script src="https://strava-embeds.com/embed.js"></script>
+  <p class="tiny" style="margin:.5em 0 0">Embed not loading? <a href="https://www.strava.com/routes/3386113643310609494" target="_blank" rel="noopener">Open the all-legs route on Strava ↗</a></p>
 </div>
 <div class="panel" id="sections">
   <h2>Race in six sections</h2>
