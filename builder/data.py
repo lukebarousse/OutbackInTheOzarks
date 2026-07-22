@@ -82,7 +82,7 @@ LEGS = [
       beta="Easy downhill to start. Rolling hills with a couple decent climbs. Gravel was in good shape. Turns onto Hwy 23, which is flat — but be on the lookout for traffic.",
       climbs=[], tags=["Traffic on Hwy 23"]),
  dict(n=12, dist=3.86, gain=183, rating="Easy", team=None,
-      surface=(42, 45, 13), surface_text="Mostly gravel / pavement · last ½ mi trail",
+      surface=(42, 58, 0), surface_text="Mostly gravel / pavement · last ½ mi gravel",
       beta="Big decline at the pavement portion. The last half mile is trail and the toughest part — the stairs on the trail are slippery.",
       climbs=[], tags=["Slippery stairs"]),
  dict(n=13, dist=6.09, gain=459, rating="Moderate", team=None,
