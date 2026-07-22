@@ -250,10 +250,13 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .navrow a:hover, .navrow button:hover { background:var(--card) }
 .navrow .brand { font-weight:800; color:var(--ink); border:none; padding-left:0 }
 .navrow .active { background:var(--ink); color:var(--page); border-color:var(--ink) }
+.navrow .rowlabel { font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); flex:none }
+.navtabs a { font-weight:700 }
 .jumprow { display:flex; gap:3px; overflow-x:auto; padding-bottom:8px }
-.jumprow a { flex:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
-  font-size:11.5px; font-weight:700; text-decoration:none; color:var(--ink2); border:1px solid var(--grid); border-radius:8px }
-.jumprow a .d { position:absolute; margin-top:18px; width:5px; height:5px; border-radius:50% }
+.jumprow a { flex:none; position:relative; width:30px; height:34px; display:flex; align-items:center; justify-content:center;
+  padding-bottom:6px; font-size:11.5px; font-weight:700; text-decoration:none; color:var(--ink2);
+  border:1px solid var(--grid); border-radius:8px }
+.jumprow a .d { position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:5px; height:5px; border-radius:50% }
 .jumprow a:hover { background:var(--card) }
 .hero { padding:30px 0 8px }
 .hero .kicker { font-weight:800; letter-spacing:.14em; color:var(--accent); font-size:13px }
@@ -469,15 +472,22 @@ def page(title, nav_html, body, script=""):
 {f"<script>{script}</script>" if script else ""}
 </body></html>'''
 
+def nav_tabs(active):
+    legs_cls = ' class="active"' if active == "legs" else ""
+    over_cls = ' class="active"' if active == "overview" else ""
+    return (f'<div class="navrow navtabs"><a class="brand" href="index.html">RUN1 · OTO 205</a>'
+            f'<a href="index.html"{legs_cls}>Legs</a><a href="overview.html"{over_cls}>Overview</a></div>')
+
 def build_index():
     jump = ""
     for l in LEGS:
-        jump += f'<a href="#leg-{l["n"]}" title="{esc(NAMES[l["n"]])}"><span class="d" style="background:{DIFF[l["rating"]]}"></span>{l["n"]}</a>'
+        jump += f'<a href="#leg-{l["n"]}" title="{esc(NAMES[l["n"]])}">{l["n"]}<span class="d" style="background:{DIFF[l["rating"]]}"></span></a>'
     filters = '<button class="filterbtn active" data-slot="0">All runners</button>' + "".join(
         f'<button class="filterbtn" data-slot="{s}">Slot {s}</button>' for s in range(1, 7))
     nav = f'''<nav class="top">
-  <div class="navrow"><a class="brand" href="#top">RUN1 · OTO 205</a><a href="overview.html">Overview & planner</a>{filters}</div>
-  <div class="jumprow">{jump}</div>
+  {nav_tabs("legs")}
+  <div class="navrow"><span class="rowlabel">Runner</span>{filters}</div>
+  <div class="jumprow"><span class="rowlabel" style="align-self:center;margin-right:4px">Leg</span>{jump}</div>
 </nav>'''
     sections_html = "".join(section_block(i, s) for i, s in enumerate(SECTIONS))
     body = f'''
@@ -488,17 +498,18 @@ def build_index():
     return page("RUN1 · OTO 205 — Legs", nav, body, RUNNERS_JS)
 
 def build_overview():
-    nav = '''<nav class="top"><div class="navrow">
-  <a class="brand" href="index.html">RUN1 · OTO 205</a><a href="index.html">Legs</a><a class="active" href="overview.html">Overview</a>
-  <a href="#plan">Planner</a><a href="#index">All legs</a><a href="#rules">Rules</a></div></nav>'''
+    nav = f'''<nav class="top">
+  {nav_tabs("overview")}
+  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#rules">Rules</a></div>
+</nav>'''
     body = f'''
 {hero()}
-<div class="panel">
+<div class="panel" id="course">
   <h2>The whole course at a glance — steepness of every leg</h2>
   {skyline_svg()}
   <div class="legendrow">Bar height = climb per mile (ft/mi) · color = official difficulty: {diff_legend()} · tap a bar to open that leg</div>
 </div>
-<div class="panel">
+<div class="panel" id="sections">
   <h2>Race in six sections</h2>
   <div class="tscroll"><table class="tbl">
     <thead><tr><th>Sec</th><th>Legs</th><th>Runs to</th><th class="r">Miles</th><th class="r">Climb</th><th class="r">Race mi at exchange</th></tr></thead>
