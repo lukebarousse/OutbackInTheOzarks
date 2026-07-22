@@ -118,9 +118,13 @@ def surface_bar(l):
     return (f'<div class="surfrow"><div class="surfbar">{seg}</div>'
             f'<div class="surftext">{esc(l["surface_text"])}</div></div>')
 
+STEEP_ZONES = [(50, "Easy"), (100, "Moderate"), (150, "Hard"), (10**9, "Very Hard")]
+
 def meter(l):
     v = ftpmi(l)
-    return (f'<div class="meterwrap"><div class="meter"><div class="fill" style="width:{min(v/200,1)*100:.0f}%"></div></div>'
+    zone = next(name for lim, name in STEEP_ZONES if v < lim)
+    return (f'<div class="meterwrap" title="Steepness zones (ft/mi): under 50 easy · 50–100 moderate · 100–150 hard · 150+ very hard">'
+            f'<div class="meter zoned"><div class="fill" style="width:{min(v/200,1)*100:.0f}%;background:{DIFF[zone]}"></div></div>'
             f'<span class="mval">{v:.0f} ft/mi</span></div>')
 
 def climb_chips(l):
@@ -320,6 +324,9 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .meterwrap { display:flex; align-items:center; gap:7px }
 .meter { width:70px; height:7px; border-radius:99px; background:var(--grid); overflow:hidden }
 .meter .fill { height:100%; background:var(--accent); border-radius:99px }
+.meter.zoned { background:linear-gradient(to right,
+  var(--grid) 0 24.5%, var(--axis) 24.5% 25.5%, var(--grid) 25.5% 49.5%, var(--axis) 49.5% 50.5%,
+  var(--grid) 50.5% 74.5%, var(--axis) 74.5% 75.5%, var(--grid) 75.5% 100%) }
 .mval { font-size:11.5px; color:var(--ink2) }
 .profile { margin:8px 0 2px; border:1px solid var(--grid); border-radius:8px; padding:6px 8px 4px; background:var(--surface) }
 .proflabel { font-size:10.5px; color:var(--muted); margin-top:2px }
