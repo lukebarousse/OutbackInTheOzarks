@@ -195,18 +195,42 @@ def section_block(i, sec):
   {ex}
 </section>'''
 
+RATING_PTS = {"Easy": 1, "Moderate": 2, "Hard": 3, "Very Hard": 4}
+
 def planner_table():
-    rows = ""
+    slots = []
     for s in range(1, 7):
         legs = [l for l in LEGS if (l["n"] - 1) % 6 + 1 == s]
         mi = sum(l["dist"] for l in legs); gain = sum(l["gain"] for l in legs)
-        hardest = max(legs, key=lambda l: (l["gain"], ftpmi(l)))
-        rows += (f'<tr><td class="c"><b>{s}</b></td><td class="blankcell runner-name" data-slot="{s}">&nbsp;</td>'
-                 f'<td>{", ".join(str(l["n"]) for l in legs)}</td><td class="r">{mi:.1f}</td><td class="r">{gain:,}</td>'
-                 f'<td>Leg {hardest["n"]} · {esc(NAMES[hardest["n"]])} (+{hardest["gain"]:,} ft)</td></tr>')
+        pts = sum(RATING_PTS[l["team"] or l["rating"]] for l in legs)
+        slots.append(dict(s=s, legs=legs, mi=mi, gain=gain, pts=pts))
+    avg_mi = sum(x["mi"] for x in slots) / 6
+    avg_gain = sum(x["gain"] for x in slots) / 6
+    avg_pts = sum(x["pts"] for x in slots) / 6
+    for x in slots:
+        x["score"] = x["mi"] / avg_mi + x["gain"] / avg_gain + x["pts"] / avg_pts
+    top = max(x["score"] for x in slots)
+    slots.sort(key=lambda x: -x["score"])
+    rows = ""
+    for rank, x in enumerate(slots, 1):
+        s, legs = x["s"], x["legs"]
+        idx = round(100 * x["score"] / top)
+        hardest = max(legs, key=lambda l: (RATING_PTS[l["team"] or l["rating"]], l["gain"], ftpmi(l)))
+        dots = "".join(
+            f'<span class="dotc" style="background:{DIFF[l["team"] or l["rating"]]}" '
+            f'title="Leg {l["n"]} · {esc(NAMES[l["n"]])} · {l["team"] or l["rating"]}"></span>'
+            for l in legs)
+        rows += (f'<tr><td class="c"><b>{rank}</b></td><td class="c"><b>{s}</b></td>'
+                 f'<td class="blankcell runner-name" data-slot="{s}">&nbsp;</td>'
+                 f'<td>{", ".join(str(l["n"]) for l in legs)}</td><td class="r">{x["mi"]:.1f}</td><td class="r">{x["gain"]:,}</td>'
+                 f'<td class="nowrap">{dots}</td>'
+                 f'<td><div class="meterwrap"><div class="meter"><div class="fill" style="width:{idx}%"></div></div>'
+                 f'<span class="mval">{idx}</span></div></td>'
+                 f'<td>Leg {hardest["n"]} · {esc(NAMES[hardest["n"]])} ({hardest["team"] or hardest["rating"]} · +{hardest["gain"]:,} ft)</td></tr>')
     return f'''<div class="tscroll"><table class="tbl">
-<thead><tr><th>Slot</th><th>Runner</th><th>Legs</th><th class="r">Miles</th><th class="r">Climb ft</th><th>Toughest assignment</th></tr></thead>
-<tbody>{rows}</tbody></table></div>'''
+<thead><tr><th>Rank</th><th>Slot</th><th>Runner</th><th>Legs</th><th class="r">Miles</th><th class="r">Climb ft</th><th>Leg ratings</th><th>Difficulty</th><th>Toughest assignment</th></tr></thead>
+<tbody>{rows}</tbody></table></div>
+<p class="tiny" style="margin:.6em 0 0">Sorted hardest → easiest. Difficulty = equal parts total miles, total climb, and summed leg ratings (Easy 1 → Very Hard 4, team rating where it differs), scaled so the hardest slot = 100. Rating dots are in leg order<span class="web-only"> — hover for the leg</span>.</p>'''
 
 def index_table(legs_href="index.html"):
     rows = ""
@@ -309,6 +333,7 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
   color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius:4px; padding:1px 5px; margin-right:7px; vertical-align:1px }
 .tiny { font-size:11px; color:var(--muted) }
+.nowrap { white-space:nowrap }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
   border-radius:7px; padding:5px 9px; margin-top:6px }
 .legfoot { margin-top:9px }
