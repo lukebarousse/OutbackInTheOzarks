@@ -117,6 +117,7 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .exchange b { display:block; font-size:13.5px; letter-spacing:.04em }
 .exchange span { font-size:12px; color:var(--ink2) }
 .exchange.finish { border-style:solid; border-color:var(--ink) }
+.exchange .mapwrap { display:flex; gap:7px; flex-wrap:wrap; margin-top:8px }
 .tscroll { overflow-x:auto; -webkit-overflow-scrolling:touch }
 .tscroll .tbl { min-width:560px }
 .tbl { width:100%; border-collapse:collapse; font-size:12.5px }
@@ -238,8 +239,12 @@ function filterSlot(s, btn) {
   document.querySelectorAll('.leg').forEach(el => {
     el.classList.toggle('hidden', s !== 0 && Number(el.dataset.slot) !== s);
   });
+  document.querySelectorAll('.jumprow a').forEach(el => {
+    el.classList.toggle('hiddenx', s !== 0 && Number(el.dataset.slot) !== s);
+  });
   document.querySelectorAll('.filterbtn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  window.scrollTo({top: 0});
 }
 document.querySelectorAll('.filterbtn').forEach(b => {
   const s = Number(b.dataset.slot);

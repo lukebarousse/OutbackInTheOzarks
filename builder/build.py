@@ -181,19 +181,20 @@ def leg_card(l):
   </div>
 </article>'''
 
+def nav_pair(key, label, btn_cls="stravabtn mapbtn"):
+    """Google + Apple Maps navigation links (web) + coords (print) for a STARTS point."""
+    st = STARTS.get(str(key))
+    if not st: return ""
+    ll = f'{st["lat"]:.6f},{st["lng"]:.6f}'
+    return (f'<a class="{btn_cls} web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination={ll}" '
+            f'target="_blank" rel="noopener">📍 {label}Google Maps ↗</a>'
+            f'<a class="{btn_cls} web-only" href="https://maps.apple.com/?daddr={ll}" '
+            f'target="_blank" rel="noopener">📍 {label}Apple Maps ↗</a>'
+            f'<span class="coords print-only">📍 {ll}</span>')
+
 def map_links(n):
     """Navigation links to the leg's start (official exchange-zone coords)."""
-    out = ""
-    for key, label in ((n - 1, "start"), *(((36, "finish"),) if n == 36 else ())):
-        st = STARTS.get(str(key))
-        if not st: continue
-        ll = f'{st["lat"]:.6f},{st["lng"]:.6f}'
-        out += (f'<a class="stravabtn mapbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination={ll}" '
-                f'target="_blank" rel="noopener">📍 {label.title()} · Google Maps ↗</a>'
-                f'<a class="stravabtn mapbtn web-only" href="https://maps.apple.com/?daddr={ll}" '
-                f'target="_blank" rel="noopener">📍 {label.title()} · Apple Maps ↗</a>'
-                f'<span class="coords print-only">📍 {label}: {ll}</span>')
-    return out
+    return nav_pair(n - 1, "Start · ")
 
 def banner_exchange_row(i, first_leg):
     """Where this section begins (start line / major exchange), with nav links for the van."""
@@ -206,16 +207,8 @@ def banner_exchange_row(i, first_leg):
         extra = ex["note"].removeprefix(f"Major exchange {i}").strip(" ·")
         note = f'mile {fmt_mi(mi)}' + (f' · {esc(extra)}' if extra else "")
         key = str(first_leg - 1)
-    st, links = STARTS.get(key), ""
-    if st:
-        ll = f'{st["lat"]:.6f},{st["lng"]:.6f}'
-        links = (f'<a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination={ll}" '
-                 f'target="_blank" rel="noopener">📍 Google Maps ↗</a>'
-                 f'<a class="bannerbtn web-only" href="https://maps.apple.com/?daddr={ll}" '
-                 f'target="_blank" rel="noopener">📍 Apple Maps ↗</a>'
-                 f'<span class="coords print-only">📍 {ll}</span>')
     return (f'<div class="secex"><div><b>{head}</b><span>{note}</span></div>'
-            f'<div class="mapwrap">{links}</div></div>')
+            f'<div class="mapwrap">{nav_pair(key, "", "bannerbtn")}</div></div>')
 
 def section_block(i, sec):
     a, b = sec["legs"]
@@ -225,7 +218,8 @@ def section_block(i, sec):
     cards = "".join(leg_card(l) for l in legs)
     ex = "" if b in EXCHANGES else (
         '<div class="exchange finish"><span class="flag">🏁</span><div>'
-        f'<b>FINISH — PRAIRIE GROVE BATTLEFIELD STATE PARK</b><span>mile {fmt_mi(TOTAL_MI)} · you did the thing</span></div></div>')
+        f'<b>FINISH — PRAIRIE GROVE BATTLEFIELD STATE PARK</b><span>mile {fmt_mi(TOTAL_MI)} · you did the thing</span>'
+        f'<div class="mapwrap">{nav_pair(36, "Finish · ")}</div></div></div>')
     return f'''
 <section class="chapter" id="sec{i+1}">
   <div class="secbanner">
@@ -421,6 +415,7 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .exchange b { display:block; font-size:13.5px; letter-spacing:.04em }
 .exchange span { font-size:12px; color:var(--ink2) }
 .exchange.finish { border-style:solid; border-color:var(--ink) }
+.exchange .mapwrap { display:flex; gap:7px; flex-wrap:wrap; margin-top:8px }
 .tscroll { overflow-x:auto; -webkit-overflow-scrolling:touch }
 .tscroll .tbl { min-width:560px }
 .tbl { width:100%; border-collapse:collapse; font-size:12.5px }
@@ -471,8 +466,12 @@ function filterSlot(s, btn) {
   document.querySelectorAll('.leg').forEach(el => {
     el.classList.toggle('hidden', s !== 0 && Number(el.dataset.slot) !== s);
   });
+  document.querySelectorAll('.jumprow a').forEach(el => {
+    el.classList.toggle('hiddenx', s !== 0 && Number(el.dataset.slot) !== s);
+  });
   document.querySelectorAll('.filterbtn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  window.scrollTo({top: 0});
 }
 document.querySelectorAll('.filterbtn').forEach(b => {
   const s = Number(b.dataset.slot);
@@ -578,7 +577,9 @@ def nav_tabs(active):
 def build_index():
     jump = ""
     for l in LEGS:
-        jump += f'<a href="#leg-{l["n"]}" title="{esc(NAMES[l["n"]])}">{l["n"]}<span class="d" style="background:{DIFF[l["rating"]]}"></span></a>'
+        slot = (l["n"] - 1) % 6 + 1
+        jump += (f'<a href="#leg-{l["n"]}" data-slot="{slot}" title="{esc(NAMES[l["n"]])}">'
+                 f'{l["n"]}<span class="d" style="background:{DIFF[l["rating"]]}"></span></a>')
     filters = '<button class="filterbtn active" data-slot="0">All runners</button>' + "".join(
         f'<button class="filterbtn" data-slot="{s}">Slot {s}</button>' for s in range(1, 7))
     nav = f'''<nav class="top">
@@ -590,8 +591,7 @@ def build_index():
     body = f'''
 {hero(sub=False)}
 {how_to_read(compact=True)}
-{sections_html}
-{rules_panel(with_qr=False)}'''
+{sections_html}'''
     return page("RUN1 · OTO 205 — Legs", nav, body, RUNNERS_JS)
 
 def build_overview():
