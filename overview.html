@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RUN1 · OTO 205 — Overview</title>
+<style>
+:root { color-scheme: light;
+  --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --card:#ffffff; --accent:#2a78d6 }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-print]) { color-scheme: dark;
+    --surface:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.12); --card:#232322; --accent:#3987e5 } }
+* { box-sizing:border-box }
+html { scroll-behavior:smooth }
+body { margin:0; background:var(--page); color:var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Liberation Sans", "DejaVu Sans", sans-serif;
+  font-size:14px; line-height:1.45; -webkit-print-color-adjust:exact; print-color-adjust:exact }
+.wrap { max-width:860px; margin:0 auto; padding:0 16px 48px }
+a { color:var(--accent) }
+h1,h2,h3 { line-height:1.15; margin:0 }
+nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bottom:1px solid var(--grid); padding:8px 12px 0 }
+.navrow { display:flex; gap:4px; overflow-x:auto; font-size:12.5px; white-space:nowrap; padding-bottom:8px; align-items:center }
+.navrow a, .navrow button { text-decoration:none; color:var(--ink2); padding:5px 10px; border-radius:99px;
+  border:1px solid var(--grid); background:none; font:inherit; font-size:12.5px; cursor:pointer }
+.navrow a:hover, .navrow button:hover { background:var(--card) }
+.navrow .brand { font-weight:800; color:var(--ink); border:none; padding-left:0 }
+.navrow .active { background:var(--ink); color:var(--page); border-color:var(--ink) }
+.jumprow { display:flex; gap:3px; overflow-x:auto; padding-bottom:8px }
+.jumprow a { flex:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:11.5px; font-weight:700; text-decoration:none; color:var(--ink2); border:1px solid var(--grid); border-radius:8px }
+.jumprow a .d { position:absolute; margin-top:18px; width:5px; height:5px; border-radius:50% }
+.jumprow a:hover { background:var(--card) }
+.hero { padding:30px 0 8px }
+.hero .kicker { font-weight:800; letter-spacing:.14em; color:var(--accent); font-size:13px }
+.hero h1 { font-size:32px; font-weight:800; letter-spacing:-.01em; margin:2px 0 4px }
+.hero .sub { color:var(--ink2); font-size:15px }
+.statgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; margin:18px 0 }
+.tile { background:var(--card); border:1px solid var(--ring); border-radius:10px; padding:10px 12px }
+.tile b { display:block; font-size:22px }
+.tile span { color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em }
+.panel { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:14px 16px; margin:14px 0 }
+.panel h2 { font-size:16px; margin-bottom:8px }
+.legendrow { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:8px; font-size:12px; color:var(--ink2) }
+.pill { display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--pc);
+  background:color-mix(in srgb, var(--pc) 13%, transparent); color:var(--ink);
+  border-radius:99px; padding:2px 9px 2px 7px; font-size:11.5px; white-space:nowrap }
+.pill .dot { width:8px; height:8px; border-radius:50%; background:var(--pc); flex:none }
+.pill .pl { color:var(--ink2); font-size:10px; text-transform:uppercase; letter-spacing:.05em }
+.chip { display:inline-block; border-radius:6px; padding:2px 7px; font-size:11px; margin:2px 3px 0 0;
+  border:1px solid var(--ring); background:var(--surface); color:var(--ink2) }
+.chip.climb { border-color:color-mix(in srgb, var(--accent) 45%, transparent); color:var(--ink) }
+.dotc { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; outline:1px solid rgba(0,0,0,.2) }
+.secbanner { margin:34px 0 12px; padding:14px 16px; border-radius:12px; background:var(--ink); color:var(--page) }
+.secbanner .secno { font-size:11px; letter-spacing:.18em; opacity:.7; font-weight:700 }
+.secbanner h2 { font-size:19px; margin:2px 0 }
+.secbanner .sectotals { font-size:13px; opacity:.85 }
+.leg { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:13px 15px; margin:10px 0 }
+.leg.hidden, .hiddenx { display:none !important }
+.leghead { display:flex; gap:12px; align-items:flex-start }
+.legnum { font-size:26px; font-weight:800; color:var(--accent); line-height:1; padding-top:2px }
+.titleblock { flex:1; min-width:0 }
+.titleblock h3 { font-size:17px }
+.titleblock .meta { font-size:11.5px; color:var(--muted); margin-top:2px }
+.badges { display:flex; flex-direction:column; gap:4px; align-items:flex-end }
+.statrow { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin:10px 0 6px }
+.stat { font-size:13px; color:var(--ink2) }
+.stat b { font-size:17px; color:var(--ink) }
+.meterwrap { display:flex; align-items:center; gap:7px }
+.meter { width:70px; height:7px; border-radius:99px; background:var(--grid); overflow:hidden }
+.meter .fill { height:100%; background:var(--accent); border-radius:99px }
+.mval { font-size:11.5px; color:var(--ink2) }
+.profile { margin:8px 0 2px; border:1px solid var(--grid); border-radius:8px; padding:6px 8px 4px; background:var(--surface) }
+.proflabel { font-size:10.5px; color:var(--muted); margin-top:2px }
+.surfrow { margin:7px 0 }
+.surfbar { display:flex; gap:2px; height:15px; border-radius:5px; overflow:hidden }
+.seg { color:#fff; font-size:9.5px; text-transform:uppercase; letter-spacing:.06em;
+  display:flex; align-items:center; justify-content:center; min-width:8px }
+.surftext { font-size:11px; color:var(--muted); margin-top:3px }
+.beta { margin:8px 0 4px; font-size:13.5px }
+.beta .src, .srcbadge { display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius:4px; padding:1px 5px; margin-right:7px; vertical-align:1px }
+.tiny { font-size:11px; color:var(--muted) }
+.footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
+  border-radius:7px; padding:5px 9px; margin-top:6px }
+.legfoot { margin-top:9px }
+.stravabtn { display:inline-block; text-decoration:none; font-weight:700; font-size:12.5px;
+  border:1.5px solid var(--accent); border-radius:8px; padding:5px 12px }
+.qrbox { display:flex; align-items:center; gap:8px }
+.qrbox img { width:62px; height:62px; image-rendering:pixelated }
+.qrbox span { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em }
+.qrbox.big img { width:88px; height:88px }
+.qrbox.big { flex-direction:column; text-align:center; gap:4px }
+.exchange { display:flex; gap:10px; align-items:center; border:1.5px dashed var(--ink2); border-radius:12px;
+  padding:10px 14px; margin:12px 0; background:var(--surface) }
+.exchange .flag { font-size:20px }
+.exchange b { display:block; font-size:13.5px; letter-spacing:.04em }
+.exchange span { font-size:12px; color:var(--ink2) }
+.exchange.finish { border-style:solid; border-color:var(--ink) }
+.tscroll { overflow-x:auto; -webkit-overflow-scrolling:touch }
+.tscroll .tbl { min-width:560px }
+.tbl { width:100%; border-collapse:collapse; font-size:12.5px }
+.tbl th { text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+  border-bottom:1.5px solid var(--axis); padding:5px 7px }
+.tbl td { border-bottom:1px solid var(--grid); padding:5px 7px; vertical-align:top }
+.tbl .r { text-align:right; font-variant-numeric:tabular-nums }
+.tbl .c { text-align:center }
+.tbl.small { font-size:11px }
+.tbl.small td, .tbl.small th { padding:3.5px 5px }
+.exrow td { background:var(--surface); font-weight:700; font-size:10.5px; letter-spacing:.05em }
+.blankcell { min-width:110px; border-bottom:1px dotted var(--muted) !important }
+.linkrow { display:flex; flex-wrap:wrap; gap:16px; margin-top:10px }
+details.legend { margin:12px 0 }
+details.legend summary { cursor:pointer; font-weight:700; font-size:13px; color:var(--ink2) }
+footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-top:1px solid var(--grid); padding-top:12px }
+.print-only { display:none }
+@page { size:letter; margin:0.45in }
+@media print {
+  :root { color-scheme:light;
+    --surface:#fcfcfb; --page:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.14); --card:#ffffff; --accent:#2a78d6 }
+  body { font-size:11.5px; background:#fff }
+  nav.top, .web-only { display:none !important }
+  .print-only { display:flex }
+  .wrap { max-width:none; padding:0 }
+  .hero { padding-top:4px }
+  .hero h1 { font-size:30px }
+  .leg, .panel, .exchange { break-inside:avoid }
+  .secbanner { break-before:page; margin-top:0; background:#0b0b0b !important; color:#fff !important }
+  .cover-end { break-after:page }
+  .leg { padding:10px 12px; margin:8px 0 }
+  .beta { font-size:11.5px }
+  a { text-decoration:none; color:inherit }
+  .idx-break { break-before:page }
+}
+</style></head>
+<body>
+<nav class="top"><div class="navrow">
+  <a class="brand" href="index.html">RUN1 · OTO 205</a><a href="index.html">Legs</a><a class="active" href="overview.html">Overview</a>
+  <a href="#plan">Planner</a><a href="#index">All legs</a><a href="#rules">Rules</a></div></nav>
+<div class="wrap" id="top">
+
+
+<header class="hero">
+  <div class="kicker">TEAM RUN1 · RACE GUIDE</div>
+  <h1>Outback in the Ozarks · 205-Mile Relay</h1>
+  <div class="sub">Friday Oct 9 – Saturday Oct 10, 2026 · Lake Leatherwood City Ballpark, Eureka Springs, AR → Prairie Grove Battlefield State Park, Prairie Grove, AR</div>
+  
+  <div class="statgrid">
+    <div class="tile"><b>207.2</b><span>miles</span></div>
+    <div class="tile"><b>36</b><span>legs</span></div>
+    <div class="tile"><b>16,051</b><span>ft of climbing</span></div>
+    <div class="tile"><b>6</b><span>runners · 6 legs each</span></div>
+    <div class="tile"><b>5</b><span>major exchanges</span></div>
+  </div>
+</header>
+<div class="panel">
+  <h2>The whole course at a glance — steepness of every leg</h2>
+  <svg viewBox="0 0 760 200" role="img" aria-label="Steepness of each leg, climb feet per mile" style="width:100%;height:auto;display:block"><line x1="30" y1="140.5" x2="752" y2="140.5" stroke="var(--grid)" stroke-width="1"/><text x="26" y="143.5" text-anchor="end" font-size="8" fill="var(--muted)">50</text><line x1="30" y1="107.0" x2="752" y2="107.0" stroke="var(--grid)" stroke-width="1"/><text x="26" y="110.0" text-anchor="end" font-size="8" fill="var(--muted)">100</text><line x1="30" y1="73.5" x2="752" y2="73.5" stroke="var(--grid)" stroke-width="1"/><text x="26" y="76.5" text-anchor="end" font-size="8" fill="var(--muted)">150</text><line x1="30" y1="40.0" x2="752" y2="40.0" stroke="var(--grid)" stroke-width="1"/><text x="26" y="43.0" text-anchor="end" font-size="8" fill="var(--muted)">200</text><a href="index.html#leg-1"><rect x="30.7" y="94.3" width="20.7" height="79.7" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 1 · Didgeridoo Dash · 6.35 mi · +755 ft · 119 ft/mi · Hard</title></rect></a><text x="41.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">1</text><a href="index.html#leg-2"><rect x="52.8" y="124.1" width="24.8" height="49.9" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 2 · Rockhouse Roll · 7.53 mi · +561 ft · 75 ft/mi · Moderate</title></rect></a><text x="65.3" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">2</text><a href="index.html#leg-3"><rect x="79.1" y="114.1" width="22.3" height="59.9" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 3 · Koala Holler · 6.81 mi · +609 ft · 89 ft/mi · Hard</title></rect></a><text x="90.2" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">3</text><a href="index.html#leg-4"><rect x="102.8" y="158.2" width="17.2" height="15.8" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 4 · Hot Diggity! · 5.33 mi · +126 ft · 24 ft/mi · Moderate</title></rect></a><text x="111.4" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">4</text><a href="index.html#leg-5"><rect x="121.4" y="81.5" width="21.2" height="92.5" rx="2" fill="#d03b3b" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 5 · Wobble to Cobble · 6.49 mi · +896 ft · 138 ft/mi · Very Hard</title></rect></a><text x="132.0" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">5</text><a href="index.html#leg-6"><rect x="144.0" y="148.3" width="16.2" height="25.7" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 6 · Hobb Nob · 5.04 mi · +193 ft · 38 ft/mi · Moderate</title></rect></a><text x="152.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">6</text><a href="index.html#leg-7"><rect x="161.6" y="121.9" width="15.6" height="52.1" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 7 · Little Clifty · 4.87 mi · +379 ft · 78 ft/mi · Hard</title></rect></a><text x="169.4" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">7</text><a href="index.html#leg-8"><rect x="178.5" y="132.6" width="19.8" height="41.4" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 8 · War Eagle · 6.08 mi · +376 ft · 62 ft/mi · Hard</title></rect></a><text x="188.4" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">8</text><a href="index.html#leg-9"><rect x="199.7" y="128.1" width="26.9" height="45.9" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 9 · Up and At 'em! · 8.13 mi · +557 ft · 69 ft/mi · Hard</title></rect></a><text x="213.2" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">9</text><a href="index.html#leg-10"><rect x="228.1" y="118.6" width="29.0" height="55.4" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 10 · Dingos with Banjos · 8.73 mi · +722 ft · 83 ft/mi · Hard</title></rect></a><text x="242.6" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">10</text><a href="index.html#leg-11"><rect x="258.5" y="143.3" width="23.4" height="30.7" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 11 · The Roamin' Forum · 7.13 mi · +327 ft · 46 ft/mi · Moderate</title></rect></a><text x="270.2" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">11</text><a href="index.html#leg-12"><rect x="283.3" y="142.2" width="12.1" height="31.8" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 12 · Walkabout to Withrow · 3.86 mi · +183 ft · 47 ft/mi · Easy</title></rect></a><text x="289.4" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">12</text><a href="index.html#leg-13"><rect x="296.8" y="123.5" width="19.8" height="50.5" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 13 · Lolligaggin' · 6.09 mi · +459 ft · 75 ft/mi · Moderate</title></rect></a><text x="306.7" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">13</text><a href="index.html#leg-14"><rect x="318.0" y="99.7" width="15.6" height="74.3" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 14 · Bandicoot · 4.89 mi · +542 ft · 111 ft/mi · Moderate</title></rect></a><text x="325.8" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">14</text><a href="index.html#leg-15"><rect x="335.1" y="146.3" width="22.8" height="27.7" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 15 · I Ain't Skeerd! · 6.95 mi · +287 ft · 41 ft/mi · Hard</title></rect></a><text x="346.5" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">15</text><a href="index.html#leg-16"><rect x="359.3" y="135.3" width="15.5" height="38.7" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 16 · Playin' Possum · 4.85 mi · +280 ft · 58 ft/mi · Moderate</title></rect></a><text x="367.0" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">16</text><a href="index.html#leg-17"><rect x="376.2" y="84.9" width="15.1" height="89.1" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 17 · Rip Snorter · 4.74 mi · +630 ft · 133 ft/mi · Moderate</title></rect></a><text x="383.8" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">17</text><a href="index.html#leg-18"><rect x="392.7" y="152.0" width="15.2" height="22.0" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 18 · Buncha Fun! · 4.75 mi · +156 ft · 33 ft/mi · Moderate</title></rect></a><text x="400.3" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">18</text><a href="index.html#leg-19"><rect x="409.3" y="123.8" width="18.5" height="50.2" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 19 · Tasmanian Devil · 5.72 mi · +429 ft · 75 ft/mi · Hard</title></rect></a><text x="418.5" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">19</text><a href="index.html#leg-20"><rect x="429.2" y="145.3" width="13.8" height="28.7" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 20 · No Worries! · 4.36 mi · +187 ft · 43 ft/mi · Easy</title></rect></a><text x="436.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">20</text><a href="index.html#leg-21"><rect x="444.4" y="140.6" width="13.3" height="33.4" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 21 · Wallaby · 4.23 mi · +211 ft · 50 ft/mi · Easy</title></rect></a><text x="451.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">21</text><a href="index.html#leg-22"><rect x="459.1" y="43.3" width="15.5" height="130.7" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 22 · Plumb Tuckered · 4.84 mi · +944 ft · 195 ft/mi · Moderate</title></rect></a><text x="466.9" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">22</text><a href="index.html#leg-23"><rect x="476.0" y="161.2" width="27.1" height="12.8" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 23 · Greased Lightnin' · 8.17 mi · +156 ft · 19 ft/mi · Moderate</title></rect></a><text x="489.5" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">23</text><a href="index.html#leg-24"><rect x="504.5" y="108.9" width="14.8" height="65.1" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 24 · Bushwalker · 4.66 mi · +453 ft · 97 ft/mi · Hard</title></rect></a><text x="511.9" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">24</text><a href="index.html#leg-25"><rect x="520.7" y="106.7" width="27.9" height="67.3" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 25 · Tester to Chester · 8.41 mi · +845 ft · 100 ft/mi · Hard</title></rect></a><text x="534.7" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">25</text><a href="index.html#leg-26"><rect x="550.0" y="56.7" width="17.7" height="117.3" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 26 · Gumption · 5.47 mi · +958 ft · 175 ft/mi · Moderate</title></rect></a><text x="558.9" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">26</text><a href="index.html#leg-27"><rect x="569.1" y="102.5" width="25.3" height="71.5" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 27 · Chuck a Wobbly · 7.67 mi · +818 ft · 107 ft/mi · Moderate</title></rect></a><text x="581.8" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">27</text><a href="index.html#leg-28"><rect x="595.8" y="120.0" width="16.5" height="54.0" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 28 · Boondocks · 5.15 mi · +415 ft · 81 ft/mi · Moderate</title></rect></a><text x="604.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">28</text><a href="index.html#leg-29"><rect x="613.8" y="144.0" width="20.5" height="30.0" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 29 · Backwoods Boomerang · 6.27 mi · +281 ft · 45 ft/mi · Moderate</title></rect></a><text x="624.0" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">29</text><a href="index.html#leg-30"><rect x="635.6" y="141.7" width="24.9" height="32.3" rx="2" fill="#ec835a" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 30 · Holy Hedgehog! · 7.56 mi · +364 ft · 48 ft/mi · Hard</title></rect></a><text x="648.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">30</text><a href="index.html#leg-31"><rect x="662.0" y="74.7" width="20.5" height="99.3" rx="2" fill="#d03b3b" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 31 · Running from the Devil · 6.27 mi · +929 ft · 148 ft/mi · Very Hard</title></rect></a><text x="672.2" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">31</text><a href="index.html#leg-32"><rect x="683.8" y="128.0" width="14.7" height="46.0" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 32 · Ridgy Didge · 4.62 mi · +317 ft · 69 ft/mi · Easy</title></rect></a><text x="691.2" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">32</text><a href="index.html#leg-33"><rect x="699.9" y="155.6" width="11.1" height="18.4" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 33 · Platypus Plod · 3.6 mi · +99 ft · 28 ft/mi · Easy</title></rect></a><text x="705.5" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">33</text><a href="index.html#leg-34"><rect x="712.5" y="148.8" width="11.2" height="25.2" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 34 · Gravel, Grit & Bridge Biz · 3.62 mi · +136 ft · 38 ft/mi · Easy</title></rect></a><text x="718.1" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">34</text><a href="index.html#leg-35"><rect x="725.1" y="127.1" width="9.2" height="46.9" rx="2" fill="#0ca30c" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 35 · The Holy Roller · 3.03 mi · +212 ft · 70 ft/mi · Easy</title></rect></a><text x="729.7" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">35</text><a href="index.html#leg-36"><rect x="735.7" y="138.5" width="15.6" height="35.5" rx="2" fill="#fab219" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg 36 · Finish Line · 4.89 mi · +259 ft · 53 ft/mi · Moderate</title></rect></a><text x="743.5" y="183" text-anchor="middle" font-size="6.2" fill="var(--muted)">36</text><line x1="30" y1="174" x2="752" y2="174" stroke="var(--axis)" stroke-width="1"/><text x="30.0" y="20" text-anchor="start" font-size="8" font-weight="700" fill="var(--ink)">START</text><line x1="160.9" y1="26" x2="160.9" y2="174" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/><text x="160.9" y="29" text-anchor="middle" font-size="7" fill="var(--muted)">mi 37.55</text><text x="160.9" y="20" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">Hobbs</text><line x1="296.1" y1="26" x2="296.1" y2="174" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/><text x="296.1" y="29" text-anchor="middle" font-size="7" fill="var(--muted)">mi 76.35</text><text x="296.1" y="20" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">Withrow Springs</text><line x1="408.6" y1="26" x2="408.6" y2="174" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/><text x="408.6" y="29" text-anchor="middle" font-size="7" fill="var(--muted)">mi 108.62</text><text x="408.6" y="20" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">Elkins</text><line x1="520.0" y1="26" x2="520.0" y2="174" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/><text x="520.0" y="29" text-anchor="middle" font-size="7" fill="var(--muted)">mi 140.6</text><text x="520.0" y="20" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">Lake Fort Smith</text><line x1="661.3" y1="26" x2="661.3" y2="174" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/><text x="661.3" y="29" text-anchor="middle" font-size="7" fill="var(--muted)">mi 181.13</text><text x="661.3" y="20" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">Devil's Den</text><text x="752.0" y="20" text-anchor="end" font-size="8" font-weight="700" fill="var(--ink)">FINISH</text><text x="30.0" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">0 mi</text><text x="117.1" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">25 mi</text><text x="204.3" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">50 mi</text><text x="291.4" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">75 mi</text><text x="378.5" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">100 mi</text><text x="465.7" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">125 mi</text><text x="552.8" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">150 mi</text><text x="639.9" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">175 mi</text><text x="727.0" y="194" text-anchor="middle" font-size="7.5" fill="var(--muted)">200 mi</text><text x="8" y="38" font-size="7.5" fill="var(--muted)">ft/mi</text></svg>
+  <div class="legendrow">Bar height = climb per mile (ft/mi) · color = official difficulty: <span class="pill" style="--pc:#0ca30c"><span class="dot"></span><b>Easy</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><b>Hard</b></span><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><b>Very Hard</b></span> · tap a bar to open that leg</div>
+</div>
+<div class="panel">
+  <h2>Race in six sections</h2>
+  <div class="tscroll"><table class="tbl">
+    <thead><tr><th>Sec</th><th>Legs</th><th>Runs to</th><th class="r">Miles</th><th class="r">Climb</th><th class="r">Race mi at exchange</th></tr></thead>
+    <tbody><tr><td class="c"><a href="index.html#sec1">1</a></td><td>1–6</td><td>Hobbs State Park</td><td class="r">37.5</td><td class="r">+3,140</td><td class="r">37.55</td></tr><tr><td class="c"><a href="index.html#sec2">2</a></td><td>7–12</td><td>Withrow Springs State Park</td><td class="r">38.8</td><td class="r">+2,544</td><td class="r">76.35</td></tr><tr><td class="c"><a href="index.html#sec3">3</a></td><td>13–18</td><td>Elkins (Bunch City Park)</td><td class="r">32.3</td><td class="r">+2,354</td><td class="r">108.62</td></tr><tr><td class="c"><a href="index.html#sec4">4</a></td><td>19–24</td><td>Lake Fort Smith State Park</td><td class="r">32.0</td><td class="r">+2,380</td><td class="r">140.6</td></tr><tr><td class="c"><a href="index.html#sec5">5</a></td><td>25–30</td><td>Devil's Den State Park</td><td class="r">40.5</td><td class="r">+3,681</td><td class="r">181.13</td></tr><tr><td class="c"><a href="index.html#sec6">6</a></td><td>31–36</td><td>FINISH — Prairie Grove Battlefield</td><td class="r">26.0</td><td class="r">+1,952</td><td class="r">207.16</td></tr></tbody></table></div>
+</div>
+<div class="panel"><h2>How to read this guide</h2>
+  <p style="margin:.3em 0"><span class="srcbadge">2025 team beta</span>
+  Beta boxes, difficulty ratings, surface breakdowns and commentary are from <b>our runner who did this race in 2025</b>.
+  Distances, gain, mile markers and climb grades are from the team's 2025 Strava-scraped sheet.</p>
+  <p style="margin:.3em 0">🌐 <b>From online:</b> official leg names, Strava routes, exchange stations, dates and night rules
+  come from the official race site and 2025 race guide.</p>
+  <p style="margin:.3em 0" class="tiny">⚠ Routes can get tweaked year to year (Strava shows Leg 2 at 7.52 mi / 752 ft vs our 561 ft) —
+  check each leg's Strava route for the current official version.</p>
+  <div class="legendrow">Difficulty: <span class="pill" style="--pc:#0ca30c"><span class="dot"></span><b>Easy</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><b>Hard</b></span><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><b>Very Hard</b></span> · Surface: <span class="dotc" style="background:#2a78d6"></span>pavement
+  <span class="dotc" style="background:#eb6834"></span>gravel <span class="dotc" style="background:#1baf7a"></span>trail</div></div>
+<div class="panel" id="plan">
+  <h2>Runner planner — who takes which rotation slot?</h2>
+  <p class="tiny" style="margin:.2em 0 .6em">With 6 runners, slot <i>N</i> runs legs <i>N, N+6, N+12, N+18, N+24, N+30</i>.</p>
+  <div class="tscroll"><table class="tbl">
+<thead><tr><th>Slot</th><th>Runner</th><th>Legs</th><th class="r">Miles</th><th class="r">Climb ft</th><th>Toughest assignment</th></tr></thead>
+<tbody><tr><td class="c"><b>1</b></td><td class="blankcell runner-name" data-slot="1">&nbsp;</td><td>1, 7, 13, 19, 25, 31</td><td class="r">37.7</td><td class="r">3,796</td><td>Leg 31 · Running from the Devil (+929 ft)</td></tr><tr><td class="c"><b>2</b></td><td class="blankcell runner-name" data-slot="2">&nbsp;</td><td>2, 8, 14, 20, 26, 32</td><td class="r">32.9</td><td class="r">2,941</td><td>Leg 26 · Gumption (+958 ft)</td></tr><tr><td class="c"><b>3</b></td><td class="blankcell runner-name" data-slot="3">&nbsp;</td><td>3, 9, 15, 21, 27, 33</td><td class="r">37.4</td><td class="r">2,581</td><td>Leg 27 · Chuck a Wobbly (+818 ft)</td></tr><tr><td class="c"><b>4</b></td><td class="blankcell runner-name" data-slot="4">&nbsp;</td><td>4, 10, 16, 22, 28, 34</td><td class="r">32.5</td><td class="r">2,623</td><td>Leg 22 · Plumb Tuckered (+944 ft)</td></tr><tr><td class="c"><b>5</b></td><td class="blankcell runner-name" data-slot="5">&nbsp;</td><td>5, 11, 17, 23, 29, 35</td><td class="r">35.8</td><td class="r">2,502</td><td>Leg 5 · Wobble to Cobble (+896 ft)</td></tr><tr><td class="c"><b>6</b></td><td class="blankcell runner-name" data-slot="6">&nbsp;</td><td>6, 12, 18, 24, 30, 36</td><td class="r">30.8</td><td class="r">1,608</td><td>Leg 24 · Bushwalker (+453 ft)</td></tr></tbody></table></div>
+</div>
+<div class="panel" id="index">
+  <h2>Every leg on one page</h2>
+  <div class="tscroll"><table class="tbl small">
+<thead><tr><th>#</th><th>Leg</th><th class="r">Mi</th><th class="r">Gain</th><th class="r">ft/mi</th><th>Surface</th><th>Rating (official → team)</th><th class="r">Starts @ mi</th></tr></thead>
+<tbody><tr><td class="c">1</td><td><a href="index.html#leg-1">Didgeridoo Dash</a></td><td class="r">6.35</td><td class="r">+755</td><td class="r">119</td><td>P33% / G33% / T34%</td><td><span class="dotc" style="background:#ec835a"></span>Hard → Very Hard</td><td class="r">0</td></tr><tr><td class="c">2</td><td><a href="index.html#leg-2">Rockhouse Roll</a></td><td class="r">7.53</td><td class="r">+561</td><td class="r">75</td><td>P100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Hard</td><td class="r">6.35</td></tr><tr><td class="c">3</td><td><a href="index.html#leg-3">Koala Holler</a></td><td class="r">6.81</td><td class="r">+609</td><td class="r">89</td><td>P25% / G38% / T37%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">13.88</td></tr><tr><td class="c">4</td><td><a href="index.html#leg-4">Hot Diggity!</a></td><td class="r">5.33</td><td class="r">+126</td><td class="r">24</td><td>P50% / G50%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Easy</td><td class="r">20.69</td></tr><tr><td class="c">5</td><td><a href="index.html#leg-5">Wobble to Cobble</a></td><td class="r">6.49</td><td class="r">+896</td><td class="r">138</td><td>G100%</td><td><span class="dotc" style="background:#d03b3b"></span>Very Hard</td><td class="r">26.02</td></tr><tr><td class="c">6</td><td><a href="index.html#leg-6">Hobb Nob</a></td><td class="r">5.04</td><td class="r">+193</td><td class="r">38</td><td>P95% / G5%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Easy</td><td class="r">32.51</td></tr><tr class="exrow"><td colspan="8">🚩 Hobbs State Park — mile 37.55</td></tr><tr><td class="c">7</td><td><a href="index.html#leg-7">Little Clifty</a></td><td class="r">4.87</td><td class="r">+379</td><td class="r">78</td><td>T100%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">37.55</td></tr><tr><td class="c">8</td><td><a href="index.html#leg-8">War Eagle</a></td><td class="r">6.08</td><td class="r">+376</td><td class="r">62</td><td>P16% / T84%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">42.42</td></tr><tr><td class="c">9</td><td><a href="index.html#leg-9">Up and At 'em!</a></td><td class="r">8.13</td><td class="r">+557</td><td class="r">69</td><td>P60% / G40%</td><td><span class="dotc" style="background:#ec835a"></span>Hard → Moderate</td><td class="r">48.5</td></tr><tr><td class="c">10</td><td><a href="index.html#leg-10">Dingos with Banjos</a></td><td class="r">8.73</td><td class="r">+722</td><td class="r">83</td><td>P17% / G83%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">56.63</td></tr><tr><td class="c">11</td><td><a href="index.html#leg-11">The Roamin' Forum</a></td><td class="r">7.13</td><td class="r">+327</td><td class="r">46</td><td>P67% / G33%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">65.36</td></tr><tr><td class="c">12</td><td><a href="index.html#leg-12">Walkabout to Withrow</a></td><td class="r">3.86</td><td class="r">+183</td><td class="r">47</td><td>P42% / G45% / T13%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">72.49</td></tr><tr class="exrow"><td colspan="8">🚩 Withrow Springs State Park — mile 76.35</td></tr><tr><td class="c">13</td><td><a href="index.html#leg-13">Lolligaggin'</a></td><td class="r">6.09</td><td class="r">+459</td><td class="r">75</td><td>P33% / G67%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">76.35</td></tr><tr><td class="c">14</td><td><a href="index.html#leg-14">Bandicoot</a></td><td class="r">4.89</td><td class="r">+542</td><td class="r">111</td><td>G100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">82.44</td></tr><tr><td class="c">15</td><td><a href="index.html#leg-15">I Ain't Skeerd!</a></td><td class="r">6.95</td><td class="r">+287</td><td class="r">41</td><td>P71% / G29%</td><td><span class="dotc" style="background:#ec835a"></span>Hard → Moderate</td><td class="r">87.33</td></tr><tr><td class="c">16</td><td><a href="index.html#leg-16">Playin' Possum</a></td><td class="r">4.85</td><td class="r">+280</td><td class="r">58</td><td>P40% / G60%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Easy</td><td class="r">94.28</td></tr><tr><td class="c">17</td><td><a href="index.html#leg-17">Rip Snorter</a></td><td class="r">4.74</td><td class="r">+630</td><td class="r">133</td><td>P25% / G75%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">99.13</td></tr><tr><td class="c">18</td><td><a href="index.html#leg-18">Buncha Fun!</a></td><td class="r">4.75</td><td class="r">+156</td><td class="r">33</td><td>P50% / G50%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Easy</td><td class="r">103.87</td></tr><tr class="exrow"><td colspan="8">🚩 Elkins — Bunch City Park — mile 108.62</td></tr><tr><td class="c">19</td><td><a href="index.html#leg-19">Tasmanian Devil</a></td><td class="r">5.72</td><td class="r">+429</td><td class="r">75</td><td>P100%</td><td><span class="dotc" style="background:#ec835a"></span>Hard → Moderate</td><td class="r">108.62</td></tr><tr><td class="c">20</td><td><a href="index.html#leg-20">No Worries!</a></td><td class="r">4.36</td><td class="r">+187</td><td class="r">43</td><td>P100%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">114.34</td></tr><tr><td class="c">21</td><td><a href="index.html#leg-21">Wallaby</a></td><td class="r">4.23</td><td class="r">+211</td><td class="r">50</td><td>G100%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">118.7</td></tr><tr><td class="c">22</td><td><a href="index.html#leg-22">Plumb Tuckered</a></td><td class="r">4.84</td><td class="r">+944</td><td class="r">195</td><td>P50% / G50%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Hard</td><td class="r">122.93</td></tr><tr><td class="c">23</td><td><a href="index.html#leg-23">Greased Lightnin'</a></td><td class="r">8.17</td><td class="r">+156</td><td class="r">19</td><td>G100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">127.77</td></tr><tr><td class="c">24</td><td><a href="index.html#leg-24">Bushwalker</a></td><td class="r">4.66</td><td class="r">+453</td><td class="r">97</td><td>P100%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">135.94</td></tr><tr class="exrow"><td colspan="8">🚩 Lake Fort Smith State Park — mile 140.6</td></tr><tr><td class="c">25</td><td><a href="index.html#leg-25">Tester to Chester</a></td><td class="r">8.41</td><td class="r">+845</td><td class="r">100</td><td>P100%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">140.6</td></tr><tr><td class="c">26</td><td><a href="index.html#leg-26">Gumption</a></td><td class="r">5.47</td><td class="r">+958</td><td class="r">175</td><td>P100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">149.01</td></tr><tr><td class="c">27</td><td><a href="index.html#leg-27">Chuck a Wobbly</a></td><td class="r">7.67</td><td class="r">+818</td><td class="r">107</td><td>G100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate → Hard</td><td class="r">154.48</td></tr><tr><td class="c">28</td><td><a href="index.html#leg-28">Boondocks</a></td><td class="r">5.15</td><td class="r">+415</td><td class="r">81</td><td>P50% / G50%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">162.15</td></tr><tr><td class="c">29</td><td><a href="index.html#leg-29">Backwoods Boomerang</a></td><td class="r">6.27</td><td class="r">+281</td><td class="r">45</td><td>P100%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">167.3</td></tr><tr><td class="c">30</td><td><a href="index.html#leg-30">Holy Hedgehog!</a></td><td class="r">7.56</td><td class="r">+364</td><td class="r">48</td><td>P100%</td><td><span class="dotc" style="background:#ec835a"></span>Hard</td><td class="r">173.57</td></tr><tr class="exrow"><td colspan="8">🚩 Devil's Den State Park — mile 181.13</td></tr><tr><td class="c">31</td><td><a href="index.html#leg-31">Running from the Devil</a></td><td class="r">6.27</td><td class="r">+929</td><td class="r">148</td><td>P56% / G36% / T8%</td><td><span class="dotc" style="background:#d03b3b"></span>Very Hard</td><td class="r">181.13</td></tr><tr><td class="c">32</td><td><a href="index.html#leg-32">Ridgy Didge</a></td><td class="r">4.62</td><td class="r">+317</td><td class="r">69</td><td>P50% / G50%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">187.4</td></tr><tr><td class="c">33</td><td><a href="index.html#leg-33">Platypus Plod</a></td><td class="r">3.6</td><td class="r">+99</td><td class="r">28</td><td>P50% / G50%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">192.02</td></tr><tr><td class="c">34</td><td><a href="index.html#leg-34">Gravel, Grit &amp; Bridge Biz</a></td><td class="r">3.62</td><td class="r">+136</td><td class="r">38</td><td>G100%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">195.62</td></tr><tr><td class="c">35</td><td><a href="index.html#leg-35">The Holy Roller</a></td><td class="r">3.03</td><td class="r">+212</td><td class="r">70</td><td>P50% / G50%</td><td><span class="dotc" style="background:#0ca30c"></span>Easy</td><td class="r">199.24</td></tr><tr><td class="c">36</td><td><a href="index.html#leg-36">Finish Line</a></td><td class="r">4.89</td><td class="r">+259</td><td class="r">53</td><td>P80% / G20%</td><td><span class="dotc" style="background:#fab219"></span>Moderate</td><td class="r">202.27</td></tr></tbody></table></div>
+</div>
+
+<div class="panel" id="rules">
+  <h2>Night rules &amp; official links <span class="tiny">(🌐 from the official 2025 race guide)</span></h2>
+  <p style="margin:.3em 0">🦺 <b>Nighttime hours = 1 hour before sunset through 1 hour after dawn:</b> reflective vest for anyone
+  out of the van, headlamp + rear flashing tail light for runners. In-ear headphones are banned (open-ear audio OK).
+  Course is marked with black arrows on bright-yellow signs at each turn, plus yellow flags and reflective tags.</p>
+  <p style="margin:.3em 0" class="web-only">
+    <a href="https://outbackintheozarks.com/course-map" target="_blank" rel="noopener">Official course map + Strava routes ↗</a> ·
+    <a href="https://static1.squarespace.com/static/67b6279ccd5b44506e82f478/t/68488aee94be8934cad18ff3/1749584626134/OTO+2025+Race+Guide+.pdf" target="_blank" rel="noopener">2025 race guide PDF ↗</a> ·
+    <a href="https://maps.app.goo.gl/gRvJDNHpHR2z5R6q9" target="_blank" rel="noopener">Exchange zones map ↗</a> ·
+    <a href="https://www.google.com/maps/d/edit?mid=1S3rWAD35CEJBqz6sRkXKpyRrL0PEO_w&usp=sharing" target="_blank" rel="noopener">Full route map ↗</a>
+  </p>
+  <div class="linkrow print-only"></div>
+</div>
+<footer class="colophon">Built for Team Run1 · beta from our 2025 runner · stats from the team Strava sheet ·
+names, routes &amp; rules from outbackintheozarks.com · not an official race document. Go get it. 🤙</footer>
+</div>
+<script>
+const RUNNERS = {1:"", 2:"", 3:"", 4:"", 5:"", 6:""};  // e.g. {1:"Luke", 2:"Jake", ...}
+document.querySelectorAll('.runner-name').forEach(el => {
+  const nm = RUNNERS[el.dataset.slot];
+  if (nm) el.textContent = nm;
+});
+function filterSlot(s, btn) {
+  document.querySelectorAll('.leg').forEach(el => {
+    el.classList.toggle('hidden', s !== 0 && Number(el.dataset.slot) !== s);
+  });
+  document.querySelectorAll('.filterbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.querySelectorAll('.filterbtn').forEach(b => {
+  const s = Number(b.dataset.slot);
+  const nm = RUNNERS[s];
+  if (nm) b.textContent = nm;
+  b.addEventListener('click', () => filterSlot(s, b));
+});
+</script>
+</body></html>

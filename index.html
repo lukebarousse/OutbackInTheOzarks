@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RUN1 · OTO 205 — Legs</title>
+<style>
+:root { color-scheme: light;
+  --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --card:#ffffff; --accent:#2a78d6 }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-print]) { color-scheme: dark;
+    --surface:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.12); --card:#232322; --accent:#3987e5 } }
+* { box-sizing:border-box }
+html { scroll-behavior:smooth }
+body { margin:0; background:var(--page); color:var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Liberation Sans", "DejaVu Sans", sans-serif;
+  font-size:14px; line-height:1.45; -webkit-print-color-adjust:exact; print-color-adjust:exact }
+.wrap { max-width:860px; margin:0 auto; padding:0 16px 48px }
+a { color:var(--accent) }
+h1,h2,h3 { line-height:1.15; margin:0 }
+nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bottom:1px solid var(--grid); padding:8px 12px 0 }
+.navrow { display:flex; gap:4px; overflow-x:auto; font-size:12.5px; white-space:nowrap; padding-bottom:8px; align-items:center }
+.navrow a, .navrow button { text-decoration:none; color:var(--ink2); padding:5px 10px; border-radius:99px;
+  border:1px solid var(--grid); background:none; font:inherit; font-size:12.5px; cursor:pointer }
+.navrow a:hover, .navrow button:hover { background:var(--card) }
+.navrow .brand { font-weight:800; color:var(--ink); border:none; padding-left:0 }
+.navrow .active { background:var(--ink); color:var(--page); border-color:var(--ink) }
+.jumprow { display:flex; gap:3px; overflow-x:auto; padding-bottom:8px }
+.jumprow a { flex:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:11.5px; font-weight:700; text-decoration:none; color:var(--ink2); border:1px solid var(--grid); border-radius:8px }
+.jumprow a .d { position:absolute; margin-top:18px; width:5px; height:5px; border-radius:50% }
+.jumprow a:hover { background:var(--card) }
+.hero { padding:30px 0 8px }
+.hero .kicker { font-weight:800; letter-spacing:.14em; color:var(--accent); font-size:13px }
+.hero h1 { font-size:32px; font-weight:800; letter-spacing:-.01em; margin:2px 0 4px }
+.hero .sub { color:var(--ink2); font-size:15px }
+.statgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; margin:18px 0 }
+.tile { background:var(--card); border:1px solid var(--ring); border-radius:10px; padding:10px 12px }
+.tile b { display:block; font-size:22px }
+.tile span { color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em }
+.panel { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:14px 16px; margin:14px 0 }
+.panel h2 { font-size:16px; margin-bottom:8px }
+.legendrow { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:8px; font-size:12px; color:var(--ink2) }
+.pill { display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--pc);
+  background:color-mix(in srgb, var(--pc) 13%, transparent); color:var(--ink);
+  border-radius:99px; padding:2px 9px 2px 7px; font-size:11.5px; white-space:nowrap }
+.pill .dot { width:8px; height:8px; border-radius:50%; background:var(--pc); flex:none }
+.pill .pl { color:var(--ink2); font-size:10px; text-transform:uppercase; letter-spacing:.05em }
+.chip { display:inline-block; border-radius:6px; padding:2px 7px; font-size:11px; margin:2px 3px 0 0;
+  border:1px solid var(--ring); background:var(--surface); color:var(--ink2) }
+.chip.climb { border-color:color-mix(in srgb, var(--accent) 45%, transparent); color:var(--ink) }
+.dotc { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; outline:1px solid rgba(0,0,0,.2) }
+.secbanner { margin:34px 0 12px; padding:14px 16px; border-radius:12px; background:var(--ink); color:var(--page) }
+.secbanner .secno { font-size:11px; letter-spacing:.18em; opacity:.7; font-weight:700 }
+.secbanner h2 { font-size:19px; margin:2px 0 }
+.secbanner .sectotals { font-size:13px; opacity:.85 }
+.leg { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:13px 15px; margin:10px 0 }
+.leg.hidden, .hiddenx { display:none !important }
+.leghead { display:flex; gap:12px; align-items:flex-start }
+.legnum { font-size:26px; font-weight:800; color:var(--accent); line-height:1; padding-top:2px }
+.titleblock { flex:1; min-width:0 }
+.titleblock h3 { font-size:17px }
+.titleblock .meta { font-size:11.5px; color:var(--muted); margin-top:2px }
+.badges { display:flex; flex-direction:column; gap:4px; align-items:flex-end }
+.statrow { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin:10px 0 6px }
+.stat { font-size:13px; color:var(--ink2) }
+.stat b { font-size:17px; color:var(--ink) }
+.meterwrap { display:flex; align-items:center; gap:7px }
+.meter { width:70px; height:7px; border-radius:99px; background:var(--grid); overflow:hidden }
+.meter .fill { height:100%; background:var(--accent); border-radius:99px }
+.mval { font-size:11.5px; color:var(--ink2) }
+.profile { margin:8px 0 2px; border:1px solid var(--grid); border-radius:8px; padding:6px 8px 4px; background:var(--surface) }
+.proflabel { font-size:10.5px; color:var(--muted); margin-top:2px }
+.surfrow { margin:7px 0 }
+.surfbar { display:flex; gap:2px; height:15px; border-radius:5px; overflow:hidden }
+.seg { color:#fff; font-size:9.5px; text-transform:uppercase; letter-spacing:.06em;
+  display:flex; align-items:center; justify-content:center; min-width:8px }
+.surftext { font-size:11px; color:var(--muted); margin-top:3px }
+.beta { margin:8px 0 4px; font-size:13.5px }
+.beta .src, .srcbadge { display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius:4px; padding:1px 5px; margin-right:7px; vertical-align:1px }
+.tiny { font-size:11px; color:var(--muted) }
+.footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
+  border-radius:7px; padding:5px 9px; margin-top:6px }
+.legfoot { margin-top:9px }
+.stravabtn { display:inline-block; text-decoration:none; font-weight:700; font-size:12.5px;
+  border:1.5px solid var(--accent); border-radius:8px; padding:5px 12px }
+.qrbox { display:flex; align-items:center; gap:8px }
+.qrbox img { width:62px; height:62px; image-rendering:pixelated }
+.qrbox span { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em }
+.qrbox.big img { width:88px; height:88px }
+.qrbox.big { flex-direction:column; text-align:center; gap:4px }
+.exchange { display:flex; gap:10px; align-items:center; border:1.5px dashed var(--ink2); border-radius:12px;
+  padding:10px 14px; margin:12px 0; background:var(--surface) }
+.exchange .flag { font-size:20px }
+.exchange b { display:block; font-size:13.5px; letter-spacing:.04em }
+.exchange span { font-size:12px; color:var(--ink2) }
+.exchange.finish { border-style:solid; border-color:var(--ink) }
+.tscroll { overflow-x:auto; -webkit-overflow-scrolling:touch }
+.tscroll .tbl { min-width:560px }
+.tbl { width:100%; border-collapse:collapse; font-size:12.5px }
+.tbl th { text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+  border-bottom:1.5px solid var(--axis); padding:5px 7px }
+.tbl td { border-bottom:1px solid var(--grid); padding:5px 7px; vertical-align:top }
+.tbl .r { text-align:right; font-variant-numeric:tabular-nums }
+.tbl .c { text-align:center }
+.tbl.small { font-size:11px }
+.tbl.small td, .tbl.small th { padding:3.5px 5px }
+.exrow td { background:var(--surface); font-weight:700; font-size:10.5px; letter-spacing:.05em }
+.blankcell { min-width:110px; border-bottom:1px dotted var(--muted) !important }
+.linkrow { display:flex; flex-wrap:wrap; gap:16px; margin-top:10px }
+details.legend { margin:12px 0 }
+details.legend summary { cursor:pointer; font-weight:700; font-size:13px; color:var(--ink2) }
+footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-top:1px solid var(--grid); padding-top:12px }
+.print-only { display:none }
+@page { size:letter; margin:0.45in }
+@media print {
+  :root { color-scheme:light;
+    --surface:#fcfcfb; --page:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.14); --card:#ffffff; --accent:#2a78d6 }
+  body { font-size:11.5px; background:#fff }
+  nav.top, .web-only { display:none !important }
+  .print-only { display:flex }
+  .wrap { max-width:none; padding:0 }
+  .hero { padding-top:4px }
+  .hero h1 { font-size:30px }
+  .leg, .panel, .exchange { break-inside:avoid }
+  .secbanner { break-before:page; margin-top:0; background:#0b0b0b !important; color:#fff !important }
+  .cover-end { break-after:page }
+  .leg { padding:10px 12px; margin:8px 0 }
+  .beta { font-size:11.5px }
+  a { text-decoration:none; color:inherit }
+  .idx-break { break-before:page }
+}
+</style></head>
+<body>
+<nav class="top">
+  <div class="navrow"><a class="brand" href="#top">RUN1 · OTO 205</a><a href="overview.html">Overview & planner</a><button class="filterbtn active" data-slot="0">All runners</button><button class="filterbtn" data-slot="1">Slot 1</button><button class="filterbtn" data-slot="2">Slot 2</button><button class="filterbtn" data-slot="3">Slot 3</button><button class="filterbtn" data-slot="4">Slot 4</button><button class="filterbtn" data-slot="5">Slot 5</button><button class="filterbtn" data-slot="6">Slot 6</button></div>
+  <div class="jumprow"><a href="#leg-1" title="Didgeridoo Dash"><span class="d" style="background:#ec835a"></span>1</a><a href="#leg-2" title="Rockhouse Roll"><span class="d" style="background:#fab219"></span>2</a><a href="#leg-3" title="Koala Holler"><span class="d" style="background:#ec835a"></span>3</a><a href="#leg-4" title="Hot Diggity!"><span class="d" style="background:#fab219"></span>4</a><a href="#leg-5" title="Wobble to Cobble"><span class="d" style="background:#d03b3b"></span>5</a><a href="#leg-6" title="Hobb Nob"><span class="d" style="background:#fab219"></span>6</a><a href="#leg-7" title="Little Clifty"><span class="d" style="background:#ec835a"></span>7</a><a href="#leg-8" title="War Eagle"><span class="d" style="background:#ec835a"></span>8</a><a href="#leg-9" title="Up and At 'em!"><span class="d" style="background:#ec835a"></span>9</a><a href="#leg-10" title="Dingos with Banjos"><span class="d" style="background:#ec835a"></span>10</a><a href="#leg-11" title="The Roamin' Forum"><span class="d" style="background:#fab219"></span>11</a><a href="#leg-12" title="Walkabout to Withrow"><span class="d" style="background:#0ca30c"></span>12</a><a href="#leg-13" title="Lolligaggin'"><span class="d" style="background:#fab219"></span>13</a><a href="#leg-14" title="Bandicoot"><span class="d" style="background:#fab219"></span>14</a><a href="#leg-15" title="I Ain't Skeerd!"><span class="d" style="background:#ec835a"></span>15</a><a href="#leg-16" title="Playin' Possum"><span class="d" style="background:#fab219"></span>16</a><a href="#leg-17" title="Rip Snorter"><span class="d" style="background:#fab219"></span>17</a><a href="#leg-18" title="Buncha Fun!"><span class="d" style="background:#fab219"></span>18</a><a href="#leg-19" title="Tasmanian Devil"><span class="d" style="background:#ec835a"></span>19</a><a href="#leg-20" title="No Worries!"><span class="d" style="background:#0ca30c"></span>20</a><a href="#leg-21" title="Wallaby"><span class="d" style="background:#0ca30c"></span>21</a><a href="#leg-22" title="Plumb Tuckered"><span class="d" style="background:#fab219"></span>22</a><a href="#leg-23" title="Greased Lightnin'"><span class="d" style="background:#fab219"></span>23</a><a href="#leg-24" title="Bushwalker"><span class="d" style="background:#ec835a"></span>24</a><a href="#leg-25" title="Tester to Chester"><span class="d" style="background:#ec835a"></span>25</a><a href="#leg-26" title="Gumption"><span class="d" style="background:#fab219"></span>26</a><a href="#leg-27" title="Chuck a Wobbly"><span class="d" style="background:#fab219"></span>27</a><a href="#leg-28" title="Boondocks"><span class="d" style="background:#fab219"></span>28</a><a href="#leg-29" title="Backwoods Boomerang"><span class="d" style="background:#fab219"></span>29</a><a href="#leg-30" title="Holy Hedgehog!"><span class="d" style="background:#ec835a"></span>30</a><a href="#leg-31" title="Running from the Devil"><span class="d" style="background:#d03b3b"></span>31</a><a href="#leg-32" title="Ridgy Didge"><span class="d" style="background:#0ca30c"></span>32</a><a href="#leg-33" title="Platypus Plod"><span class="d" style="background:#0ca30c"></span>33</a><a href="#leg-34" title="Gravel, Grit &amp; Bridge Biz"><span class="d" style="background:#0ca30c"></span>34</a><a href="#leg-35" title="The Holy Roller"><span class="d" style="background:#0ca30c"></span>35</a><a href="#leg-36" title="Finish Line"><span class="d" style="background:#fab219"></span>36</a></div>
+</nav>
+<div class="wrap" id="top">
+
+
+<header class="hero">
+  <div class="kicker">TEAM RUN1 · RACE GUIDE</div>
+  <h1>Outback in the Ozarks · 205-Mile Relay</h1>
+  <div class="sub">Friday Oct 9 – Saturday Oct 10, 2026 · Lake Leatherwood City Ballpark, Eureka Springs, AR → Prairie Grove Battlefield State Park, Prairie Grove, AR</div>
+  
+</header>
+<details class="legend"><summary>How to read this guide (sources + legend)</summary><div class="panel" style="margin-top:8px">
+  <p style="margin:.3em 0"><span class="srcbadge">2025 team beta</span>
+  Beta boxes, difficulty ratings, surface breakdowns and commentary are from <b>our runner who did this race in 2025</b>.
+  Distances, gain, mile markers and climb grades are from the team's 2025 Strava-scraped sheet.</p>
+  <p style="margin:.3em 0">🌐 <b>From online:</b> official leg names, Strava routes, exchange stations, dates and night rules
+  come from the official race site and 2025 race guide.</p>
+  <p style="margin:.3em 0" class="tiny">⚠ Routes can get tweaked year to year (Strava shows Leg 2 at 7.52 mi / 752 ft vs our 561 ft) —
+  check each leg's Strava route for the current official version.</p>
+  <div class="legendrow">Difficulty: <span class="pill" style="--pc:#0ca30c"><span class="dot"></span><b>Easy</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><b>Hard</b></span><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><b>Very Hard</b></span> · Surface: <span class="dotc" style="background:#2a78d6"></span>pavement
+  <span class="dotc" style="background:#eb6834"></span>gravel <span class="dotc" style="background:#1baf7a"></span>trail</div></div></details>
+
+<section class="chapter" id="sec1">
+  <div class="secbanner">
+    <div class="secno">SECTION 1</div>
+    <h2>Legs 1–6 · Lake Leatherwood (START) → Hobbs State Park</h2>
+    <div class="sectotals">37.5 mi · +3,140 ft</div>
+  </div>
+  
+<article class="leg" id="leg-1" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">01</div>
+    <div class="titleblock">
+      <h3>Didgeridoo Dash</h3>
+      <div class="meta">mile 0 → 6.35 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><span class="pl">team says</span><b>Very Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.35</b> mi</div>
+    <div class="stat"><b>+755</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:59%"></div></div><span class="mval">119 ft/mi</span></div>
+    <span class="chip climb">▲ 2.8% avg · 2.2 mi · 330 ft</span><span class="chip climb">▲ 2.2% avg · 2.3 mi · 274 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:33;background:#2a78d6" title="33% pavement">pavement</div><div class="seg" style="flex:33;background:#eb6834" title="33% gravel">gravel</div><div class="seg" style="flex:34;background:#1baf7a" title="34% trail">trail</div></div><div class="surftext">Trail / pavement / gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Trail has switchbacks with loose gravel and tree roots — be careful, saw several people fall. Steep climb going into Eureka, potential to walk some of it. Easy downhill through town, followed by a tough gravel climb to the finish. Could see this leg rated very hard.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Loose gravel + roots</span><span class="chip warn">⚠ Steep climb</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3379992613740062728" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADxElEQVR4nO2dQXLbMAwAm06P/v9LfXevvGAKFIDktXePCSNytINgSBHkz+v1+iVMft89APl/lAdGeWCUB0Z5YJQHRnlg/kS/eDwe4509n89/9nW2yfw8en5m/NXxZLjyvRl5YJQHRnlgwpx3Uv2/fxLlgGpu6OShTC7sPD/Tb5XM+zHywCgPjPLApHLeSWf+lGlfndtF7aMxdJ6ZmV9GbLw3Iw+M8sAoD0w551Go5q2TTg6+EiMPjPLAKA/MbTlvav3wpLNuebbJtN8YfxUjD4zywCgPTDnnbf+vr+aYzJwsopoLO31tvDcjD4zywCgPTCrnbazjdfZqXvnzDtvrn0YeGOWBUR6Yn7tq0qtzrIjOHpPOnpR3wMgDozwwygOTqs+b2nO/UQ93EuW/qVq9TF+dZ2b+9sTIA6M8MMoD06pVyKwNVtcPO/tNTjp7LN+hViHzHow8MMoDozwwY3tYpnJM9POp81C2z4LJ9NWZj54YeWCUB0Z5YMrf86bmQFNzps76YdTv1D6Xzh4W1zY/HOWBUR6Y9X2b1TXPqbndRl35Rm37SfU9GHlglAdGeWDKZ0xvn+PcOZ9zao64cZ7nxhkuRh4Y5YFRHpixc1iq36g6eeWkM1eLnlOtMb9rDEYeGOWBUR6Y9XsVOvs1Nr7JVdn+fhn9rWubH47ywCgPzNi9Cp19H1NnhnXGcOX5n1P9GnlglAdGeWDCfZvV71Lbd8VlxpBpn+n3ynXU6t+eGHlglAdGeWBSOW/7Dp3OHsu77veZmo92+jLywCgPjPLAjNWkv8PZlZ011cxzIqr1GBHV9kYeGOWBUR6YVE36Rv34dk6aeubGN8jMODMYeWCUB0Z5YMprm1Gbk+254F1zyo130sHIA6M8MMoDM1afd7Kxjtdhqk5g4/tiJ0caeWCUB0Z5YMZqFSK2a9oy7avnvEydsTl1Bk2EkQdGeWCUB6Zcq3AylQMy/U7d6ZPpdyoHV6mO38gDozwwygPzFfekZ9ioJTjZuJPPyAOjPDDKA1M+Y7pD9G0s0/6kc+fc9npjp07fs8e+COWBUR6Y9fM2O/Vt1TaZ52+vYXbWbz1j+otQHhjlgVnZwzK1L3/qPryp8XTOy64+M4ORB0Z5YJQHZqVW4S46NXPbZ1tnxlnFyAOjPDDKA/MWOa9TS5Bps31n3vadDH7P+0CUB0Z5YMbO29xgoxai+vypvjJYq/BFKA+M8sCkct7GHs6N2u2Nb41TtepT9x+dGHlglAdGeWBuq8+TPkYeGOWBUR4Y5YFRHhjlgVEemL+FF9cJs6EiGwAAAABJRU5ErkJggg==" alt="QR: Strava route leg 1"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-2" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">02</div>
+    <div class="titleblock">
+      <h3>Rockhouse Roll</h3>
+      <div class="meta">mile 6.35 → 13.88 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">team says</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>7.53</b> mi</div>
+    <div class="stat"><b>+561</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:37%"></div></div><span class="mval">75 ft/mi</span></div>
+    <span class="chip climb">▲ 1.8% avg · 5.3 mi · 497 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">All pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>A lot of climbs on this one. Moderate, but arguably hard. Pay attention to turn signs and dogs.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Dogs</span><span class="chip warn">⚠ Watch the turns</span></div>
+  <div class="footnote">ℹ Strava currently lists this route at 7.52 mi / 752 ft — the 2026 build may differ from our 2025 numbers. Scan the route to double-check.</div>
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3379993009756757000" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADuklEQVR4nO2dMXLcMAwA40zK+/9Lrz+3bDAGDEDKanZLR6Jk7yAYkiD09fl8/giTv3e/gPwe5YFRHhjlgVEeGOWBUR6Yf9E/vF6v8Ye93+8fx4+u6dybeZ+T6LkZtv9uJ0YeGOWBUR6YMOedVP/fP5nKAZ1xolwY5bbO7xs9t0rm9zXywCgPjPLApHLeSWf+lLm+OrerkpnbTY1ZHb/6dzPywCgPjPLAlHPeFJ181rm3mnu2c3AHIw+M8sAoD8xtOW8ql0zt4W282zZGHhjlgVEemHLOu2uva2pvLDOHm/odTzbGNPLAKA+M8sCkct7G/KZaG1nNW1f+PPPOGxh5YJQHRnlgvv7nM+mZvLhRG5Khc55hCiMPjPLAKA9MmPOm8s0GU2fmpnJV9W81tQdp5IFRHhjlgSnP86bOa3fOg3dqL6vXZ36eYeodTow8MMoDozwwY31YOtd35lvV8+adMU821jarYxp5YJQHRnlgyn1YOmcJTjL5qZoDOmfDq73NMmyvDxt5YJQHRnlgwpy3kT+2zyds1F5u18505qlGHhjlgVEemFQNS8RUboueO7XHNjU3zbxnhql5pJEHRnlglAemXLd55XcDNvpKT33bIeLKMwxGHhjlgVEemJU+LNtrjFO5auOM+UatqWubD0R5YJQHZuW7CtH1G3UimWdNUa3nzIzTucbIA6M8MMoDk6ph2dhj26hP2bi3QydHmvMejvLAKA/Myn7eXefBr+wLs92rM3rWiZEHRnlglAem1WO6s8cWsX0+ocpd39tznvdwlAdGeWDKa5uZ6086c69qD5TOOmfmuVf2G8tg5IFRHhjlgWmdz8swVfdffdYGnXrRjfoaIw+M8sAoD0y599jJ1HrmXf3AMnTOObifJyHKA6M8MOWzChGd3JDpvxUxlXeje6vPzbxD55sSJ0YeGOWBUR6YsRqW6r0Zpvbbtt+zOqa9x0R5ZJQH5rbvpF9ZCxqxMU7ExhlHIw+M8sAoD0w4z7uyr+bGObypfpvV5270no4w8sAoD4zywLRqWDJsfG+vem80TmcfceodOuMYeWCUB0Z5YFb6bW73zNzIi511zo287trmw1EeGOWBGavb7FCt9YjywUYv0E69ZWed03new1EeGOWBuS3nbfRA2chnU+cKpr5HcWLkgVEeGOWBKee87V4n0bMyufCu7xBV752qFzXywCgPjPLAtM7ndcisT55M9YKZ+rZRxHb9y4mRB0Z5YJQH5rbzedLHyAOjPDDKA6M8MMoDozwwygPzDR4u0J3eNVg9AAAAAElFTkSuQmCC" alt="QR: Strava route leg 2"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-3" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">03</div>
+    <div class="titleblock">
+      <h3>Koala Holler</h3>
+      <div class="meta">mile 13.88 → 20.69 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.81</b> mi</div>
+    <div class="stat"><b>+609</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:45%"></div></div><span class="mval">89 ft/mi</span></div>
+    <span class="chip climb">▲ 1.4% avg · 3.0 mi · 223 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:25;background:#2a78d6" title="25% pavement">pavement</div><div class="seg" style="flex:38;background:#eb6834" title="38% gravel">gravel</div><div class="seg" style="flex:37;background:#1baf7a" title="37% trail">trail</div></div><div class="surftext">75% gravel/trail · 25% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Hard for sure. Super rocky path — even the vans can't follow it. You run across a dry river bed and finish up a steep, narrow hiking trail to the highway. Many had to walk a little.</p>
+  <div class="tagrow"><span class="chip warn">⚠ No van access</span><span class="chip warn">⚠ Rocky</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3384280323494893970" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrUlEQVR4nO2dsY7cMAwFc0HK+/8v3X7TuiFCRnz2zmGmTGRJtwOCkC1KX+/3+5cw+f30BOT/UR4Y5YFRHhjlgVEeGOWB+VP9x/f39/pgr9frn2NVbSo687z2WbXvjNuZ552/m5EHRnlglAemzHlXpnnoyjQHTPNflc86/56eZ/p3M/LAKA+M8sC0ct6V6brqhM6arGrTmee0/86407GqcTsYeWCUB0Z5YMY5L800n53kp+m71pN3sAmMPDDKA6M8MB+X807eQ07XYdVYn5DPOhh5YJQHRnlgxjnvqfeW0zXZyRqu4mTNl8ijRh4Y5YFRHphWzkvsRbxysg9l+v7zZD5T0r+bkQdGeWCUB+brE2rST95VTmsMTvi0b3tGHhjlgVEemFZ93tZ7wsR+yM58EnPbqpE4wcgDozwwygPTWudtfQOr+qzap+vHO+23cvPJetSa9B+I8sAoD8x4nbe1778zbqf/Dnfms636ig5GHhjlgVEemKPveXfWvaXXW1tntZysa6fzMfLAKA+M8sBE9m2enIFStUmc75XoJ71X84qRB0Z5YJQHZnzeZmJfxrXPrX0xVZvpfKb93FnbYOSBUR4Y5YFZu1chfR5Y1WYrB2+tTbfo/C1GHhjlgVEemDLnbZ3jnF4jbu1JSd/PkLh7yMgDozwwygNztM5L71fcanOlmkNi/lt1hxVGHhjlgVEemKPveYlnt/a2pPeITvNcIt8beWCUB0Z5YNb2baZrDNJnmtz5PtP6PFEeGeWBubU+b6vPdI15NW41z/TeUdd5PxDlgVEemDLnnaztqn7SZ4Cla9Wr9un8V2HkgVEeGOWBufVeha08Ou0zQXp9WY11xcgDozwwygMzXudtncuVOH8ycc9D1f9JP1Wf036MPDDKA6M8MI/V51X9nOSPxLNVm3Q/HYw8MMoDozwwrXXe1hlgW+2reXb6T89zykmeNvLAKA+M8sA8dk964t3m1hwSzybeixp5YJQHRnlgjvZtTkl8n0vfh7BVt544p83IA6M8MMoDMz6HZcr0G95W/1e2zi3rMP3md4KRB0Z5YJQHppXzrmzVG5ycSZa+02c67lNnyhh5YJQHRnlgxjlviztzSaIOodPGM6alRHlglAfmsZx3kkuqvDJdMz21bvO8TVEeGeWBGee89F7KRF3ElcR+y07/J/czVBh5YJQHRnlg1u5VmJK4kyiRj7dq86fPmvN+OMoDozwwj9XnyTlGHhjlgVEeGOWBUR4Y5YFRHpi/Vj7zZbF1G34AAAAASUVORK5CYII=" alt="QR: Strava route leg 3"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-4" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">04</div>
+    <div class="titleblock">
+      <h3>Hot Diggity!</h3>
+      <div class="meta">mile 20.69 → 26.02 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">team says</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>5.33</b> mi</div>
+    <div class="stat"><b>+126</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:12%"></div></div><span class="mval">24 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">Pavement / gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Starts on paved highway with moderate traffic. Mostly flat. Finishes with a descent on a rocky dirt road. Closer to easy.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Traffic</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3384309193583745802" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsUlEQVR4nO2dMXLcMAwA40xK//+l7p2WDSZAAFC3vt3yrJOo24ExIgXw4/v7+5cw+f30AOT/UR4Y5YFRHhjlgVEeGOWB+RP94fPzc/xiX19f/zx/dEznu5nxnETXzbD9u50YeWCUB0Z5YMKcd1L9v39SzQHR8Z1cEuXCKLd17je6bpXM/Rp5YJQHRnlgUjnvpPP8lCHz7NVh4/yZ+9343Yw8MMoDozww5Zw3xcY8ZIbqtarzqzcx8sAoD4zywDyW8zq5JJqHnHqWyoxtav6zg5EHRnlglAemnPOeWuuaWhvL5LBOXozYyJFGHhjlgVEemFTO25jHy+SM6hzjU59HbM9/GnlglAdGeWA+KDXpU3Oh2+O5iZEHRnlglAcmzHmZ/+lPvccxVTM3lauqv9VUzjbywCgPjPLAtGoVOrmnWmMenSdi412VqXq+qRxs5IFRHhjlgUk950VMvbv/VO6sXitiqj6vek4jD4zywCgPTLkPy80csPFuZKdv2VRuzowng5EHRnlglAdmpT4vkzO25wyn3r3srM9V7zHTF+3EyAOjPDDKA9PKeVM9Tap5pVMnnunnufEe5kY/ayMPjPLAKA9Mqya9Mz+5sXdBp+Yvc62NZ9BOfjXywCgPjPLAjPWYruazjd6VN8fQWfPr1DacGHlglAdGeWDG1vOqz15Te+BlrnWT7fneEyMPjPLAKA9MmPM2+nVF56+OocpTeyNMzaNGGHlglAdGeWDKfVhu7gP+1HgybPfqjK51YuSBUR4Y5YFp9ZiuPttNPetMHZNhY3/26ncjjDwwygOjPDCpHtMbPVmm8sHU+tlJJ8dPfdec98NRHhjlgSn3Htuu6Y54av+EaAxTfVWsVXhTlAdGeWBa63nba1ob85ZTOekV+pEaeWCUB0Z5YFo16Z3Po2Oi/lsRGzUPr7B3knObPxzlgVEemNbcZoapfYJu7p+wsU9CBnuPvRHKA6M8MI/tk77xLkmVm3shbdQ4GnlglAdGeWDCuc1Xq8PrXOvmXrU31xqNPDDKA6M8MKn1vJv1bVPvjGTG01lHnBpD5zxGHhjlgVEemLEe0ycbe6tWzxNxs990dQzun/dGKA+M8sCM9Zh+BTZ6gXZ6vkytWUYYeWCUB0Z5YB7LeZ19YiM28tnNmvrq+Y08MMoDozwwY/V5N9nYf3X7ee5kqv7PyAOjPDDKA9PqMd0hk7eqx5xs7G0UcbMu8MTIA6M8MMoD81h9nvQx8sAoD4zywCgPjPLAKA+M8sD8BQDq6Z9iMdxTAAAAAElFTkSuQmCC" alt="QR: Strava route leg 4"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-5" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">05</div>
+    <div class="titleblock">
+      <h3>Wobble to Cobble</h3>
+      <div class="meta">mile 26.02 → 32.51 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><span class="pl">official</span><b>Very Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.49</b> mi</div>
+    <div class="stat"><b>+896</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:69%"></div></div><span class="mval">138 ft/mi</span></div>
+    <span class="chip climb">▲ 3.4% avg · 1.8 mi · 315 ft</span><span class="chip climb">▲ 2.2% avg · 2.1 mi · 252 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Very steep climbs with some hard descents — and beautiful views. You'll have hills where you have to walk, followed by steep descents where you can run fast, but not too fast or you might fall. Pay attention to footing. Very challenging leg.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Footing</span><span class="chip warn">⚠ Walk the steeps</span><span class="chip warn">⚠ Views</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3384309737164274076" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADwUlEQVR4nO2dsXIDMQgFk0xK//+XundaNcxAAJ/X3i0THVLuDWHQgfT9eDy+hMnP1QuQ/6N4YBQPjOKBUTwwigdG8cD8Rr+43W7jk93v93GbmXWe80bjM2s7n43GP/O96XlgFA+M4oEJY95JJ1ZlYkAmlkRE8Szz8+o6o/GRze33pueBUTwwigcmFfNOqnlVh0xOFo2pxtqM/cy81bmieTPoeWAUD4zigSnHvFegms9V9zM7+eIz0fPAKB4YxQPz0jGvug9ZzcOiGDb1bW8bPQ+M4oFRPDDlmLe9b9mxk4lbnb3Kzt++ERf1PDCKB0bxwKRi3kYt4kmnDiXzPW+qLqZqf/u96XlgFA+M4oH5foWe9E6/QXUfcgq/50kLxQOjeGBS/XlT+4Qb+VxmPVNrq867/c1PzwOjeGAUD0wqz9v4BtapQ9moMdmIwSedfNSe9DdE8cAoHphyT/r2PmTGZpXteHYS2dnIBfU8MIoHRvHAhHne9v5k55yUjXxroyZlo0fwRM8Do3hgFA9MuYblk+tHNvI/Y96HonhgFA9Mqyd9+3zLzj5hZCfDlJ2MzeqYEz0PjOKBUTwwrXsVpvYtMzar81bZiEnV2tHo2Qg9D4zigVE8MCt1m51azeoaOuuM1jDVgxGNOem8Ez0PjOKBUTww5Tyvcx5Kh853r8hOtF+asT91b18HPQ+M4oFRPDArvQrVZzt7fRt3I3Se3a5TPdHzwCgeGMUDs37e5tT//e0zTTbqcTpxMYOeB0bxwCgemFR/3tS+YsRUTcd2j3lmruqYCPO8N0fxwCgemHINy8l2HNo+nzOa62Sjl3wKPQ+M4oFRPDCtmHeyfT5LNFd1nR02cr5OjqvngVE8MIoHZqU/b8rO1PmcU31+nV6FDFU7eh4YxQOjeGBa/XnRmJONOxAyTH1LO9n4Jtd5Vs8Do3hgFA/MSg3LVb3q0bOv1mM3dV6angdG8cAoHpjL7kmfqtWcWsN2DrdxjpqeB0bxwCgemPJdQh02zpve2AuN5o3Gb+eU7m2+IYoHRvHAlM9hqbJxpld1rmf2FVTPP+ug54FRPDCKB6Z8l9DUnuRUXclG7MzYz6ytYzODngdG8cAoHphyzJuiczZ01eZ2H8JGj3wGPQ+M4oFRPDCXxbypOs/ojrrqGiL7GabudvC8zQ9C8cAoHphyzNuupdw4xyRjJzP+pBNfp/aH9TwwigdG8cCs36swZXOqp61K9b69zLMZm8a8N0fxwCgemMv686SPngdG8cAoHhjFA6N4YBQPjOKB+QOWgPjtKiR2vgAAAABJRU5ErkJggg==" alt="QR: Strava route leg 5"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-6" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">06</div>
+    <div class="titleblock">
+      <h3>Hobb Nob</h3>
+      <div class="meta">mile 32.51 → 37.55 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">team says</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>5.04</b> mi</div>
+    <div class="stat"><b>+193</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:19%"></div></div><span class="mval">38 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:95;background:#2a78d6" title="95% pavement">pavement</div><div class="seg" style="flex:5;background:#eb6834" title="5% gravel"></div></div><div class="surftext">¼ mile dirt, then all pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Easy paved highway. Rated moderate, but I would rate it easy. Nice rolling flats on pavement.</p>
+  <div class="tagrow"></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3384310043525698972" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADv0lEQVR4nO2dMY4bMQwAc0FK//+l7p1WKQiQISl7jJnyTtbueUDwuEtJP6/X65cw+f3uG5D/R3lglAdGeWCUB0Z5YJQH5k/0i8fjMX6x5/M5PmfmPs/rRuMz93Z+Nhp/83sz8sAoD4zywIQ576STqzI5IJNLIqJ8lvl59T6j8dGc29+bkQdGeWCUByaV806qdVWHTE0Wjanm2sz8metWrxVdN4ORB0Z5YJQHppzzNqjmkmo9V32e2akXb2LkgVEeGOWB+Yict/FOrpM7p97tbWPkgVEeGOWBKee8m88tq/Nk8tbUs8oqG3nRyAOjPDDKA5PKeTfzwdRzy5t9MRHb35uRB0Z5YJQH5ucT1qRPvW+rzl/l097tGXlglAdGeWDCnFft7++8b+s8Y5xakzBVa97Mi0YeGOWBUR6YVJ3XyU+dWm17/Xhm/EZuztxD5rNGHhjlgVEemNQ+LJ0abqrWmVrfvZHPTqrfQ+f7MfLAKA+M8sC03udtv4fLfHaq3trYq2VjjeCJkQdGeWCUB2aszsvM0xmzsb/X1DyZ2m4DIw+M8sAoD0yY8zI5oDqmmg+m1qF3asrMPDf/Pzgx8sAoD4zywJTPVbjZw9m5bpWpvbA31kVEGHlglAdGeWBSdd5UT8fJVN/mVE/K1L6dnf8Vqhh5YJQHRnlg1s/P2657qnVe9Vlrp99ye28zIw+M8sAoD0z5/LypHBOx3Yc5tda+muem7uHEyAOjPDDKA9PqYYmYOvcgmnNjT5Op/HTSyYsZjDwwygOjPDCpvcdONvokp67bGZ+Z52RjH5Zofuu8L0R5YJQHprz3WMTNXo+be4NN/S0bdaqRB0Z5YJQHppXzpta9Rdw8MyHDzbWAmTmNPDDKA6M8MGN9m9t1VVQnbawx6KzH79Rz1TrVyAOjPDDKA/MR5ypE42+eq1C9t+o8vs+Tf1AeGOWBKZ+fd7PHZOr8nY216tu4D8uXozwwygPztnPSt9eude5h47Mbz1eNPDDKA6M8MOW1Ch2mcsMGn9BHWs1/Rh4Y5YFRHpjyPixVpnpSqvOfbNeLmWtVx2Qw8sAoD4zywKRy3kknx1THdK67sV/o1Pr0qVxr5IFRHhjlgSnnvCk65wdV55zaP2y7X6aKkQdGeWCUB+ZtOW9jT5bOerho/gxTa/uqGHlglAdGeWDKOW+7l6TTM5Kh02/ZOTOhmuPt2/xylAdGeWBSOW/juVznXPKbvZ2ds4ROOn9vhJEHRnlglAfmbevzpI+RB0Z5YJQHRnlglAdGeWCUB+Yvx/P30z0GRckAAAAASUVORK5CYII=" alt="QR: Strava route leg 6"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — HOBBS STATE PARK</b><span>mile 37.55 · Major exchange 1 · official van-swap point</span></div></div>
+</section>
+<section class="chapter" id="sec2">
+  <div class="secbanner">
+    <div class="secno">SECTION 2</div>
+    <h2>Legs 7–12 · Hobbs State Park → Withrow Springs State Park</h2>
+    <div class="sectotals">38.8 mi · +2,544 ft</div>
+  </div>
+  
+<article class="leg" id="leg-7" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">07</div>
+    <div class="titleblock">
+      <h3>Little Clifty</h3>
+      <div class="meta">mile 37.55 → 42.42 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.87</b> mi</div>
+    <div class="stat"><b>+379</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:39%"></div></div><span class="mval">78 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#1baf7a" title="100% trail">trail</div></div><div class="surftext">100% trail</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Rolling hills with two big inclines. Easy to go fast on the downhill. A lot of good shade.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Shaded</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386085387673391190" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADxUlEQVR4nO2dsXIbMQwF40xK/f+XqldapsAMEAB3Wmm3tCkerTfwG5IA7uf1ev0SJr/vXoD8P4oHRvHAKB4YxQOjeGAUD8yf6BePx2P8Yc/nszT+XMP52WhtmTGZ9UTPzXDl92bkgVE8MIoHJvS8k+r//ZPIA6re0PGhjBd25s88t0rm+zHywCgeGMUDk/K8k87+KTO+ureLxkdr6MyZ2V9GbHxvRh4YxQOjeGDKnrfBxnlg1bdOOh58JUYeGMUDo3hgbvO8zF1alc655TnmnX3uxMgDo3hgFA9M2fOm7roy80/tySKqXthh43sz8sAoHhjFA5PyvLvOHqfu3jo/P6n68fa+0MgDo3hgFA9M6Hnb+7nMc6d8MTP/xvhtjDwwigdG8cD8RH1YpnL336HGLkOnVq+azznlnUYeGMUDo3hgQs+LmKrX3vCYk+1czY1adWsVvgjFA6N4YMr3eVO1aBHbHlP12g3/i+aprtnIA6N4YBQPTKsmPfO/fspjOvNnfj7lc1O5LZ5tfjiKB0bxwKT6bV5ZP5BZT2bMRl35dk+yTI3giZEHRvHAKB6YsZr0Tl+uzPiNHmCZZ0WfjcZX/ayDkQdG8cAoHphU3uZJ5z5voy/llfmZ0fgqU/5t5IFRPDCKB6b1XoXOnimaJ0PnTq7K1LM2zoSNPDCKB0bxwKycbXb2MRu9VKa8+aSTqzLlx0YeGMUDo3hgUvV5G/n6mWdNcWUt+dQ8nm1+OIoHRvHAlO/zIjbeP7BxfjhFJ19myjuNPDCKB0bxwKz325zKpax+dqpnWOcMc7u3p5EHRvHAKB6Y1j5vw8/uqhnvzNOpBfQ+70tRPDCKB2bsbPNk6txv6h5uis5+zvfnyT8oHhjFA1OuVch41UZuSMeDp+oEMn/vxrlohJEHRvHAKB6YsVqFiE7PzCqdfdhUbmp1nk5ui5EHRvHAKB6YlT4snXnuOj+8Mi90yuONPDCKB0bxwJTfnzfFhrdt9wPLfDZiI7fFyAOjeGAUD0zqvQpTdO7GNtZwMlVLt/FePevzPhDFA6N4YFr9NjNM1aVN5Xlun2F26jGqfmnkgVE8MIoHppzDMlW3F805tcfqrCeimqfamTODkQdG8cAoHpj1vM0ppnIpozk3cjK3azCMPDCKB0bxwLyF5230WKm+x7VaUzF179i51zTywCgeGMUDU/a87V4nVaZyRq5cw9T7jIw8MIoHRvHApDxvI4dzqqdlND5i6q5xyl+tVfhSFA+M4oG5rT5P+hh5YBQPjOKBUTwwigdG8cAoHpi/XMLgS/2Uj44AAAAASUVORK5CYII=" alt="QR: Strava route leg 7"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-8" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">08</div>
+    <div class="titleblock">
+      <h3>War Eagle</h3>
+      <div class="meta">mile 42.42 → 48.5 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.08</b> mi</div>
+    <div class="stat"><b>+376</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:31%"></div></div><span class="mval">62 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:16;background:#2a78d6" title="16% pavement"></div><div class="seg" style="flex:84;background:#1baf7a" title="84% trail">trail</div></div><div class="surftext">Mostly trail · last mile pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Anticipate loose rocks, exposed roots and heavy leaf coverage. Several descents and moderate climbs. Finishes with a transition to paved road leading directly to War Eagle. GPS navigation recommended for the trail (sorry Benny).</p>
+  <div class="tagrow"><span class="chip warn">⚠ GPS recommended</span><span class="chip warn">⚠ Rocks + roots + leaves</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386095246258470460" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADt0lEQVR4nO2dMbIbOQwF/V0Odf+TKpfTSVgFGHgjtdwdrmcpWl0QTBLg/Lxer1/C5Pe7JyD/jvLAKA+M8sAoD4zywCgPzJ/THzwej/UPez6f62NW5nn93NPzlbld/9/T83d+b0YeGOWBUR6YY867MslVlRxQySUnTvms8t+78zw9fxoz/b0ZeWCUB0Z5YEo570p3XTWhsiY7PdPNtZXxK5/b/azT51Yw8sAoD4zywLRzXprJurCbnyprvu568U6MPDDKA6M8MB+X87Zy2CR3JvYqExh5YJQHRnlg2jkvvW85GaeSt7b2Kq9UvpNEvjTywCgPjPLAlHJeohbxyqQOpXKel66LOZH+3ow8MMoDozwwP5/Qk7513tYdf8In7HMaeWCUB0Z5YEr9eVv7hFvrthOVfc703O6seTHywCgPjPLAHHPe1m/31r5iZczKnLdqNSe5+UT372vkgVEeGOWBafekJ3q30z1/W/lsQmItaOSBUR4Y5YFp3z3WzQ1bv+/pesvEXS2n8Sf7xleMPDDKA6M8MO29zcT9I5N13tY52WScRO9gBSMPjPLAKA/MqD9vkqsmtZrd+UzWlJO5bY1zwsgDozwwygPT3tv8hNrFxPiJfrv0+aWRB0Z5YJQHptSfN6nvr4yZuNslce64tdbc+veBkQdGeWCUB2ZUw1Jhq3Z/qz+9e06ZyKNbGHlglAdGeWDa97Bs1V52SdR5pt+rkJjDFSMPjPLAKA/M6B6W0/MnJnuAn9bDV2HSO1/ByAOjPDDKA3Nc5yX68yokzsMS68utd/WdcJ335SgPjPLAtHsV7qxVSdxb1v2syT2fE6xh+XKUB0Z5YEbneVe27jRJ342yxZ3zdJ33hSgPjPLAtPc2J2ztQ975nocTW3ubk3NEIw+M8sAoD0y7Py+xbkucjSXqSxN9hKfxzXlfjvLAKA9MaZ23ta66cucdZp/WY7eV1408MMoDozwwb3tPerr3oDuHRF3l6fkr3sPyn6I8MMoD87bzvO5nJfoBKnPYOodLvHfJyAOjPDDKA1PqVUjkksTdlVt5a0L3/rMJRh4Y5YFRHphRf96Jye/+5P0GibO3RB/CVq418sAoD4zywLRz3han3/3KGi5R93/nOxMqc65g5IFRHhjlgXlbzkucdW3d8/KudVsXIw+M8sAoD0w756V/0xN9EZVxJs8n6lOs2/xylAdGeWBKOS9Rwzm5DzPdM54Yc1LLc8LIA6M8MMoD87b+PJlj5IFRHhjlgVEeGOWBUR4Y5YH5C/Sg6fnehrhOAAAAAElFTkSuQmCC" alt="QR: Strava route leg 8"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-9" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">09</div>
+    <div class="titleblock">
+      <h3>Up and At 'em!</h3>
+      <div class="meta">mile 48.5 → 56.63 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">team says</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>8.13</b> mi</div>
+    <div class="stat"><b>+557</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:34%"></div></div><span class="mval">69 ft/mi</span></div>
+    <span class="chip climb">▲ 2.1% avg · 2.1 mi · 226 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:60;background:#2a78d6" title="60% pavement">pavement</div><div class="seg" style="flex:40;background:#eb6834" title="40% gravel">gravel</div></div><div class="surftext">60% pavement · 40% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Lightly hilly countryside with a few medium-sized hills along the way. Seems moderate.</p>
+  <div class="tagrow"></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386095841125979708" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADt0lEQVR4nO2dMY7jMAwAbw9X5v8vTZ9t1RAgj2TsSWbKrCwLHnAJyxL183q9/giTv1cPQP4f5YFRHhjlgVEeGOWBUR6Yf9EfHo/H+M2ez2ep/TmG89pobJk2mfFE983wzudm5IFRHhjlgQlz3kn1//5JlAOqeaWThzK5sNN/5r5VMrnTyAOjPDDKA5PKeSed96dqn51cFY2h02dmnBEbz83IA6M8MMoDU855V7E9Lxrdq9PPNkYeGOWBUR6Yy3LeVA6L2nSu3Zjn3MDIA6M8MMoDU85578wBmdyTeSfr9F+dO43YeG5GHhjlgVEemFTO25jHy8wZ3uH36vijNhsYeWCUB0Z5YMKcd9Wc3sYak2r/UfsM73xuRh4Y5YFRHpifqA7L1DetqTWQU+0jOnv1NsaWeeZGHhjlgVEemHLO68wNbue/6NqNtZobe9Xdq/BFKA+M8sCsr2G5Wz2UTj6emheN+qmO2cgDozwwygMTvudFdN7nqm2mxpBhe51LFec2PxzlgVEemFS9zc46/o0cGbHxrnayMV96Ut0jaOSBUR4Y5YEZm9vs1ADL9NMZW7X/zpqdd9ZwMfLAKA+M8sC09udl3u2i9ts1ozPXnmysU82MoVPD08gDozwwygPTOldhqk5KZh9e5vepnBrda3v+ttqnkQdGeWCUB2as3ubUuo+raqxsrEnZPrfIyAOjPDDKA5Nat7mxXy3qP8PUnoE77HOvXnti5IFRHhjlgSnnvIiNmpOd+cNtOnl0KncaeWCUB0Z5YFrf8zau7exJmMqR1fw01U+1vZEHRnlglAem9Z439Y2t2mdmnFN5buo738acsJEHRnlglAcmVW+zw1Ttzc69NpiqHdrByAOjPDDKA9OqMV1lu2b0Rv/vfJeN2kQYeWCUB0Z5YFpnCW2cFZDhDjXD7lDP08gDozwwygNTntu86nyDjbFN3XcKzxL6IpQHRnlgyucqTHHVWseNfjrra5zb/FKUB0Z5YFLnKkyRqT3dOX+gOobMfTu1V6bqiLo/7wNRHhjlgWl9z8twh3429olH/VTH0OnTyAOjPDDKA1Out7m9bmWqpuXJ1DqaKEdeNadq5IFRHhjlgRmrMd1hKs911rxMfZPbOCcvwsgDozwwygNzi5w3VaOkem7txpkPGarnKPk97wNRHhjlgSnnvHfWOsmwfa565trtmjURRh4Y5YFRHpj12mMn27VLqmPI0NlL0JnzdA3Lh6M8MMoDc9n+POlj5IFRHhjlgVEeGOWBUR4Y5YH5BW7JDiYkyoHVAAAAAElFTkSuQmCC" alt="QR: Strava route leg 9"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-10" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">10</div>
+    <div class="titleblock">
+      <h3>Dingos with Banjos</h3>
+      <div class="meta">mile 56.63 → 65.36 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>8.73</b> mi</div>
+    <div class="stat"><b>+722</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:41%"></div></div><span class="mval">83 ft/mi</span></div>
+    <span class="chip climb">▲ 2.9% avg · 1.5 mi · 229 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:17;background:#2a78d6" title="17% pavement"></div><div class="seg" style="flex:83;background:#eb6834" title="83% gravel">gravel</div></div><div class="surftext">½ mi pavement · 7 mi gravel · 1 mi pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>You go up a gnarly hill when you reach gravel — the rock was chunky and challenging for road shoes. Back onto the highway, then gravel again. Both my favorite and least favorite leg. Rated hard, and I definitely agree.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Chunky rock</span><span class="chip warn">⚠ Shoe choice matters</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386096094381966438" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADyElEQVR4nO2du3LbQAwA40xK/f+XqrfbS4EJEACkVtotZfJ41g6EuRf49f39/UuY/L67A/L/KA+M8sAoD4zywCgPjPLA/In+8Hg8xh/2fD7/+azzmsznUfuZ/lf7k+HK783IA6M8MMoDE+a8k+rv/kmUAzqfV/uTyYWd9jPPrZLJnUYeGOWBUR6YVM476YyfMmTGXtHn571RO538lxlfRmx8b0YeGOWBUR6Ycs7bIPNb35lj7Mx5dtrZxsgDozwwygNzW86rjuc692bmLc9rquuLd2HkgVEeGOWBKee87d/6ao7p5KRqLuyw8b0ZeWCUB0Z5YFI5b2Mer7NX88rPT6rXb89/GnlglAdGeWDCnHfX3N1U3qq2n7k+w5Xfm5EHRnlglAfmK6rDMrV2NbUHcur6iM5ZvY2+Zb5zIw+M8sAoD0w553XmBrfzX3Tvxl7NjbPqnlX4IJQHRnlgxvawbIy3NnLMdi2YzLOidqp9NvLAKA+M8sCE47yIqTHQxngxuibDxli2g3Obb47ywCgPzMq+zcx4ZWNucGOsdrJRX+Ykc0bwxMgDozwwygOTqjFdnYs72V63y7QTtVmdp43aie6t1hStYuSBUR4Y5YFJ7WE52V7r6syRZrjyuVO5M8LIA6M8MMoDU36vwkaOyTC197LKlTm12n8jD4zywCgPzFi9zal33XXywVSNlYhq7t9+b5GRB0Z5YJQHJrVvc+PdOplnTfHK59yr954YeWCUB0Z5YFpnFSI26nu9Qn3Lk+0aadGzTow8MMoDozww5ZwXMfU+1Y3aK51x3sbZ9gjX8z4I5YFRHpjyet7G2lvmWVH71b5NrS9Wn7uxvmjkgVEeGOWBKZ9VqLLxnoGNdcROHzb2i2Yw8sAoD4zywJTPKpxMjdW21+E25hW3a5U5zntzlAdGeWBa71XIsLHPc6MPmeu3z91Xx4hGHhjlgVEemNbc5kadke2xUcR2/ZcMvkvog1AeGOWBGdu3WWV7z2SV7drTG2ccjTwwygOjPDCpGtNTRO9V2BgLZvqQabNTI63TN88qvDnKA6M8MOX1vCp3nR/otF/lylrYJ0YeGOWBUR6Y1vm8iKnxzVR9k6kzA513KlXbzGDkgVEeGOWBGasx3eGuGi7RXGv1WVPzolWMPDDKA6M8MC+R86rvWa2uyU2tC07NtU79v0YeGOWBUR6Ycs67stZJho39LJlnZT7f6MOJkQdGeWCUByaV8zbm6Drjtk7u2dj/krnXOizyF8oDozwwt53Pkz5GHhjlgVEeGOWBUR4Y5YFRHpgfoM0GBKnZ9coAAAAASUVORK5CYII=" alt="QR: Strava route leg 10"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-11" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">11</div>
+    <div class="titleblock">
+      <h3>The Roamin' Forum</h3>
+      <div class="meta">mile 65.36 → 72.49 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>7.13</b> mi</div>
+    <div class="stat"><b>+327</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:23%"></div></div><span class="mval">46 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:67;background:#2a78d6" title="67% pavement">pavement</div><div class="seg" style="flex:33;background:#eb6834" title="33% gravel">gravel</div></div><div class="surftext">⅓ gravel · ⅔ pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Easy downhill to start. Rolling hills with a couple decent climbs. Gravel was in good shape. Turns onto Hwy 23, which is flat — but be on the lookout for traffic.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Traffic on Hwy 23</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386096336748878934" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADqElEQVR4nO2dzW7bQAwGm6JHv/+T5p5cdVmALPlJHmPm6ErrjQcswf39+vn5+SNM/j7dAfl/lAdGeWCUB0Z5YJQHRnlg/p3+4fV6rX/Z9/f3epuVfl6/9/R8pW/Xd0/P3/m7GXlglAdGeWCOOe/KJFclcsCVUz6rfH6l289Km+nfzcgDozwwygNTynlXunXVVpun9k/vVtqs1HyVPFoh8bsZeWCUB0Z5YNo57x3o1nPd8cxJvXgnRh4Y5YFRHpi3znndcchuHXbKYe+QzyoYeWCUB0Z5YNo5bysfPJW3JmOVk5ovkUeNPDDKA6M8MKWc987rUCrzed18M5m3O/UhgZEHRnlglAfm6x32pKdrLMq+iy5GHhjlgVEemNL+vK1xwq267URlnDPdtzvXvBh5YJQHRnlgSnXe1hxYpc3TM5U2u+1Xnt/aqzCpR92T/oEoD4zywKztz5vktgpb+7sT+ezKqZ1ELWjkgVEeGOWBubXO2xovTdRbW2e1bNWslf4YeWCUB0Z5YNrzed3cMJmHS5/vNWmnm6u26sgrRh4Y5YFRHphjzkvkkkou7H6+dX505bu6TGq7CkYeGOWBUR6Y0b0KW/vKu+8m1kYm9uElxkivGHlglAdGeWBG83ndZybPV0jPO26tNd1az2LkgVEeGOWBid+ft1U/beXayVjrZK4xsS/eyAOjPDDKA9O+P28rx5xIr8NMrB099SexZ/+KkQdGeWCUByZy3mZini9x/9yp/a0cOcmLFYw8MMoDozwwx/m8xLhihcR82NYe80o/u+2csM77cJQHRnlg2mdM37kepNuf9F71yvN3YuSBUR4Y5YFpr9u88tS+t/TakMn3JvpmnfeBKA+M8sCsrdtM13+J+xASd8AmzrY+YeSBUR4Y5YEpncOSOHP5SmJ8MrG+NLFOdYKRB0Z5YJQHJrKGZetckq37dxJ71Sds5VcjD4zywCgPzGP3pCf2Bmz1IfFuYnzVyAOjPDDKA1Oq87bYyg0Jtu76ufPeJSMPjPLAKA9M+xyWLt05vAmJO+q6TNa/dDHywCgPjPLAlHLela3zULbOZEnfUTc5V3rSZgUjD4zywCgPTDvnbdEdA0zvQ9i6n2/r76pg5IFRHhjlgXks56Xnurp9uPJU3dbFyAOjPDDKA9POeen/058aF+0+3/18kuNPGHlglAdGeWAi9yqk27xzbedkrenkGXPeh6M8MMoD89j+PJlj5IFRHhjlgVEeGOWBUR4Y5YH5BT2724mL3fnMAAAAAElFTkSuQmCC" alt="QR: Strava route leg 11"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-12" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">12</div>
+    <div class="titleblock">
+      <h3>Walkabout to Withrow</h3>
+      <div class="meta">mile 72.49 → 76.35 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>3.86</b> mi</div>
+    <div class="stat"><b>+183</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:24%"></div></div><span class="mval">47 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:42;background:#2a78d6" title="42% pavement">pavement</div><div class="seg" style="flex:45;background:#eb6834" title="45% gravel">gravel</div><div class="seg" style="flex:13;background:#1baf7a" title="13% trail"></div></div><div class="surftext">Mostly gravel / pavement · last ½ mi trail</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Big decline at the pavement portion. The last half mile is trail and the toughest part — the stairs on the trail are slippery.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Slippery stairs</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386097114352695398" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADuUlEQVR4nO2dzW4bMQwGm6JHv/+T5p5edRFAlh/XnmLm6OxKaw8YQj/Ufv38/PwSJr/f/QDy7ygPjPLAKA+M8sAoD4zywPy5/eH1esU7+/7+jrdZec6z39v1lWc7771d/+TvZuSBUR4Y5YG55ryTSa7q5oBKXjm55bPK59vPuf27GXlglAdGeWBKOe+kO67qttkdk92uqTxnt/1Kv92+bv1WMPLAKA+M8sC0c942qTw0mc+cjBefxMgDozwwygPzcTlvMvfYHYfdclhqbW8bIw+M8sAoD0w756X+v6f2enTzVmqusstGXjTywCgPjPLAlHLek/mguzeksp7XzTep9bzt383IA6M8MMoD8/UJNemp9bZu+10+YQ3vxMgDozwwygNTqs9LzRNOxk+p9bntPTJP7nkx8sAoD4zywFxzXup/d2pesdJm5ZlTezUnuflG9/saeWCUB0Z5YNrnsHTXzybjxZNUffdG7V3le22MBY08MMoDozww1/W8d80BTvqqMMm7k7ryjTVLIw+M8sAoD0x7D8unnTn5JKkxa+oaIw+M8sAoD8yoPm8yJ5k6uyt1fnS3r8r1t2tSv4mRB0Z5YJQHJja3Wbkmde/tOZ88C3ubyncx8sAoD4zywLT3bW6cBz3JVak1v408vfGcJ0YeGOWBUR6Y9r7N7XcmdPtKvXtosh+121cKIw+M8sAoD8zKHpbKvSdPznlu37v9DCdGHhjlgVEemNh5m5NxTyU3bJ9pslE/N6mdr2DkgVEeGOWBWanPmzAZC06ur7Rzsr2/xnHef47ywCgPzGhus8uTZ1Ru1Kp32a4pNPLAKA+M8sCUct72fpONOu4NJntQN3KnkQdGeWCUBya2b3NSY75Rz7C9L2bSTqpuwcgDozwwygPTrs/rkjqHM5VLus95u6bbzkbdgpEHRnlglAemtIdlsqf/JHX+cvfeT6uxS+VXIw+M8sAoD8zb3pOeekfBxjuGNu7d2Adr5IFRHhjlgWnXKkxIvaNn4wyz1Lt+ts8/OzHywCgPjPLAlGrSN3JJqg6v2+bt+lRdQXfNb4KRB0Z5YJQHpv0uoVTdQvfcy277qXHqRo1EKtcaeWCUB0Z5YNo5L0Uql7yrDqHbV/cM6wpGHhjlgVEemLflvO4c5vZ7iCp93ZjURUww8sAoD4zywLRz3vZ5Wqnx2Y3tdyPcPp/Urd8w8sAoD4zywMTeq9Bl0ubGmO9GKldN9vLcMPLAKA+M8sC8rT5P5hh5YJQHRnlglAdGeWCUB0Z5YP4CGL0E3o+N1bcAAAAASUVORK5CYII=" alt="QR: Strava route leg 12"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — WITHROW SPRINGS STATE PARK</b><span>mile 76.35 · Major exchange 2</span></div></div>
+</section>
+<section class="chapter" id="sec3">
+  <div class="secbanner">
+    <div class="secno">SECTION 3</div>
+    <h2>Legs 13–18 · Withrow Springs State Park → Elkins (Bunch City Park)</h2>
+    <div class="sectotals">32.3 mi · +2,354 ft</div>
+  </div>
+  
+<article class="leg" id="leg-13" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">13</div>
+    <div class="titleblock">
+      <h3>Lolligaggin'</h3>
+      <div class="meta">mile 76.35 → 82.44 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.09</b> mi</div>
+    <div class="stat"><b>+459</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:38%"></div></div><span class="mval">75 ft/mi</span></div>
+    <span class="chip climb">▲ 0.5% avg · 6.1 mi · 162 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:33;background:#2a78d6" title="33% pavement">pavement</div><div class="seg" style="flex:67;background:#eb6834" title="67% gravel">gravel</div></div><div class="surftext">⅓ pavement · ⅔ gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Cross the street to the dirt road — if you go over the second bridge, you went too far. Pavement leads to a ferry pickup to cross Hwy 412, then finish with a half-mile run after.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Navigation</span><span class="chip warn">⚠ Hwy 412 ferry crossing</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386097533788029014" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADvElEQVR4nO2du3LbQAwAbU9K/f+XqlfaazABAoDUWrulwhwp7cCYewD8fr1eX8Lk5+4HkP9HeWCUB0Z5YJQHRnlglAfmT/QPj8dj/GbP5/Of94quicg85zlmdH3mvpnnvPJ3M/LAKA+M8sCEOe+kmodOqjmpSpTPMp+fVHNVZszt383IA6M8MMoDk8p5Jxs5LJOrovGjazLPWR0/c9/qvaL7ZjDywCgPjPLAlHPeNtVc1clP1bXWzhrsBkYeGOWBUR6Yt8t5J9V1yOo8LMphU3t72xh5YJQHRnlgyjlv6u97Z+4VfZ7JW521yql9xymMPDDKA6M8MKmct3EW8aS6fljdz6vmm6nxt383Iw+M8sAoD8z3O9Skd3JDdR2yw7vt7Rl5YJQHRnlgUvV5U+uEG+chM8+z8WxTNRIdjDwwygOjPDDltc3OOmF1/OqeXybfTJ3V7NRIRFS/r5EHRnlglAdmpT4vur6zDjlV370x18zk0Y25oJEHRnlglAcmtZ/3Dmt9V+anqTMpGzWCJ0YeGOWBUR6Ycr/N7TlTZz2zw8Z+m+c2JUR5YJQHpjzPO9mo1duoQ7+yb/XU3C5zvZEHRnlglAem9V6FzhnIDhvjT83JOr/bSea7GHlglAdGeWBa+3nVazrXZ5jqsbLR83pjv9PIA6M8MMoDs/7+vO0ater4UY7p7F9W7zWFkQdGeWCUByac522cydzutxLdq/OcnXnYxjOcGHlglAdGeWDCed5U/+WpdcK75oud/NSpnc9g5IFRHhjlgSnP8zLXTNWhn9y1rjhVzzc1Tz0x8sAoD4zywLTeq7BxLmOqt9lGrXrm+uiajd/ByAOjPDDKA3NpH5bM+BFXvj8hw/b3je51YuSBUR4Y5YFJrW1OsV3DsPGeh+qzXdmnzcgDozwwygMz1oelswY41cckM2aG7T7XEea8D0J5YJQHZv0MS8TGudDM+Nv3zTCV1408MMoDozwwt70nfbt2rfMMG/93o0+bkQdGeWCUB2a9D8tJVLt2V/7b7k+9Xbdu5IFRHhjlgUnVKmzsY23kqo131FXZqMeIMPLAKA+M8sCkct7JVF1BdZ/srv6WGz3VpnKtkQdGeWCUB6ac86bI/N2/q8dm9Awb52XsPfahKA+M8sDclvOq+SAzzl09XLZ7zUQYeWCUB0Z5YMo5b6O/c2b8Tr1BZpyp6yOq807Pbf5ylAdGeWBa/TY7ZMbcqFWvslEjn/ncnPfLUR4Y5YG5rT5P+hh5YJQHRnlglAdGeWCUB0Z5YP4CF0QM4sqTQBUAAAAASUVORK5CYII=" alt="QR: Strava route leg 13"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-14" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">14</div>
+    <div class="titleblock">
+      <h3>Bandicoot</h3>
+      <div class="meta">mile 82.44 → 87.33 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.89</b> mi</div>
+    <div class="stat"><b>+542</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:55%"></div></div><span class="mval">111 ft/mi</span></div>
+    <span class="chip climb">▲ 1.1% avg · 2.3 mi · 130 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Several turns, and some of the signs were removed or hard to see. Pay attention — have the van stick with the runner on this one.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Navigation!</span><span class="chip warn">⚠ Van should shadow runner</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386098082441573948" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrElEQVR4nO2du3IbMQwA40xK/f+XqldausAECIA7rbxb2ifyRjswzAfIr9fr9UuY/L77BeT/UR4Y5YFRHhjlgVEeGOWB+RP94vF4jHf2fD7/2Vf0TETmPc82o+cz/Wbe88rvzcgDozwwygMT5ryTah46qeaAav6L8lnm59vvuf29GXlglAdGeWBSOe+kOq7qkBmTRc9k3rPafqbfal9RvxmMPDDKA6M8MOWct0F1zrPz841+78LIA6M8MMoD8xY5L8ol1bxSHYdV+323/GfkgVEeGOWBKee87XnL6JnqmKwzhttgIy8aeWCUB0Z5YFI578p8MDVv2RmHTa3nbX9vRh4Y5YFRHpivd6hJn1pvq7ZfxblNGUN5YJQHJsx5nXnFK/dDTtUkTI01r8yLRh4Y5YFRHphUzjup5qep3JNpM2q/8/xGbs68Q+azRh4Y5YFRHphyTXo1V1Vrtzt5LuKufJb5HjpjQSMPjPLAKA9Maz1vY67vHfLT1FktGzWCJ0YeGOWBUR6YlfM2p2oArjzzpbO386Q6tutg5IFRHhjlgQlz3tQ5W3ftJYnazHBXrV61XyMPjPLAKA/Myh6W7b0eJ1N7I7fvQ9j4How8MMoDozwwqfW8zjpch429lxHb9zNs1DYYeWCUB0Z5YNbvz+usyW3UJGT2l2ban9qP2sHIA6M8MMoD06pV6OSYiM44KWrnys9OrTu6b/PDUR4Y5YFZP2/zyvvnOmzkyO37GYw8MMoDozww5XHeyca85ca50pnnM+1kPlttp7P2aeSBUR4Y5YFJ5byTjfsNNs4526hVr/Y1NSccYeSBUR4Y5YEp1+d11rdOOrV0G3tDNuZOq+PLCNfzPhDlgVEemHJ93hQbNQ/be0Y2xnOd/yeMPDDKA6M8MK1x3klnDnDqXJXt/aWddjx7TL6hPDDKA3Pb/XlROxHbNeBT/WaYyq9GHhjlgVEemNvuSd+4W2fqHTY+uzEvauSBUR4Y5YFZP4flJKpdu+ss6e3zqV3PkxDlgVEemFZ9XoZODUOGqTnVK+8kmurLyAOjPDDKA9Oqz4vo/N2fOvdyo4Zham1vKtcaeWCUB0Z5YMo5b4qpM0ruug+h8w5Rv5499oNQHhjlgbkt522cPd1Zz8v0FbFxxkoGIw+M8sAoD0w5523vpdw+h2V7v2VEdbzovs0PR3lglAdm/V6FqTY39lhW+z2Zqq/PfDbCyAOjPDDKA3NbfZ70MfLAKA+M8sAoD4zywCgPjPLA/AW5fRteR8liTQAAAABJRU5ErkJggg==" alt="QR: Strava route leg 14"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-15" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">15</div>
+    <div class="titleblock">
+      <h3>I Ain't Skeerd!</h3>
+      <div class="meta">mile 87.33 → 94.28 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">team says</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.95</b> mi</div>
+    <div class="stat"><b>+287</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:21%"></div></div><span class="mval">41 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:71;background:#2a78d6" title="71% pavement">pavement</div><div class="seg" style="flex:29;background:#eb6834" title="29% gravel">gravel</div></div><div class="surftext">2 mi gravel · 5 mi pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Pitch black. Some little rollers with one mild climb. I would rate it moderate.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Pitch black — lights!</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386098515190436412" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADvklEQVR4nO2dMY4bMQwAc0FK//+l7u9apSBChqTsMWZKn7zWeUAT0pLar+/v71/C5PerJyD/j/LAKA+M8sAoD4zywCgPzJ/oD4/HY/zDns/nPz/rHJN5Pbp+Zv7V+WS4+b0ZeWCUB0Z5YMKcd1L93T+JckDn9ep8Mrmwc/3M51bJ5E4jD4zywCgPTCrnnXTWT5nx1bVdND6aQ+eamfVlxMb3ZuSBUR4Y5YEp57wNNtZY1bx10snBNzHywCgPjPLAvCznddaCEZ19y3NM9f7iqzDywCgPjPLAlHPezd/6zF5iJydVc2GHje/NyAOjPDDKA5PKeRv7eFO1mp3rVPNldfz2/qeRB0Z5YJQH5utVPemdNdlJp8akU5PyDhh5YJQHRnlgwpw3de/qHXrsMnR69aZybea9J0YeGOWBUR6Ycs7r7A1O9QB0ai+r46dqWOxVkL9QHhjlgSnfz+v0vWXYzjE3z4KJiK5TvaaRB0Z5YJQHJnU/793upW3Uj2ys86Zyf4SRB0Z5YJQHpnz2WPV3fKN/oPreqb7yqWt2egRPjDwwygOjPDCpM6YzZ3pF3Kzvn8qp23WbUz0MRh4Y5YFRHpix/rzMPaqNs5tv1mdGbJzD6d7mh6M8MMoD09rb7NRrVPvNt+cZcTOnVudv5IFRHhjlgWmdtznVY5d5780zVqpzi9h+bpGRB0Z5YJQHJtWfdzJVr5/5rIjtvvWbfe7V954YeWCUB0Z5YFq9ClNM9cPdfL5PJ49O5U4jD4zywCgPTLluMzP+ZLuPLfqsqTPDqnuYN8+OMfLAKA+M8sCU9zZPts9u3uhbqOa5Tv/DxnljJ0YeGOWBUR6Yct1mROe8zeocps796ozZqKOpYuSBUR4Y5YEp123e3DOcyg1TZ0xXx3dqO61h+XCUB0Z5YFZ6FU429gyr86n2Am73FE6dhWbkgVEeGOWBaZ3DslGfMrX/WR0zdQ+ySuf/NfLAKA+M8sC89XPSN2odN66zUefi3uaHozwwygOT6lWYonpW9cY6svP8vAwbdTr2530gygOjPDBjdZsRU3UcnfPDqmde33y2Q/S667wPR3lglAemVbcZ0cmRndrO7XtymWdHTF0zg5EHRnlglAemVbe5TTXHdOpTtnvyNjDywCgPjPLAvEXO29jDzOSzjeciTeH9vA9HeWCUB6ac87Zr909unu3SmU8nd3bmY+SBUR4Y5YFp9ed1mFrPZV7PXDNiaj230Rdo5IFRHhjlgXlZf570MfLAKA+M8sAoD4zywCgPjPLA/AC6S+3pBLWJzAAAAABJRU5ErkJggg==" alt="QR: Strava route leg 15"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-16" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">16</div>
+    <div class="titleblock">
+      <h3>Playin' Possum</h3>
+      <div class="meta">mile 94.28 → 99.13 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">team says</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.85</b> mi</div>
+    <div class="stat"><b>+280</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:29%"></div></div><span class="mval">58 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:40;background:#2a78d6" title="40% pavement">pavement</div><div class="seg" style="flex:60;background:#eb6834" title="60% gravel">gravel</div></div><div class="surftext">40% pavement · 60% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Spooky as hell, but if you can get past that, a quiet and peaceful run. Rated moderate, but I would rate it easy.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Dark + spooky</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386098701498648662" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrklEQVR4nO2du24cMQwA4yCl//9L3TutUhAgQ1J745spz3ta4QY0Ier18f39/UuY/H66A/L/KA+M8sAoD4zywCgPjPLA/In+8Pn5Of6yr6+v0vNnH87vRn3LPJPpT/TeDDd/NyMPjPLAKA9MmPNOqv/3T6IcUM0rnTyUyYWd9jPvrZLJnUYeGOWBUR6YVM476Yyfqu13clXUh06bmfFlxMbvZuSBUR4Y5YEp57yn2K6LRu/qtLONkQdGeWCUB+axnNcZh2Xm4aLPM9/dqHNuYOSBUR4Y5YEp57ynckA1R07NEU7lv43fzcgDozwwygOTynkbdbxMzfAVPu+wXf808sAoD4zywHw8tSd9aj/ARi106vltjDwwygOjPDBhzpsa97xaforo1DY3+pb5zY08MMoDozww5ZzXqQ1uPBOxvVZzY6+6exXeCOWBUR6YsTUsU+Ot6LtTOaaaazfyX9ROtc9GHhjlgVEemNR83sY81s3xYoaNsWwHa5s/HOWBUR6Y1HmbmXHJdj0zQ2eslqEzzqvunci0b+SBUR4Y5YFp7UnP5IBOLbRTM4zItL89hptqx8gDozwwygOTWsNyMnW2ZNTmzbHaSWc/+9R7M8+fGHlglAdGeWDK9yps1/Sizzt3CW3cb7AxB1lt08gDozwwygPTWrfZuceuWles9qeaPzb2HmzfW2TkgVEeGOWBadU2p9ZzTtVCM89n3ntzn3v1uydGHhjlgVEemHLOyzCVkzL9eep+n04encqdRh4Y5YFRHpiwtjm1L20qn2XY6HOnhjl1FkyEkQdGeWCUB+bqOG9qHcp2PfPmGZvO570pygOjPDDrOS/T5kbdb4Ob++szGHlglAdGeWBaZ0xX2c6FG2dST+1zn7pf4sTIA6M8MMoDs57zpnJJh+07FjLtnEydW23kgVEeGOWBadU2N9an3NwjEb13++yxCO8SeiOUB0Z5YF7invSTTm67ub8i058Ta5vyD8oDozwwqXsVpsicPb29TmRqvi1i41499+f9QJQHRnlgyudtVtm4i6BzH8J2DXPjfNEIIw+M8sAoD0z5vM2peb6ozakxVqc/EVHfnqqpGnlglAdGeWDKOe8m1RzTWRczNSd38yw0Iw+M8sAoD8xL5LztPQBT84IbdxVFOJ/3w1EeGOWBad0ldJOb61kiOmdvZt7rXoU3QnlglAcmlfM2anRTa1Iyn2fajNgYC3qXkCiPjPLAPLY/T/oYeWCUB0Z5YJQHRnlglAdGeWD+AgZ9Akq7OXfSAAAAAElFTkSuQmCC" alt="QR: Strava route leg 16"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-17" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">17</div>
+    <div class="titleblock">
+      <h3>Rip Snorter</h3>
+      <div class="meta">mile 99.13 → 103.87 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.74</b> mi</div>
+    <div class="stat"><b>+630</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:66%"></div></div><span class="mval">133 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:25;background:#2a78d6" title="25% pavement">pavement</div><div class="seg" style="flex:75;background:#eb6834" title="75% gravel">gravel</div></div><div class="surftext">75% gravel · 25% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Appropriately moderate. The hills were nasty getting up, but you end on pavement with a consistent decline — you make up a ton of time on the downhill. Push hard on the uphill, because you can catch your breath at the end.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Nasty ups, fast finish</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386099115846651452" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADt0lEQVR4nO2dzW7bQAwGm6LHvP+T5p5e97IAWfKTPc3MsZWltQcMsT+kPr6/v38Jk9+vHoD8O8oDozwwygOjPDDKA6M8MH9u//H5+bn+sK+vr/V7VsZ5Pvd2fWVs52dv1z/5uxl5YJQHRnlgrjnvZJKrujmgkldObvms8u/pcaZ/NyMPjPLAKA9MKeeddOdVk3tW5mTdz07uX3lu91m351Yw8sAoD4zywLRzXppuPpvkp8qcrztffBIjD4zywCgPzNvlvAndedgth71DPqtg5IFRHhjlgWnnvK180F0bvOWzbt6arFVOvnsijxp5YJQHRnlgSjkvcRbxZHIOpbv+ORlP9/7p383IA6M8MMoD8/EONemTsyrdGoMEr1oLNfLAKA+M8sCU6vO21gkT5yEr49kaW/e56TMvRh4Y5YFRHphrztv6251YV6zUwyX2+bZqJG50v6+RB0Z5YJQH5rq2OfnbnZjPbdX8bdU2pH+fCkYeGOWBUR6Y0n7ek3Vvt/ukc+fWmZTuZyfjMfLAKA+M8sC0e49N9rq6pOsHJvd51VnNEyMPjPLAKA/MqD5v0nNy0ht6a955YytvpZ9r5IFRHhjlgVl7r8LW2cX0Gcsbifno1p7fDSMPjPLAKA/MaD8vcU1iDJM55db7Gbbuf2LkgVEeGOWBac/znqxdS+TRynpp5f7ddd3EPp+RB0Z5YJQHZnSGJfHZSW/oyjXpzyZqITy3+R+iPDDKAxN5r8JWL7HuuZWt/bytHDnJixWMPDDKA6M8MKN+m1t5aKsHykmifvzkybOjzvP+Q5QHRnlg1vqwbO23JfJohSdrybcw8sAoD4zywLTneVvvN0j3UkmQ7uHSfa6RB0Z5YJQHZlSfN1lvrNxnMk9653cpbK3fGnlglAdGeWDa9XldEnVvk5xUIb0n57lNUR4Z5YEp7ec9WQN+u+ZGuj91osZu67sbeWCUB0Z5YF72nvQn+0dXxpA4V3m7/sQ+LD8U5YFRHpi1fpsVbrVrk1qFJ/f8Kjy5L2jkgVEeGOWBafdh6TLp6dUdzzvUFXT7n00w8sAoD4zywLT7sGytSXbPNCbq1isk6hC2cq2RB0Z5YJQHJtJ7rEKiR/OT70OoXFP5rL3HfijKA6M8MC/LeYl3/UzGcPLkvM153g9FeWCUB6ad89JnKSdrmxXSdX6VftNb68NGHhjlgVEemFLOS5zhTLyTKJGPJz1WTiprm5X7nBh5YJQHRnlgXlafJ3OMPDDKA6M8MMoDozwwygOjPDB/AbmvDKDshT+QAAAAAElFTkSuQmCC" alt="QR: Strava route leg 17"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-18" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">18</div>
+    <div class="titleblock">
+      <h3>Buncha Fun!</h3>
+      <div class="meta">mile 103.87 → 108.62 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">team says</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.75</b> mi</div>
+    <div class="stat"><b>+156</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:16%"></div></div><span class="mval">33 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">Pavement / gravel / pavement · about half and half</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>You can definitely run faster on this leg. Pay attention to turns and traffic on the final mile. Overall a flat and nice leg — more towards easy.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Turns + traffic, final mile</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386102217590042710" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADtElEQVR4nO2du25cMQwFkyCl//9L3TutUgggQ567O85Mad+HdgdcQhIl/fz6+vohTH69ugHy7ygPjPLAKA+M8sAoD4zywPy+/ePj42P9ZZ+fn+vPrLTzfO/t+krbzntv1z/5vRl5YJQHRnlgrjnvZJKrujmgkldObvms8vd0O9Pfm5EHRnlglAemlPNOuv2q7jO7fbLbNZV2dp9feW/3Xbf3VjDywCgPjPLAtHNemq08NBnPnPQXn8TIA6M8MMoD83Y576Tbr+pef8thW3N7aYw8MMoDozww7Zy39fs+qSW5PaeSt7bGKrsk8qKRB0Z5YJQHppTznswH3dqQynxeN99szeelvzcjD4zywCgPzM93WJM+qVXpjkMmcGxT2igPjPLAXHNet75/Um85GWPcWpOwVSPzZM2LkQdGeWCUB6bUz5vkp26+vF1TeWb3+ZXrE7m50obKvUYeGOWBUR6Y9pr0Sf1k4ne/QjqfJdpQwcgDozwwygMTH9vcWj+X7m8l9mpJrBE8MfLAKA+M8sCs1W12c9LkmSdb82TvsMa8i5EHRnlglAdmVLeZnjO73XuyVdtZeVflmYn6Uvt53xDlgVEemLVzFdK1i5MxwAqTObzJuOWNymcx8sAoD4zywETqNtPn8iT2WEmfz5BY22DkgVEeGOWBaffzJvN279DPu7V58nkn+8VMMPLAKA+M8sC06zYnOWzyuz/pbz15b7oNJ0YeGOWBUR6Yaz8vXfeRqPOckB7PvP3d9Xn/KcoDozwwa3WbJ4mzFxLr/yok5u0q2M/75igPjPLAlMY2b2ztQ1Zhaz+XG+l16O63KX+hPDDKAzOq2+zyZF5MMNk7pnvN7foTIw+M8sAoD0y8bvNGeu3a1t5mFbbWb3S/TyMPjPLAKA9Mu5/X5cnxz5NEfemT+5M5n/fNUR4Y5YF52fl5t+dUru/emz4LqctWv9DIA6M8MMoD87Jz0tN7lU3akLg3Mb5q5IFRHhjlgVnbb7PC+Tue2J/sVfNwk/ZMcr+RB0Z5YJQHpnSWUKKWMrGnc+KMui7dWpUJRh4Y5YFRHphSzjtJ1FVW3pU4u6BC4izZrVxr5IFRHhjlgWnnvC2eHJN88ny+J+cpjTwwygOjPDAvy3mJs34mbThJ99u25g6NPDDKA6M8MO2cl66lTJyNV3lO5fobk/XmlX2obxh5YJQHRnlgSjkvUcO5tY/l7Zottvaq3qq7OTHywCgPjPLAvGx9nswx8sAoD4zywCgPjPLAKA+M8sD8AW1m6VebATLXAAAAAElFTkSuQmCC" alt="QR: Strava route leg 18"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — ELKINS — BUNCH CITY PARK</b><span>mile 108.62 · Major exchange 3 · team note says “Elkins”, official guide says “Bunch City Park” (same stop, in Elkins)</span></div></div>
+</section>
+<section class="chapter" id="sec4">
+  <div class="secbanner">
+    <div class="secno">SECTION 4</div>
+    <h2>Legs 19–24 · Elkins (Bunch City Park) → Lake Fort Smith State Park</h2>
+    <div class="sectotals">32.0 mi · +2,380 ft</div>
+  </div>
+  
+<article class="leg" id="leg-19" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">19</div>
+    <div class="titleblock">
+      <h3>Tasmanian Devil</h3>
+      <div class="meta">mile 108.62 → 114.34 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">team says</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>5.72</b> mi</div>
+    <div class="stat"><b>+429</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:38%"></div></div><span class="mval">75 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Leaves the city and heads out onto a paved road. Very dark. Mostly flat with some light-to-medium rolling hills. More moderate.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Very dark</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386102804902513750" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsklEQVR4nO2dQZIbIQwAs6kc/f+X+u5cuVAlRRK4J93HXYYZu0urBQTz8/l8fgmT37cfQP4d5YFRHhjlgVEeGOWBUR6YP7tfvF6v9pu93+/2PiPPud531z7ybOu1u/YnvzcjD4zywCgPzDbnrVRyVSQHRHLJjl0+i/w8+5y79rs+p783Iw+M8sAoD0wo561kx1UVImOyXZtsro30H7lv9l67+0Yw8sAoD4zywKRz3jeQHc9l5zMr48WTGHlglAdGeWC+LudVxnbZcdguh3Wt7U1j5IFRHhjlgUnnvJPzlpH22bxVmausfPaJvGjkgVEeGOWBCeW8iVrElez8YXY9r6suJtv/9Pdm5IFRHhjlgfn5hj3pXfOZ2f67cG5T0igPjPLAbHNedhxTWW+r1EN27Umo1Krcqnkx8sAoD4zywIRy3krXGtjJsd1E3qrk5sgzRK418sAoD4zywGzX8yq5atf+Vg3IdD5b2fUzMRY08sAoD4zywIzPbVbmHk+Ot7pqUk7+r2DkgVEeGOWBGT+HpbJP7uSZL5XazpWuOeEIRh4Y5YFRHphQ3ebEvNzE2dCV9b/Ks2X77BoLGnlglAdGeWBKNSy79l3ngVXmQrNM72fIEvksRh4Y5YFRHpi2cd5K1zgmS9cc6Tfs0zDnPRzlgVEemPT787J/6yvjp4lxXqSuctd/lok1vBUjD4zywCgPTPr9edmxWqWeJdJm4t0IlWtPzusaeWCUB0Z5YEL787reFZcdY0X67KJrvrErL0Yw8sAoD4zywJTO25w+c6tr/1/X/GTk2bJtdjjOezjKA6M8MOm6zZWuPDR9lliErn3oJ8/eNPLAKA+M8sCU6jazTO89P7nfYGLdLnKvFSMPjPLAKA9Mum4z2yZy7cT78Kb3Ak7Mr2bbG3lglAdGeWDaxnkTY5qT71XYXZu9bxeu5z0c5YFRHpij789bufVOoun7RujK60YeGOWBUR6Ya+9JP1nrkX2GiWu75ldXjDwwygOjPDClus0s0+cyT5y3efKdR+5J/49QHhjlgUmfw5Kl6wyzyrXT+TJyr2ybCEYeGOWBUR6YUM5b6dpXMJHnJs63rNTvVPqMYOSBUR4Y5YFJ57wuutbzuvaDV+pO3ZMuaZQHRnlgruW8yp683c+zueTWuK1rL4SRB0Z5YJQHJp3zpmspJ/ZFRPqptJ+oT7Fu8+EoD4zywIRy3kQN58lalQq31h3NeQ9HeWCUB+ba/jypY+SBUR4Y5YFRHhjlgVEeGOWB+QtUPgukHr6ONQAAAABJRU5ErkJggg==" alt="QR: Strava route leg 19"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-20" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">20</div>
+    <div class="titleblock">
+      <h3>No Worries!</h3>
+      <div class="meta">mile 114.34 → 118.7 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.36</b> mi</div>
+    <div class="stat"><b>+187</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:21%"></div></div><span class="mval">43 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Easy breezy! A few hills.</p>
+  <div class="tagrow"></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386103842125470806" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADtUlEQVR4nO2dMZLbMAwAc5mU/v9L3Tstr8AMcAAkr2+3vFCURjswQoogv16v1x9h8vfuB5CfozwwygOjPDDKA6M8MMoD8y/6h8fjMX6z5/NZan8+w3lt9GyZNpnnie6b4cr3ZuSBUR4Y5YEJc95J9Xf/JMoB1XzWyUPb/WfuWyWTO408MMoDozwwqZx30hk/ZfrMjL0y10b9dPJfZnwZsfHejDwwygOjPDDlnLdBlFemxkmdOc9OP9sYeWCUB0Z5YG7LeVNjo0z76jgy035q/rODkQdGeWCUB6ac87Z/6zfGZBGdOdXoGTptqhh5YJQHRnlgUjlvYx4vM2c49e2t8/eTaj7env808sAoD4zywIQ57665u401JtX+o/YZrnxvRh4Y5YFRHpivaB+Wu9aSVOcYO3OS1X6ufLbMOzfywCgPjPLAlHNeZ25wO/9F126s1dyoVbdW4RehPDDKA1P+njf1rWvqvplrTzr5eKpWL+qn2qeRB0Z5YJQHJjXOi9jYZ+TK9ZbRfafGsh2c2/xwlAdGeWDG6vM6OXKqBnxqrBaxvf6lWiNo5IFRHhjlgSnvt9mZi+vca2MPsI168+3x34mRB0Z5YJQHpjW3eXJlToraZ5g6S2Hjvpn2J0YeGOWBUR6Y9XMVNuYYq2cJbdRaRHRyavX5jTwwygOjPDCt73lT59hF11bbT+2xEnHl/p8ZjDwwygOjPDDluc2pOcyIK89cfYc69+q1J0YeGOWBUR6YVk36Nu98pk8nj07lTiMPjPLAKA/M2LkK2+epdp5nOz9N9VNtb+SBUR4Y5YEJx3kn2/XdG0zluStr3qsYeWCUB0Z5YMJx3kZteMRUvpk6x25qHc02Rh4Y5YFRHpjWus3quT+da7fXxXTGYZn/H2zU1xt5YJQHRnlgxr7nddpPzR9u5NepWvWNc/WMPDDKA6M8MOt7TE+db9DpM8P2PiwZPEvoF6E8MMoDk1rDssFG/d/U+s+NOnrnNuUbygOjPDCpNSxTnL/j77zv5dS+aBt7ypwYeWCUB0Z5YNb329w+P7aaF7fPwOvk6Wq+NPLAKA+M8sCU17Bsnxu3vfd0h+qZSp0+Mxh5YJQHRnlgWrUK20yd25dpP/VNrvqtrpMvjTwwygOjPDBvkfOmzkCozn9u18538Hveh6M8MMoDs16ft83UmpHqve56hhMjD4zywCgPTCrnbazhrK4l6ez5cjKV57b3j3YNy4ejPDDKA3NbfZ70MfLAKA+M8sAoD4zywCgPjPLA/AePP9Nz2xv3QAAAAABJRU5ErkJggg==" alt="QR: Strava route leg 20"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-21" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">21</div>
+    <div class="titleblock">
+      <h3>Wallaby</h3>
+      <div class="meta">mile 118.7 → 122.93 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.23</b> mi</div>
+    <div class="stat"><b>+211</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:25%"></div></div><span class="mval">50 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Very easy run — smooth road and flat. The only lookout worth noting is an uneven bridge, which can pose a challenge running at night.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Uneven bridge at night</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386104079323906150" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrklEQVR4nO2dQVIjMQwAgdpj/v/S3LNX70GFhKQZOtt9BGObdCkqeWzP5+v1+hAmX3dPQH6O8sAoD4zywCgPjPLAKA/Mn+gXj8djfLDn8/ntWFGbiMw8zz6j9plxM/O88nMz8sAoD4zywIQ576Sah046OSkzbuZvN3JVps/tz83IA6M8MMoDk8p5J9UcVu2zWpNFbTLzrPafGbc6VjRuBiMPjPLAKA9MOefdRaeeq65ndurFKzHywCgPjPLAYHJehmodFuWwqWd72xh5YJQHRnlgyjlv6vt9aq2vmrc6a5Wd/30jLxp5YJQHRnlgUjlvYy/iyca6ZacOm+p/+3Mz8sAoD4zywHz+hjPpndxQrQU3cG1TyigPjPLApM7nTa0TbuyHzMxnam7Vcbef+Rl5YJQHRnlgwjqvc04gaj/V/8Yek6k11YhOPeqZ9DdEeWCUByas8zq5Kmq/8b2fYTufbcwhg5EHRnlglAemvIels79jar10Kj9t39US9d/5HE6MPDDKA6M8MOX7Njt5bmqsk6nnZJ29nSeZ3DZVRxp5YJQHRnlgUmubndpr4wzc1H0rmf6r7adquwxGHhjlgVEemEvrvKn7Kjf2Rk7VXtt7f06MPDDKA6M8MGN1XqafzM9Pqu8umJrnxjmN6rgZjDwwygOjPDCtOm97P0uGqXcPdZ4pVseawsgDozwwygNTfn/edh0zde7tyr2j0Xw2zuyfGHlglAdGeWDK5/My7aeeaZ1s7+GcypGZ+Xg+T5RHRnlgWvdt3pWHqu037vPcuIcl6t867w1RHhjlgUndPbZd90yd0c7MIWL7HLr3bco/KA+M8sCM1Xm/7dzeNlO5rfO/G3lglAdGeWDKd0xvsHFv9fa7FCKufCeDkQdGeWCUByZV5029A+HKd+5s1F4bz+Q6f2vkgVEeGOWBaT3PO5k6A55pH80z0//2PDNM3Zdm5IFRHhjlgbntPelX3h+dmcN2DbexvmrkgVEeGOWBufR5Xmdv5JVrodG4Ufu77j8z8sAoD4zywJTvYamy8e6hTP8nU+cfMlTvP+tg5IFRHhjlgUnlvJOpNcnqHSWZNhvP3jbeATSVa408MMoDozww5Zw3xdRd1VP7Qol7U408MMoDozwwt+W8jWddnTtCT+6q26oYeWCUB0Z5YMo5b/s7/cq7qjfudunUoyfu23xzlAdGeWBSOW9jD+f2mbwptu8Y83zef4rywCgPzG3n86SPkQdGeWCUB0Z5YJQHRnlglAfmL1N18x3eZfXUAAAAAElFTkSuQmCC" alt="QR: Strava route leg 21"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-22" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">22</div>
+    <div class="titleblock">
+      <h3>Plumb Tuckered</h3>
+      <div class="meta">mile 122.93 → 127.77 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">team says</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.84</b> mi</div>
+    <div class="stat"><b>+944</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:98%"></div></div><span class="mval">195 ft/mi</span></div>
+    <span class="chip climb">▲ 3.0% avg · 4.8 mi · 765 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">Gravel / pavement · close to half and half</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>One steady climb the whole way — very gradual, but steep at times. It just keeps going! Hard to hold the heart rate down. Be ready to climb and go slow on this one. Leans towards hard.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Sustained climb</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386104596854165590" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrklEQVR4nO2du24jMQwA4+BK//+Xuve1agSQR1Lawc2Uyb7iAc1QD+7r+/3+CJPf2w8g/47ywCgPjPLAKA+M8sAoD8yf3S/e73f7zT6fT/s1I8+53nd3fOTZ1nN3x5/83Iw8MMoDozww25y3UslV2RwQySsru3wW+fn0c05/bkYeGOWBUR6YUM5bydZVlWtGarLsuZXrR+6bvdfuvhGMPDDKA6M8MOmc9wSy9Vx2PLNSL57EyAOjPDDKA/O4nJedV9udm63z1nO75vamMfLAKA+M8sCkc17X93vXWo9s3uoaq8x+DhN50cgDozwwygMTynkTaxFXKutQIvN5lfx0cl1MFiMPjPLAKA/M6wl70itjlZWx0CxPmMNbMfLAKA+M8sCE9ud1jRNOrIeMPM/Es3XVghWMPDDKA6M8MNuc1/XdXVkPkq3tIs/ctVazskdiR/bvNfLAKA+M8sC07c/rqnUqY5iRa07UmpE8OlELGnlglAdGeWC283ld+wEq6z5u5aeuNSkTewRXjDwwygOjPDClOi9b30TI5siuebKuMduu/xUiGHlglAdGeWAeN58XoWv+L/s82TzXdZ0dRh4Y5YFRHpj02GaEiX5gO7rWRp58H0JX700jD4zywCgPTGh/3sScWeT4LJU5v4l5x+z1s/nbyAOjPDDKA5N+f17X+F4XXe8eOtnPpQsjD4zywCgPTLoPy0QvrpNjnhNrR08+w4qRB0Z5YJQHJl3n7ajkj6533VWY2D9X2TsfwcgDozwwygMT2qswUQ9N9Gfp6pkyUbNO7LUw8sAoD4zywLSNbXYdn+XkXvXKdSYw8sAoD4zywIy/S6iyfjLLRK/LlezfMtHLZsXIA6M8MMoDU1q3OVEDZcdLu/YCTo9nTuRUIw+M8sAoD8zI/ryVW+/i6Tp3ZaLPdeV4Iw+M8sAoD0yozqvUTJW+YpXjb9VeWSr51cgDozwwygNz7T3p03vXKs8wcW7X+OqKkQdGeWCUB2ak3+aOW700s/daOfnOo2z+M/LAKA+M8sCU9udFmOhJdvKdeVmy/c8qGHlglAdGeWBK78/bUel72bUutKtOraznrFwzgpEHRnlglAcmnfO6yPYoyfYwu9ULdGIN6g4jD4zywCgPzLWcV6nJuvLH0+q2LEYeGOWBUR6YdM6b/k7v2ksXOf5k77SJPpxGHhjlgVEemPHeYxPXnH7Hwu6aE2On7s/7T1EeGOWBubY/T+oYeWCUB0Z5YJQHRnlglAdGeWD+AriO2LMg1jPwAAAAAElFTkSuQmCC" alt="QR: Strava route leg 22"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-23" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">23</div>
+    <div class="titleblock">
+      <h3>Greased Lightnin'</h3>
+      <div class="meta">mile 127.77 → 135.94 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>8.17</b> mi</div>
+    <div class="stat"><b>+156</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:10%"></div></div><span class="mval">19 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Starts off flat and smooth, but gets very rough and rugged about 3 miles in and stays that way until the end.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Rugged after mile 3</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386104875912717884" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADtElEQVR4nO2dwZLjMAgFJ1N7zP9/ae7Zqw9LFSxgu5Pu44xsKX5FUUiAHu/3+0eY/F69APl/FA+M4oFRPDCKB0bxwCgemD/RP57P5/hkr9frn+/P/L26tsyz0ZjMXJ21VYnm0vLAKB4YxQMT+rwjGd8QkfEZGf+XoeM7ozGd377x3Y5oeWAUD4zigUn5vCOdGKtDJ66aGrPtw6rv1/LAKB4YxQNT9nlTVGO4KCarxoWd+LK6L7qNlgdG8cAoHpjLfF5EZy+0sy8azRVxB/+n5YFRPDCKB6bs8yj7lpl1dmK+6nfY+G5aHhjFA6N4YFI+byMXMTNXJ8+zkxcasZFf2kHLA6N4YBQPzOOqmvQ71BtM4d6mlFE8MIoHJlWf1znfmvJt0fipc7upuojOGo5kvr+WB0bxwCgemNDnTZ1pXVXf1pnrzPyXzrfV8sAoHhjFA1PuwzK1l1j1Z504LPOeq87nIl9rnPfhKB4YxQNT7sMy5c+m9i036vOidW7kwnTGaHlgFA+M4oEZq8+byjeZWsPGvJkYMWKjL5qWB0bxwCgemDBvcyrG6sRPnfdEYzJcVXtg77EvQvHAKB6YVK3C1B7gke39z6m9yu280E5squWBUTwwigemVZ/X2T+c8j1T9QbR2jrjO2vIoOWBUTwwigemdX/eRt+T6p0+GzFoho140Tjvi1A8MIoHJnWed4e9ysxcU70xI6beP7XPqeWBUTwwigemXJO+Ebts9xI7s1dZ1S927qrV8sAoHhjFA1OO86IxR7bvVc88e2ZvsM57IozzPhzFA6N4YFp5m2fet5Bhyi9O3Z+3Xe+h5YFRPDCKB6aVw3Jko+Z6Y/zUOrd9v3ubH47igVE8MKnzvOqYqTO/7XtcM+vJ/D1aw3Z8rOWBUTwwigdmrPdYxIb/68w7dW9RtTf0Riyo5YFRPDCKB6bVe6zK3XqjRGvIPLvRn8XeY1+E4oFRPDCtvc0OZ9YPdObNrOGq+gotD4zigVE8MGM5LBnO7AE9Fc9FTN3DZ++xL0XxwCgemNR53pn1dht9NTPzTvmnzpjq79LywCgeGMUDU85hufOdsdH7t+OtqX3L6m/X8sAoHhjFA7OetxmRyXusPtvxHxv1fBHmsIjikVE8MJf5vCMd/xT9veq3NnpbR0zFyloeGMUDo3hgyj5vI59z4868qXq+zrPmsEiI4oFRPDApn7eRw9nJezxyt1yYKp3+n1oeGMUDo3hgWveky7VoeWAUD4zigVE8MIoHRvHAKB6Yv6o/3FVmhpsFAAAAAElFTkSuQmCC" alt="QR: Strava route leg 23"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-24" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">24</div>
+    <div class="titleblock">
+      <h3>Bushwalker</h3>
+      <div class="meta">mile 135.94 → 140.6 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.66</b> mi</div>
+    <div class="stat"><b>+453</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:49%"></div></div><span class="mval">97 ft/mi</span></div>
+    <span class="chip climb">▲ 3.7% avg · 1.6 mi · 310 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Even though it's pavement, it was in very bad shape at times — pay attention. A lot of hills and very desolate. You will walk some. It felt good to get to Lake Fort Smith and be done with this one.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Broken pavement</span><span class="chip warn">⚠ Desolate</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386105352317011046" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADtUlEQVR4nO2du3IbMQwA40xK/f+XqldaNpgAAXCnlXZLm76jtQNh+AD583q9fgmT33d3QP4f5YFRHhjlgVEeGOWBUR6YP9EvHo/H+Muez+c/33W2yfw8en6m/9X+ZLjyczPywCgPjPLAhDnvpPq9fxLlgGpu6OShTC7sPD/z3iqZz8fIA6M8MMoDk8p5J53xU6Z9dWwXtY/60HlmZnwZsfG5GXlglAdGeWDKOW+bqTFWNW9Ffeg8ZxsjD4zywCgPzG05r7qW1hlLZeYtzzaZ9lO5uYORB0Z5YJQHppzztr/rM2OsTvuTai7s/O8bn5uRB0Z5YJQHJpXzNubxOns1r/x5tf9Rmw2MPDDKA6M8MD931aRP1QN09ph02ju3KS2UB0Z5YMKcN/X9/g75KUMnz230LfOZG3lglAdGeWDKOa8zN7jRJmJ7r+ZGrbq1Cl+E8sAoD8z63ObGeK6zTrZxFszUz6t9NvLAKA+M8sCkcl41D03tAen8bWduc2os28G5zQ9HeWCUByZ13mb0vZ/5fr9y38fGGOtkaj0volojaOSBUR4Y5YEp1ypsz0luzAFmnr/xnKj9FEYeGOWBUR6Y1nmb0TkpU+OeiO2xWqafG3c4ZNqfGHlglAdGeWDW71XYOD96Y30xopMLq8+p9t/IA6M8MMoD0zpvc2OP5V01Bhvzk9v3Fhl5YJQHRnlgUvV5J9tzmNu1d5l3XVnnXv3bEyMPjPLAKA9Mqyb9ZKN+vDOfuU1nn8tU7jTywCgPjPLAjN2rMHWf6vbaYfTezHMiOvt6Ou818sAoD4zywJTPYZmqPe/sQ9mez9w+R831PFEeGeWBSdWkZ7hr/a/6nKm9lxFXzq8aeWCUB0Z5YMq1Cp1cWD3PZWqtbmpNMdP/qTVI97B8OMoDozwwrfW8zhzjlbUBU7WAU3O5U+NaIw+M8sAoD0yrViHDlfcqXFl7vjGH6V1CX4TywCgPzFvck36yXRcRsVFLcDJV+3Fi5IFRHhjlgRnbw5Jh43zO7fM2p9Yvq33z7LEPR3lglAdm/bzNqdw5VZ+wfQdeJ09X86WRB0Z5YJQHpnWvQsTUHo2pOu7t+xzumlM18sAoD4zywLTOmH4Hps5b2diTuV2DYeSBUR4Y5YF5i5w3tac/U1eXaX9XP6tzsEYeGOWBUR6YsfM2N9i+J+/K/yXzXmsVvgjlgVEemFTO29jD2bnTLrMHJGJqTFZl42xuIw+M8sAoD8xt9XnSx8gDozwwygOjPDDKA6M8MMoD8xd72/dJsd+trwAAAABJRU5ErkJggg==" alt="QR: Strava route leg 24"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — LAKE FORT SMITH STATE PARK</b><span>mile 140.6 · Major exchange 4</span></div></div>
+</section>
+<section class="chapter" id="sec5">
+  <div class="secbanner">
+    <div class="secno">SECTION 5</div>
+    <h2>Legs 25–30 · Lake Fort Smith State Park → Devil's Den State Park</h2>
+    <div class="sectotals">40.5 mi · +3,681 ft</div>
+  </div>
+  
+<article class="leg" id="leg-25" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">25</div>
+    <div class="titleblock">
+      <h3>Tester to Chester</h3>
+      <div class="meta">mile 140.6 → 149.01 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>8.41</b> mi</div>
+    <div class="stat"><b>+845</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:50%"></div></div><span class="mval">100 ft/mi</span></div>
+    <span class="chip climb">▲ 5.3% avg · 2.1 mi · 595 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>All uphill for 1.7 miles before a constant downhill to Chester. The downhill felt like it went on forever. Rated hard, and I definitely agree.</p>
+  <div class="tagrow"><span class="chip warn">⚠ 1.7 mi opening climb</span><span class="chip warn">⚠ Endless downhill</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386105554728989782" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsElEQVR4nO2dMXLjMAwA40xK//+l7p2WDWeAAKC8ym6ZoyXFOwgOJEE93u/3lzD5vvoB5O8oD4zywCgPjPLAKA+M8sD87P7h+Xy23+z1erVfM/Kc63134yPPtn52N/7k92bkgVEeGOWB2ea8lUqumsgBK7t8Fvn5SvY5I9ec/t6MPDDKA6M8MKGct5KtqypEarLdmMhzZq8fuW/2Xrv7RjDywCgPjPLApHPeBJGaKTI+m58iNV+2XjyJkQdGeWCUB+Yjcl4X2Tpsl8Mm5ionMPLAKA+M8sCkc970vGXlOpG8VZmrrNR8E/nSyAOjPDDKAxPKeZ+8DyWynpfNN5V1u90zTGDkgVEeGOWBeXxCT3plr0p2/W+Cq+Y8jTwwygOjPDCh/ryuecKJ/ZCR5+l6tux9p/e8GHlglAdGeWC2dV6l9tqN77p+V/94ZHxXbq7Uo/ak3xDlgVEemLb+vF0+6Kp1uvq7p/NZdn2x8v0YeWCUB0Z5YErnsHTtdYzkyIm50K6zWrKfrcwbrxh5YJQHRnlgRvZtdvUAnDzzpasG7ZoTjmDkgVEeGOWBGdm3eVVNVln/W+k6t6UyJnJfIw+M8sAoD8zIHpbKnOFV54FN9zNkifwuRh4Y5YFRHphQnXcyt02Mn1h3jHy2cn1z3s1RHhjlgRl/f97J+ix7Blhk7XBiPrYLIw+M8sAoD0x6Pe/kO+pWKmtyXfXoyV51923eHOWBUR6YtvcqTM8Bdu1P2TFRj0bez2B/3j9FeWCUBya9njexLnXVeS4Rpvdq7rDOuznKA6M8MKF9myffv3oyj6509Q9Mn7G5YuSBUR4Y5YEp1XkVJuY/T9I1P1mpcY08MMoDozwwpX2bXflmok9guo+w8gzZdb4dRh4Y5YFRHpiR/rzdmMj1p/ekZD+7crKnwvW8m6M8MMoDM7KeV1kDi4zPfnaiV71C1/8VjDwwygOjPDCXvSf95PnRkWeY2Fe5G7/iOSz/FOWBUR6Y8XNYVta/411rYF39cxPnU0/3rRt5YJQHRnlgQj3pE2c3V3Jq9pon+wqy559VMPLAKA+M8sCkz2HpmpOsvDMve80KE2eqdeVaIw+M8sAoD0zb2WNZuvb0d13z096ZEMHIA6M8MMoDc1nOq9Rku/zRdR7mVXVbFiMPjPLAKA9Mulchy/R7DKbP0qww0ZuxYuSBUR4Y5YEJ1XkTezinz5XuYvqstd0YexVujvLAKA/MZf15UsfIA6M8MMoDozwwygOjPDDKA/MLDbzs51+EeIcAAAAASUVORK5CYII=" alt="QR: Strava route leg 25"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-26" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">26</div>
+    <div class="titleblock">
+      <h3>Gumption</h3>
+      <div class="meta">mile 149.01 → 154.48 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>5.47</b> mi</div>
+    <div class="stat"><b>+958</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:88%"></div></div><span class="mval">175 ft/mi</span></div>
+    <span class="chip climb">▲ 3.0% avg · 5.5 mi · 851 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Take a left onto the main road out of the parking lot, immediately beginning a substantial climb. Once you reach the summit, bear left to transition to a dirt road for your exchange.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Climbs right off the start</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386105849832191250" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADyUlEQVR4nO2dQY7bMAwAu0WP+f9Lc0+v6oEAWZJ2Jpk5ZmVb8IBLSBaln9fr9UuY/L67A/L/KA+M8sAoD4zywCgPjPLA/In+8Hg8xh/2fD5L7c8+nNdGfcu0yfQnem6GK9+bkQdGeWCUBybMeSfV//snUQ6o5oZOHsrkws79M8+tknk/Rh4Y5YFRHphUzjvpjJ+qdHJV1IfOPTPjy4iN92bkgVEeGOWBKee8Dabyykk1b2X6U73PNkYeGOWBUR6Y23Le1FjwpDNvebZ55zx3YuSBUR4Y5YEp57yNXBXdPzPmy4zJIqq5sJP/Nt6bkQdGeWCUByaV8zbGN5lcMvXtrfN7h+1xoZEHRnlglAfm566a9KkxVudb4NS3w7sw8sAoD4zywIQ5b2rcc1d+mpp77NQCdvqWeedGHhjlgVEemPI4rzM3uNEmYnut5katurUKX4TywCgPTCrnddaGRHTWmHS+k23Mo079Xu2zkQdGeWCUByY1txkxtWYyc//o2o25zamxbAfnNj8c5YFRHphWfV51X7FMjUH1WVGbjbry7bUwmRrBEyMPjPLAKA/MSk16Zz/MTJupPcAy+5NV7zOVvzMYeWCUB0Z5YFo16Rvjp40xYnSfk+rcbCfPTeVvIw+M8sAoD0zrXIVqbjiJ5vGq10btN2otMn3rPKvafyMPjPLAKA/M+rkKnfxUnYecuk+GzhzmVD428sAoD4zywLRqFTbWbmxAqXPPXHti5IFRHhjlgWnVKkRs1NJNnY0+xVTNe/VZJ0YeGOWBUR6Y1ve8k+o6++jaKhu1dHedt1dtb+SBUR4Y5YFp7T12sr1PdJXt9S/b3ykzGHlglAdGeWDCcV4190T/x6fOKJjKGVNrTTN928bIA6M8MMoDUz5XYXuvyw4be1Jvn7dgfd6XojwwygPT2odl6jydqVzYyTFT85BXnsln5IFRHhjlgSmv25yqQ7jyvLoMV+4fHeFZQl+E8sAoD8xbnJN+MjV2rLJRS3Di3mPyD8oDozwwY2tYMlTXtmzMB3bWl2aYWl/j3mMfjvLAKA/MWH1eRGf/5Uyb6rXbc5idb37VfGnkgVEeGOWBWd9vc+P+1Wu36yXumlM18sAoD4zywKycn9dh6gy8qH30rKlvclful2bkgVEeGOWBeYucN7V3SbUufurMvM5a1szY0e95H4jywCgPTDnnbawriejkuQxTuarK1HlGRh4Y5YFRHphUzttYw9k50y6zBiRiI891zvmLcA3Lh6M8MMoDc1t9nvQx8sAoD4zywCgPjPLAKA+M8sD8BZpp7h+ensJIAAAAAElFTkSuQmCC" alt="QR: Strava route leg 26"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-27" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">27</div>
+    <div class="titleblock">
+      <h3>Chuck a Wobbly</h3>
+      <div class="meta">mile 154.48 → 162.15 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">team says</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>7.67</b> mi</div>
+    <div class="stat"><b>+818</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:53%"></div></div><span class="mval">107 ft/mi</span></div>
+    <span class="chip climb">▲ 2.3% avg · 3.0 mi · 357 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Arguably a hard rating. The hills were a beast and the terrain was difficult. There's a huge hill between miles 5 and 6 — you will likely walk some. Save yourself on the initial hills, because the last one is painful.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Beast hills</span><span class="chip warn">⚠ Big hill mi 5–6</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386106246970734140" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADwElEQVR4nO2dwXLkMAgFN1t7nP//0rnPXrmoCgLY7qT7mMiSxq8whQTS1+fz+SNM/t49Afk+igdG8cAoHhjFA6N4YBQPzL/TP16v1/hg7/d7vM/MPOO4p/aZucVnT+2vfG9aHhjFA6N4YI4+L9LxVRs+IHLyZ5m/R6rzzPS5/d60PDCKB0bxwKR8XqQaV1X7rMZkpzaZeVb7z4xbHes0bgYtD4zigVE8MGWft0HmW9+J56rrmZ148Uq0PDCKB0bxwDzC502tPVbjsNO4mbXKJ/g/LQ+M4oFRPDBlnzf1fZ/yYVW/NbVWWX0PG35RywOjeGAUD0zK5z0hDyXTPtKJw+7Ki6mi5YFRPDCKB+brCTXpU/tt1f6ruLYpYygeGMUDk6rPm1on7OSbTO3PTc1tKhbsoOWBUTwwigfmGOd16gRO7af6n6ofz7S/cv+v+nu1PDCKB0bxwKzX503Vbk/Vd1/pz2I/G7GglgdG8cAoHphUnLdRPzBVG7fhn6Z+b+bZzny0PDCKB0bxwKzEeZn2nXNSIlP7ZFO5nZ09xSpaHhjFA6N4YFJ5m1Prck/e/8uMVe2zE9tl2mt5YBQPjOKBad2rsLH2mGEjN7Izzynflnk2ouWBUTwwigemHOdFpvbqMuNO5V6emDq3c6MW4oSWB0bxwCgemPX78zbOSen0k9mHy/S/cf5nFS0PjOKBUTww5bzNjq/qfPe38z+nnt2eQ0TLA6N4YBQPzDHO2zhLeuoclu39vCn/tH0/g5YHRvHAKB6Ysfq8K/3QqU1kal1x49y1DMZ5PxzFA6N4YMpxXqc+byOvJNM+wxNqJKrPanlgFA+M4oFJ1aRPxTQbfq7af+fZzhlpU74/ouWBUTwwigdmpT6v2r7j5zZqDO6K+arvU8sDo3hgFA/MSn1eps2UrzqxkV86lddTnYNx3g9E8cAoHphUnNdZr5va/8u0j0ydETO1r5mZW2bciJYHRvHAKB6Y2+5Jv/L86MwcNvIqT+0jnsPyS1E8MIoHpnxnbIftO3o2ztu88s6jqv/T8sAoHhjFA5PK29zwJZ09wk6fp/ZX3kk0NZaWB0bxwCgemJTPi2zk9Gf63KiLyNDJ5+z0mUHLA6N4YBQPTNnnTXFlruaVdQjbZ9NEtDwwigdG8cDc5vM24ryqL7krbjPOE8Ujo3hgyj5vO5dy6r66E9t3I2TOm55aH9bywCgeGMUDUz57bIrOeZhX1oxP3Y0wlXcT0fLAKB4YxQNzW32e9NHywCgeGMUDo3hgFA+M4oFRPDD/ASCNE3jJzncbAAAAAElFTkSuQmCC" alt="QR: Strava route leg 27"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-28" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">28</div>
+    <div class="titleblock">
+      <h3>Boondocks</h3>
+      <div class="meta">mile 162.15 → 167.3 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>5.15</b> mi</div>
+    <div class="stat"><b>+415</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:40%"></div></div><span class="mval">81 ft/mi</span></div>
+    <span class="chip climb">▲ 2.5% avg · 1.1 mi · 153 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">Half pavement · half gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Smooth sailing! Nice paved road, beautiful views. Some substantial uphill, but still moderate overall.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Views</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386106474653939798" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrUlEQVR4nO2dsXLcMAwF40zK+/8vde+0ajgDBHg67WW3tHmSfDswBhRBfv38/PwSJr/f/QDy7ygPjPLAKA+M8sAoD4zywPw5/eL1eq3f7Pv7e/2alee83vc0vvJs18+ext/5vRl5YJQHRnlgjjnvyiRXVXLAJA+d8lnl593nPI0/XTP9vRl5YJQHRnlgSjnvSreu6tKtyU5jtnJtJY9WSHxvRh4Y5YFRHph2znsC3XquW0dO6sU7MfLAKA+M8sA8LudNartuHXbKYVvv9tIYeWCUB0Z5YNo5b+v/+6T2Ov28kre25iq7JPKikQdGeWCUB6aU8+7MB921Id1cuPU8k/eFWxh5YJQHRnlgvp7Qkz7pN+jOQ054wju8K0YeGOWBUR6YY87rru+fvG+bzDFu9SRMeh7etebFyAOjPDDKA1Oq8yb5qZsvT2Mq1+xevzI+kZsrz1D5rJEHRnlglAemvQ9Lt07amofc6u++s9acPEMFIw+M8sAoD0ykztuq7e6stxJ7taS/KyMPjPLAKA/MaB+WrfUjibnTLpO1nVcqNe7WmhojD4zywCgPzKg/LzFfl1j/kniG7vhEHWnkgVEeGOWBKa3bPLG1prFyze59u6R76bpU/hYjD4zywCgPzLHO25qLm5w5cGf/wxPytHXef4TywCgPTPz8vDv7GSZ5dHI+Q/deWxh5YJQHRnlg2ufnJdYuXpmseamMSX82US+6bvMDUR4Y5YEpzW1OSJw/l9jTJLEeZ5IXKxh5YJQHRnlgbu3P65J4P9clvVbzhHXeh6M8MMoDM+rPu5LoMU/MH55I7H82wXWbH47ywCgPzOhchUR/+lYvXZr0Os/T+CtGHhjlgVEemLV1m3f2AySumTiToUv3OkYeGOWBUR6Y9vu8K1vv9tL7uaT3YUlcx/d5H47ywCgPTKnO656ZkDhXoTs+0ateuW+XSV408sAoD4zywLztnPR0r3r3GdJ1ZGKdp5EHRnlglAcmvg/Llev/8a35va3+ucR8Znpe18gDozwwygPT3oelS3dPr8S90vVi5V7dMRWMPDDKA6M8MGv9eVe29o+u3PfO921b99rKtUYeGOWBUR6Yds7bYrI39Ok6p/HpPoStXvsuRh4Y5YFRHpi35bwn7L35rrrNOk+UR0Z5YNo57wl7bt2ZL7u13en6Wz0SV4w8MMoDozwwpZyXWMM5OTPozj0wt9akJNbyGHlglAdGeWDe1p8nc4w8MMoDozwwygOjPDDKA6M8MH8BL6fp27wEUs8AAAAASUVORK5CYII=" alt="QR: Strava route leg 28"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-29" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">29</div>
+    <div class="titleblock">
+      <h3>Backwoods Boomerang</h3>
+      <div class="meta">mile 167.3 → 173.57 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.27</b> mi</div>
+    <div class="stat"><b>+281</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:22%"></div></div><span class="mval">45 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Lots of rolling hills with three big climbs — every downhill was met with a climb. Windy road with very little shoulder. Would recommend a flagger.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Flagger recommended</span><span class="chip warn">⚠ No shoulder</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386106720653876796" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsUlEQVR4nO2dMW4cMQwA4yCl//9S906rFATIkNTenGdKW7eSb0AT0lLSx/f39y9h8vvpAcj/ozwwygOjPDDKA6M8MMoD8yf6xefn53hnX19fpfbnGM7PRmPLtMmMJ+o3w83vzcgDozwwygMT5ryT6v/9kygHVPNZJw9tPz/Tb5VM7jTywCgPjPLApHLeSWf+VH1mJ1dFY+g8MzPOiI3vzcgDozwwygNTznnbZHJVhmreivrqPGcbIw+M8sAoD8xjOa/6Li2z9thZtzzbdMZwEyMPjPLAKA9MOedt/6+vzvM6OamaCzt/+8b3ZuSBUR4Y5YFJ5byNdbzqXOqpn1fHH7XZwMgDozwwygPz8dSe9Kmc0akx2W6/jZEHRnlglAcmzHlTa3pTNZBT7SM6a5sbY8t850YeGOWBUR6Y8jxvqsZkI8ecbNdqbuxVd6/CD0J5YJQH5uo876QzZ+q8J5uqF72558FzWN4Q5YFRHpixeV6VqTnTxtrmRp1LFdc23xzlgVEemFbdZmetcmPf28Zc7eTmu8PMd2LkgVEeGOWBKa9tTp3dHLXf2DM3VW/5ajnSyAOjPDDKA5PKeSfb86ft9cOn7lLY2P9g5IFRHhjlgSnfq1DNDZ28NXWX0M33jp2cWh2/kQdGeWCUB6Z13manxnLqLOmp2pONud32vUVGHhjlgVEemFTd5vaZy1NroZn2mX5v1qpUP3ti5IFRHhjlgSm/z8swlZOi8bzCnT5TZ3tW+zox8sAoD4zywIRrm1P3+Eyd1xyxfWbYU7k/097IA6M8MMoDU36fN3X/QPV92Kvtl8j01Xm+a5tvjvLAKA9MmPM2zr3MtMnUfVSf3xlPxNTZ2R2MPDDKA6M8MCt70iO21xg3zqSeWpvdyJFGHhjlgVEemNZehQwb9wdFdHLnVB1K5qy1KYw8MMoDozwwrbrNjXO/tutlIm6eHx3hXUI/COWBUR6Yl7gn/eTmvLDab+azEa5tyj8oD4zywKRqWKbI3KsQtY/YPm+zs766cabMiZEHRnlglAfm6p2xU/OhqXPCtmtzMmPoPNPIA6M8MMoD09qfF9HJSRt3LEzVj0Rje2pN1cgDozwwygOzXrfZ4eY+9I056Pb80sgDozwwygPzEjlv491eJp91zluZWvvNzB19n/eGKA+M8sCUc97GPrMOG2d1dvq6WfNi5IFRHhjlgVm5VyFi6q677XqTqb6ifr1LSJRHRnlgHtufJ32MPDDKA6M8MMoDozwwygOjPDB/Ac0QEUS4Yy5sAAAAAElFTkSuQmCC" alt="QR: Strava route leg 29"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-30" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">30</div>
+    <div class="titleblock">
+      <h3>Holy Hedgehog!</h3>
+      <div class="meta">mile 173.57 → 181.13 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#ec835a"><span class="dot"></span><span class="pl">official</span><b>Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>7.56</b> mi</div>
+    <div class="stat"><b>+364</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:24%"></div></div><span class="mval">48 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#2a78d6" title="100% pavement">pavement</div></div><div class="surftext">100% pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>A lot of gradual climbs for the first 4–5 miles. Take your time — you'll need it for the brutal descent into Devil's Den: switchbacks and high traffic, with over 800 ft of descent in the last couple of miles. Highly recommend a flagger. <span class="tiny">(rating from our sheet — missing in the note)</span></p>
+  <div class="tagrow"><span class="chip warn">⚠ Flagger recommended</span><span class="chip warn">⚠ Brutal descent</span><span class="chip warn">⚠ Switchbacks + traffic</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386107651228095036" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADqElEQVR4nO2dzXIUMQwGgeKY93/S3MPVFxcS0rezHbqPYdbjTZci/CP759fX1w9h8uvpDsi/ozwwygOjPDDKA6M8MMoD8/v2Dx8fH+sv+/z8/Ou7bs/cqPTzbPP2fOW9lX6+8vdm5IFRHhjlgbnmvJNuHjqZ5KTKeyufTeSqSpvp35uRB0Z5YJQHppTzTro5rNtmd0x2e6bSz277lfd233V7bwUjD4zywCgPTDvnpdnKQ5P5zMl48ZUYeWCUB0Z5YN4u593YWre7tXl+dmttL42RB0Z5YJQHpp3ztv6+T8Zet59X8tbWXGWXRF408sAoD4zywJRy3ivzQXdvSDcXbvVnsl64hZEHRnlglAfm5zvUpG+tt3Xbn+B6noxQHhjlgSnV523NE07GT1vrc+m+vXLPi5EHRnlglAfmmvO2/nZvzStW2qz0eWuv5iQ33+h+XyMPjPLAKA9Me5zX/Vs/GS+ebNV3J2rvKt8rMRY08sAoD4zywFzX87ZyVeX5xDzqjcl3mdSVJ9YsjTwwygOjPDDtuc0ukzWwClvrZFtztum9midGHhjlgVEemEhNenfMtHUm5+T86Fvfus+nx5EnRh4Y5YFRHpjRvQpb5zvf2py8t8vW+Cw9R3pi5IFRHhjlgSnV5yXmG59aL7yRvp8h8f8DIw+M8sAoD0xknHdrJ1HnsHX3UKL2Ln22mZEHRnlglAemfQ7LK++oO0ncT5S+VyHRhxMjD4zywCgPzNp5m4n8URmHJc68TtfjW58nyiOjPDCjexUS836Jc6WfqqNP19obeWCUB0Z5YEbnsCR+fpLet1J516RuYYJ7WL45ygOjPDAvvVdha1/MK++96743scbpet43RHlglAcmvm/z9nzlven7ENJ1CF267Rh5YJQHRnlgIvV5J+n9jd02u589eaoPjvO+IcoDozww7TOmt8Y6W2PExPhv0s8KW+elGXlglAdGeWAeuyc9Xbs26UPis1vzqydGHhjlgVEemNI4b4tEXfmk/du7Km1O9qne6OY/Iw+M8sAoD0ypPi+RS945b03YOke7gpEHRnlglAemXZO+tT8zfe7lu92T0G2zgpEHRnlglAemnfO22FoPq7SZrkNI3JlQwcgDozwwygPzWM7r5pJE/nhq3OY4T5RHRnlg2rUKXdL7MBO1g1vztze21jKNPDDKA6M8MGv3KnSZtJm+Y6HSZuJeIWsV/iOUB0Z5YB6rz5M5Rh4Y5YFRHhjlgVEeGOWBUR6YP2WYAlCr4PbvAAAAAElFTkSuQmCC" alt="QR: Strava route leg 30"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — DEVIL'S DEN STATE PARK</b><span>mile 181.13 · Major exchange 5</span></div></div>
+</section>
+<section class="chapter" id="sec6">
+  <div class="secbanner">
+    <div class="secno">SECTION 6</div>
+    <h2>Legs 31–36 · Devil's Den State Park → FINISH — Prairie Grove Battlefield</h2>
+    <div class="sectotals">26.0 mi · +1,952 ft</div>
+  </div>
+  
+<article class="leg" id="leg-31" data-slot="1">
+  <div class="leghead">
+    <div class="legnum">31</div>
+    <div class="titleblock">
+      <h3>Running from the Devil</h3>
+      <div class="meta">mile 181.13 → 187.4 · rotation slot 1 · runner <span class="runner-name" data-slot="1">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><span class="pl">official</span><b>Very Hard</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>6.27</b> mi</div>
+    <div class="stat"><b>+929</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:74%"></div></div><span class="mval">148 ft/mi</span></div>
+    <span class="chip climb">▲ 2.3% avg · 6.3 mi · 750 ft</span>
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:56;background:#2a78d6" title="56% pavement">pavement</div><div class="seg" style="flex:36;background:#eb6834" title="36% gravel">gravel</div><div class="seg" style="flex:8;background:#1baf7a" title="8% trail"></div></div><div class="surftext">½ mi trail · 3.5 mi pavement · rest gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Short trail coming out of the park with uneven terrain. Once you reach Hwy 16 it's flat until 2.3 miles in — then you climb!! Climb the rest of the way. Walked a few stretches to keep the heart rate down.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Climb from mile 2.3 on</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386108031698157654" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADq0lEQVR4nO2dzXLbMAwGm06Pfv8n9d296sIZoMAnZdPdo0NRtHcQDP+/Pp/PL2Hy++kGyL+jPDDKA6M8MMoDozwwygPz5/SH1+u1/rL3+71eZ6Wd1/eeylfadn32VP7O383IA6M8MMoDc8x5Vya5qpIDJnnolM8qn3fbeSp/qjP9uxl5YJQHRnlgSjnvSrdfVaGbhyr9tq1cW8mjFRK/m5EHRnlglAemnfMSbPWxuvmpkmu7/cU7MfLAKA+M8sB8i5x3ItH/O9VzfXZrbi+NkQdGeWCUB6ad87b+vz+Vt7bGKrfGbycYeWCUB0Z5YEo5L7EW8cpkHUplPm+Sn+5cF9PFyAOjPDDKA/P1Hfakb823devfwrFNaaM8MMoDc8x53X5Md81IYoxx0vearFV5as2LkQdGeWCUB6Y9tpmex5qst6zkm621mpM9Eie639fIA6M8MMoDc8x5kzmqSd8rvb/7zr7mpA0VjDwwygOjPDDxsc2t/Jdeb7m1JmUyptptj5EHRnlglAcm0s+blO8+uzVPtjUGWxlT3VpTY+SBUR4Y5YGJ7Env5stuH2vrvJUTd45tTt5r5IFRHhjlgVm7V+HOtR6JtZHp/mi3fOW7GHlglAdGeWBKY5tb+SnB1pzf1rmd3f7o5Hc28sAoD4zywLT7eZNxyxNb60omdw8l1lsm5vCuGHlglAdGeWDa9+d1971Nzs+slEncjZDIc1t79q8YeWCUB0Z5YOLnbSbGCRMkztWc5MUKRh4Y5YFRHph2P+9Kuj9UKd9tz6l8pZ7Ks916JvOdRh4Y5YFRHpj2nvT0edBbJPaqd+vxvE05ojwwygMzWrc5WTNS4c67e9Jjp5P3Op/3A1EeGOWBia/bPDHZe96tP3GXwol0m68YeWCUB0Z5YEr353VzRqVM4hzqSfnTs1cm9SSeNfLAKA+M8sBE5vMme8Ar5U/trNSffm+FrXFjIw+M8sAoD8xj96Qn7tbZakPi2cT4qpEHRnlglAem1M/bIpFX0udt3nnnkXvS/yOUB0Z5YEb78yp098al16qc2nDnnURb7zLywCgPjPLAtO8S2roTYOvcy0qdExJ7JLZyrZEHRnlglAemnfO22JoP25onu3Nt6hZGHhjlgVEemMdy3iQfbPWTnuq3ed6mKI+M8sC0c96d9+FVSOenRH7dOofTyAOjPDDKAxO/V2FS59aZnxMSe+orn5vzfjjKA6M8MI/tz5M5Rh4Y5YFRHhjlgVEeGOWBUR6YvyPA7SlvIXK1AAAAAElFTkSuQmCC" alt="QR: Strava route leg 31"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-32" data-slot="2">
+  <div class="leghead">
+    <div class="legnum">32</div>
+    <div class="titleblock">
+      <h3>Ridgy Didge</h3>
+      <div class="meta">mile 187.4 → 192.02 · rotation slot 2 · runner <span class="runner-name" data-slot="2">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.62</b> mi</div>
+    <div class="stat"><b>+317</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:34%"></div></div><span class="mval">69 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">50% pavement · 50% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Transition is about halfway, where you'll make a left. Rolling hills throughout, followed by a short climb to the finish.</p>
+  <div class="tagrow"></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386108373130219794" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsklEQVR4nO2dsXLcMAwF40zK+/8vde+0bDgBAjzf7Xm3tUTK3oExpAjo4+vr65cw+f3sB5D/R3lglAdGeWCUB0Z5YJQH5s/tB4/HY32yz8/Pf851u+ZG5TnPMW/XV+atPOd3/t2MPDDKA6M8MNecd9LNQyeTnFSZt3JvIldVxkz/3Yw8MMoDozwwpZx30s1hkzEra7LuvZPxK/N257rNW8HIA6M8MMoD0855aSbrtm5+6u61TvZgExh5YJQHRnlgXi7nnXTXVd3rbzls691eGiMPjPLAKA9MO+dt/X/v7g3e8lk3b032Kid7m4m8aOSBUR4Y5YEp5bzEWcSTxL7lZB02yW23Z0hg5IFRHhjlgfl4hZr0SW7o7kNOeIV3eCdGHhjlgVEemFJ93tY+YeI8ZOV5Es+2VSMxwcgDozwwygNzzXlb/7sT+4qVerjEe76tGokb3d/XyAOjPDDKA7NWn7e11pn0SamMmV5rbj1DBSMPjPLAKA/M6H3eVt1bd67E+clEr5ZEjeCJkQdGeWCUB2bt3Ga6R0ll3glbe7a3OooERh4Y5YFRHphvPbe5ldu2+q3c2OpDfaO7jnSd94YoD4zywFxz3lZv6K2znd15u6TXZF0qv4uRB0Z5YJQHprTOS6+rKiRqJ05eIU9387eRB0Z5YJQHpv39vK1+KJNvBlXGr4xTefeW2I/dwsgDozwwygNTqs87SZxdrIzf/Ubd1rf0uvcm1ou+z3tDlAdGeWAi5zZv93b7RFeu2SJRXzjJixWMPDDKA6M8MJH3eSfpM5OTd2wVtubdqkc8MfLAKA+M8sC0c96EV+6lksip6Z7URh4Y5YFRHpjS3ma6fiBdV5e+9yR9pvTEyAOjPDDKAxOpz6vwCv3Jts62dK+pXO/e5pujPDDKA/Ot7/O2rt86S1K5tzvv1jjmvDdHeWCUB6a0ztuqy966/vaclfHTz1lhK68beWCUB0Z5YJ72nfRE/cPkGRLnKm/Xn9iH5YeiPDDKAzN6n9clUQO+xda3ftL9z06MPDDKA6M8MO1zm126Pb26vVrS36jrMumj1sXIA6M8MMoDU8p5J1t16JOeZIn6vO68t2u2xqxg5IFRHhjlgWnnvC0Sa6ytHpsniW8mbGHkgVEeGOWBeVrOe4U9yWet2+y3Kcojozww7ZyXPktSyQeT9VOiZ3SFyfcZbhh5YJQHRnlg1r6r0CXRJyyRj9O9YKzP+6EoD4zywDytPk/mGHlglAdGeWCUB0Z5YJQHRnlg/gJyzvKlstgRWwAAAABJRU5ErkJggg==" alt="QR: Strava route leg 32"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-33" data-slot="3">
+  <div class="leghead">
+    <div class="legnum">33</div>
+    <div class="titleblock">
+      <h3>Platypus Plod</h3>
+      <div class="meta">mile 192.02 → 195.62 · rotation slot 3 · runner <span class="runner-name" data-slot="3">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>3.6</b> mi</div>
+    <div class="stat"><b>+99</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:14%"></div></div><span class="mval">28 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">Pavement / gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>A lot of curves in the road towards the end and no shoulder to retreat to — be careful! Recommend a flagger.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Flagger recommended</span><span class="chip warn">⚠ Blind curves</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386109824209567830" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADpUlEQVR4nO2dvXLcMAwG40zKe/8nvd5u2XAChPgk7WW3TPTD8Q4MgySor+/v71/C5PfdA5B/R3lglAdGeWCUB0Z5YJQH5s/uP16v1/jL3u/3X9+1u2ZHZZzrM3fXV95bGeeVPzcjD4zywCgPzDbnrXTz0Eo3B3Tz3y6fVf49Pc70z83IA6M8MMoDU8p5K926qkI3D1Xqtso4u8+vvLf7rt17Kxh5YJQHRnlg2jkvQbdm6tZz3fnMk3rxSow8MMoDozwwj8h5U3TrsF0Oe0I+q2DkgVEeGOWBaee8qXwwtfekm7em5iq7JPKokQdGeWCUB6aU867MByfznCsn85B37YvpYuSBUR4Y5YH5ekJP+tR6W/f5Jzxh/tPIA6M8MMoDU+rPm5on7NZPU/0DibFV3pve82LkgVEeGOWBKdV5J2tgJ7Vaun+8cv3U+t9JPWpP+geiPDDKAzPWn1ep1RK/9yvclc8qP4eTWtDIA6M8MMoD0z577KTOm9oPMrXfcmpPSuLvgMo1Rh4Y5YFRHphtzjv5XZw+r2T3rhOecHZMFyMPjPLAKA/M2Hre1P7JqTpyd02FxDlhifVLIw+M8sAoD0x7bnNq72JizezKs7BP7p3KqUYeGOWBUR6YyL7Nu3rXpvaXJr5tNLWuuWLkgVEeGOWBOarzntC7NvXtocT402ebGXlglAdGeWDa57BcWQPtrum+K7FHNNHzV7l3xcgDozwwygMTOW9zKrel+9tW0nluxf48UR4Z5YHZ1nlTtUiXdF9gl8S5axWs8z4c5YFRHpj2HpaVqXPIdu9KfCe2O7a7+gUrGHlglAdGeWDaZ4/tmMpP6f6/xL3dZ079rWDkgVEeGOWBKc1trpzUQ4m+9d29U99S6HJlvjfywCgPjPLAxOc2p87oSqyHVe7djS2NOe/DUR4Y5YFp72G5K//tmOoB35HosZva82LkgVEeGOWBue076enetZMxJO5N1LVGHhjlgVEemPZ63glXzk92OalN0zWlc5sfiPLAKA9Mad9m4uzmu3r70mPonn92gpEHRnlglAem3aswtT8zkecSa28n3wA6eWYFIw+M8sAoD8xYf16X7hldJ8+c+nZder9MFyMPjPLAKA/MbTnvrm/97J65kq7bPG9TlEdGeWDaOS+9l2Sq33xH4tsIFRLntBl5YJQHRnlgIt9VmHpm+hznCt1cdbKf016F/wjlgVEemNv68+QcIw+M8sAoD4zywCgPjPLAKA/MD3kx88UWYOBjAAAAAElFTkSuQmCC" alt="QR: Strava route leg 33"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-34" data-slot="4">
+  <div class="leghead">
+    <div class="legnum">34</div>
+    <div class="titleblock">
+      <h3>Gravel, Grit &amp; Bridge Biz</h3>
+      <div class="meta">mile 195.62 → 199.24 · rotation slot 4 · runner <span class="runner-name" data-slot="4">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>3.62</b> mi</div>
+    <div class="stat"><b>+136</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:19%"></div></div><span class="mval">38 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:100;background:#eb6834" title="100% gravel">gravel</div></div><div class="surftext">100% gravel</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Nice easy leg with a lot of descents. If you have anything left, you can make good time on this one.</p>
+  <div class="tagrow"><span class="chip warn">⚠ Fast descents</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386110156892772626" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsUlEQVR4nO2dwXLbMAwFm06P/v8v9T296sIpUODZWmf3mNiUoh0EQ4oAv76/v38Jk9/vvgH5f5QHRnlglAdGeWCUB0Z5YP6cfvF4PNYv9nw+/3mt62cqPz+NX7n/7v1UeOVzM/LAKA+M8sAcc96V7v/9K6cc0M0rkzxUyYWT8SvX7VLJnUYeGOWBUR6YUs67Mpk/dcef5KrTPUzGrMwvTySem5EHRnlglAemnfMSVOZYkzXGyZrnZJw0Rh4Y5YFRHpi35bzJ3KjyHu7088p3E+ucCYw8MMoDozww7Zx3txxQmZOd6ObCyd+eeG5GHhjlgVEemFLOS6zjbe3VnIwzyZcV0uufRh4Y5YFRHpivd9Wkb9UDTPaYTPak3AEjD4zywCgPzDHnbc173pWfunOsyXUT91Z55kYeGOWBUR6Y9jxvsjaY+MyJ9F7NRK26tQo/COWBUR6Ydh+WxP/6V+aYdC+YyrVO43Tv2cgDozwwygMTmeddSazvbc0FT9faysGTPSyubX44ygOjPDDxfpvdPimT+0nM1a5s9QI90a0RNPLAKA+M8sBE6vMSe14SeWWr58uJrTnoCSMPjPLAKA9Mad/mlUT/lMl3E/szX7luOXlWRh4Y5YFRHpj4uQpb+WNr72WX7jiJvaaubX4gygOjPDCjfpvd2rVuznhlj5VEHXr63CIjD4zywCgPTGnfZrpfV7pHF6XOvfLdK0YeGOWBUR6Y9vu8E1v7IU/c7UyfRN+W7rWMPDDKA6M8MMe1zUmPldM4W6T7uXTz07t6xxh5YJQHRnlgSvV5k3dj6Zq5K4k8Nzmrr8Lk/aKRB0Z5YJQHZrSH5cTWnpHE+a5b1530MNvCyAOjPDDKAxOpSb+yNW+bsFUnsFVXZ32eKI+M8sC0c15iXlW51uTzlRyT6LE56bVWwcgDozwwygMT6cNyGmerN1hiv0yib/WJrXoPIw+M8sAoD8ytz0lP18+dxrxDrYVrmx+O8sAoD0z8XIUr3bW+RN/L9N6TybzN3mM/COWBUR6YeL/NdH1b4oye9Ll3Wz3JjDwwygOjPDCjPSwn0jmyOw9LnA1UOd98MmYFIw+M8sAoD0ykPm/CK88b6q61JurrJ/nSyAOjPDDKA3OLnNfd09F9J7d1Zl6iv3Zl7uj7vA9EeWCUByZekz5hq7ZhMv7pWpPPbJ1nZOSBUR4Y5YEp5bzEHs5EH6/Eu72t/ZyJvTlGHhjlgVEemLfV58kcIw+M8sAoD4zywCgPjPLAKA/MXwEw2Qe7GLa0AAAAAElFTkSuQmCC" alt="QR: Strava route leg 34"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-35" data-slot="5">
+  <div class="leghead">
+    <div class="legnum">35</div>
+    <div class="titleblock">
+      <h3>The Holy Roller</h3>
+      <div class="meta">mile 199.24 → 202.27 · rotation slot 5 · runner <span class="runner-name" data-slot="5">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#0ca30c"><span class="dot"></span><span class="pl">official</span><b>Easy</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>3.03</b> mi</div>
+    <div class="stat"><b>+212</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:35%"></div></div><span class="mval">70 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:50;background:#2a78d6" title="50% pavement">pavement</div><div class="seg" style="flex:50;background:#eb6834" title="50% gravel">gravel</div></div><div class="surftext">½ gravel · ½ pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Start on dirt with a steady incline, finish on pavement with a decline. Next to a busy road — stay alert!</p>
+  <div class="tagrow"><span class="chip warn">⚠ Busy road</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386112051238968892" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrklEQVR4nO2du24jMQwAL4cr8/9f6t5p1RAgj6TWE8yUyVqr9YAm9ODq6/1+/xEmf5/ugPw/ygOjPDDKA6M8MMoDozww/6J/fH9/j9/s9XqNt5np53nf6PpM387PRtff/N6MPDDKA6M8MGHOO+nkqkwO6OShKJ9l/l7tZ3R91Ob292bkgVEeGOWBSeW8k+q4KkOUnzK5MLpmKtdm8miGje/NyAOjPDDKA1POeRtUx2edv59kxnzV8eJNjDwwygOjPDAfkfMyTK3bRW2en/2EfJbByAOjPDDKA1POeVP5oDo3mJn/zOStqbnKKht51MgDozwwygOTynk388HUvGVnHvKpfTFVjDwwygOjPDBfn1CT3skN1RqDDp8252nkgVEeGOWBSdXnTc0TboznMv252bebe16MPDDKA6M8MGHOm/rtnppXzLSZ6fPUXs1OjURE9XmNPDDKA6M8MOVx3kbt9kbtWqYPU8+Yea6NsaCRB0Z5YJQHJlzP6+Sq6lgqw838tJGbN74rIw+M8sAoD8zYvs3qb31nXS1z3ypTc7bbezVPjDwwygOjPDCp9bwOGzVwU+9bybTfaWe7tsHIA6M8MMoDs3KuwtSa2c29kZ33c27cK/MsRh4Y5YFRHphUfV6nbqHDxnsyI7br0Dfyt5EHRnlglAemPM6r/i5PjWmmcm31DIdOftp+t5mRB0Z5YJQHprxvc2rvZZWNfZ7b5yps9OHEyAOjPDDKA1OuSY/YPvfn02r4qu2cWJ8nyiOjPDCt9byp/Y3RvaI2t2vMo/tm+lltJ8Jx3i9HeWCUByY1t5lhqtZ7at1uo//R9dv5L8LIA6M8MMoD03rf5sY5PtV2nqof2K4FzLRp5IFRHhjlgSmP87bHN9t7T6L+3MzTmeud2/zlKA+M8sCU1/NOts/o6bCxv3RjTa7zWSMPjPLAKA/M2Dump2rAM9dHfci0v93PKaxJ/+UoD4zywDx2Tvp27VqnDxuf3ZhfNfLAKA+M8sCM7dvMsH1+0HaNRLVvG+8/OzHywCgPjPLApM4S2sglnbx184y6Kp3+VzHywCgPjPLApHLeyc33Z2b6cLZz89yi6JqpNjMYeWCUB0Z5YMo5b4pq3tquQ7i5N3UKIw+M8sAoD8xjOa+TS6bGSZ82bqti5IFRHhjlgWnVKmTYPsfg5rs0n7o+wsgDozwwygOTGudtzMtt1+RNMbUnpbNOGWHkgVEeGOWBeaw+T/oYeWCUB0Z5YJQHRnlglAdGeWB+AJnjAbTlekqxAAAAAElFTkSuQmCC" alt="QR: Strava route leg 35"><span>Strava route</span></div>
+  </div>
+</article>
+<article class="leg" id="leg-36" data-slot="6">
+  <div class="leghead">
+    <div class="legnum">36</div>
+    <div class="titleblock">
+      <h3>Finish Line</h3>
+      <div class="meta">mile 202.27 → 207.16 · rotation slot 6 · runner <span class="runner-name" data-slot="6">—</span></div>
+    </div>
+    <div class="badges"><span class="pill" style="--pc:#fab219"><span class="dot"></span><span class="pl">official</span><b>Moderate</b></span></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><b>4.89</b> mi</div>
+    <div class="stat"><b>+259</b> ft</div>
+    <div class="meterwrap"><div class="meter"><div class="fill" style="width:26%"></div></div><span class="mval">53 ft/mi</span></div>
+    
+  </div>
+  
+  <div class="surfrow"><div class="surfbar"><div class="seg" style="flex:80;background:#2a78d6" title="80% pavement">pavement</div><div class="seg" style="flex:20;background:#eb6834" title="20% gravel"></div></div><div class="surftext">Pavement · 1 mi gravel · pavement</div></div>
+  <p class="beta"><span class="src">2025 team beta</span>Light rolling hills. Ferry at the Hwy 62 intersection — park your car on the same side as the runner and ferry across the street. Ends at the finish line at Prairie Grove Battlefield Park! <span class="tiny">(rating from our sheet — missing in the note)</span></p>
+  <div class="tagrow"><span class="chip warn">⚠ Hwy 62 ferry crossing</span><span class="chip warn">⚠ FINISH!</span></div>
+  
+  <div class="legfoot">
+    <a class="stravabtn web-only" href="https://www.strava.com/routes/3386112837113508412" target="_blank" rel="noopener">View route on Strava ↗</a>
+    <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADvElEQVR4nO2dO67bQAwA84KUvv9J3TvtNgTIkJQ8ykz5Imk3GtDEfrj6+Xw+v4TJ77s7IP+O8sAoD4zywCgPjPLAKA/Mn+gfXq/XeGPv93v8mZl+nu1G12f6dt4bXX/lezPywCgPjPLAhDnvpJOrqjkgk1dOonyW+ft2P7ffm5EHRnlglAcmlfNOquOq6jOrY7Lomkw/q8/PtFttK2o3g5EHRnlglAemnPM2qOaS6niuOp/ZGS9eiZEHRnlglAfmK3JeJydF13dy5zfkswxGHhjlgVEemHLOm8oHU3mumrc25iqr645TGHlglAdGeWBSOW9jL+JJdf6wup5XzTdT63nb783IA6M8MMoD8/MNNelT623V509x11yokQdGeWCUByZVnzc1T9gZP02tz031bapGooORB0Z5YJQHpjy32ZknrD6/Ov7L5JupvZqd3BxR/f8aeWCUB0Z5YMKcF/2+V9fPpsY6U/XdG7V3J5n3NvV+jDwwygOjPDDhet7U3GbnPJSN/NRZI+y0tbFmaeSBUR4Y5YFJ5byI7bFRdM1ddOoCp3L/iZEHRnlglAcmtW+zs09y+zzMjXx55flqmXbNeQ9EeWCUB6b1XYWpMU3m+VN1C5m2pq6v7h2N7o0w8sAoD4zywLTGedt1ddV7O2t+U+d2btRCRBh5YJQHRnlgWuO8zt79qTHc1LeHNmoPptY7I4w8MMoDozwwqfq8zlhko6ZtY//n1L0b40XX8x6I8sAoD0yqPq/KXeewdNjIkZ28mMHIA6M8MMoDM1afFzG1Z3Jqfa7KlfOu1XuNPDDKA6M8MK3vKnTqFiI686XbtepX4h6Wh6M8MMoDU/6uwkbNdec5mWdOsb2HM9PuiZEHRnlglAfmtn2b1Vy4sXdmam9Opp8b87FGHhjlgVEemLFzWKZy29Ta2NRaWqZvG7ie93CUB0Z5YMp7WDbOAJtaL8z05669MFVcz3s4ygOjPDC3fSd9ozZgqg8b927Mrxp5YJQHRnlgWt9VqHJlzUOVqbnW7fPPTow8MMoDozww5XNYqkydPZb5e8T2eDHTVvWaDEYeGOWBUR6YVM47mRqTdX73N+rzIqZq86vPzGDkgVEeGOWBKee8KTZy1Td8n287B58YeWCUB0Z5YG7Ledt7Qat9OLlr3FbFyAOjPDDKA1POedu/6RvnmJxs77eMyHzDKHM+9YmRB0Z5YJQHpnXeZofOPpQra8Y739urznlaq/AfoTwwygNzW32e9DHywCgPjPLAKA+M8sAoD4zywPwFUHEFbpNIpi0AAAAASUVORK5CYII=" alt="QR: Strava route leg 36"><span>Strava route</span></div>
+  </div>
+</article>
+  <div class="exchange finish"><span class="flag">🏁</span><div><b>FINISH — PRAIRIE GROVE BATTLEFIELD STATE PARK</b><span>mile 207.16 · you did the thing</span></div></div>
+</section>
+
+<div class="panel" id="rules">
+  <h2>Night rules &amp; official links <span class="tiny">(🌐 from the official 2025 race guide)</span></h2>
+  <p style="margin:.3em 0">🦺 <b>Nighttime hours = 1 hour before sunset through 1 hour after dawn:</b> reflective vest for anyone
+  out of the van, headlamp + rear flashing tail light for runners. In-ear headphones are banned (open-ear audio OK).
+  Course is marked with black arrows on bright-yellow signs at each turn, plus yellow flags and reflective tags.</p>
+  <p style="margin:.3em 0" class="web-only">
+    <a href="https://outbackintheozarks.com/course-map" target="_blank" rel="noopener">Official course map + Strava routes ↗</a> ·
+    <a href="https://static1.squarespace.com/static/67b6279ccd5b44506e82f478/t/68488aee94be8934cad18ff3/1749584626134/OTO+2025+Race+Guide+.pdf" target="_blank" rel="noopener">2025 race guide PDF ↗</a> ·
+    <a href="https://maps.app.goo.gl/gRvJDNHpHR2z5R6q9" target="_blank" rel="noopener">Exchange zones map ↗</a> ·
+    <a href="https://www.google.com/maps/d/edit?mid=1S3rWAD35CEJBqz6sRkXKpyRrL0PEO_w&usp=sharing" target="_blank" rel="noopener">Full route map ↗</a>
+  </p>
+  <div class="linkrow print-only"></div>
+</div>
+<footer class="colophon">Built for Team Run1 · beta from our 2025 runner · stats from the team Strava sheet ·
+names, routes &amp; rules from outbackintheozarks.com · not an official race document. Go get it. 🤙</footer>
+</div>
+<script>
+const RUNNERS = {1:"", 2:"", 3:"", 4:"", 5:"", 6:""};  // e.g. {1:"Luke", 2:"Jake", ...}
+document.querySelectorAll('.runner-name').forEach(el => {
+  const nm = RUNNERS[el.dataset.slot];
+  if (nm) el.textContent = nm;
+});
+function filterSlot(s, btn) {
+  document.querySelectorAll('.leg').forEach(el => {
+    el.classList.toggle('hidden', s !== 0 && Number(el.dataset.slot) !== s);
+  });
+  document.querySelectorAll('.filterbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.querySelectorAll('.filterbtn').forEach(b => {
+  const s = Number(b.dataset.slot);
+  const nm = RUNNERS[s];
+  if (nm) b.textContent = nm;
+  b.addEventListener('click', () => filterSlot(s, b));
+});
+</script>
+</body></html>
