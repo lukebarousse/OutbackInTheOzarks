@@ -11,7 +11,8 @@ import qrcode
 from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL_GAIN
 
 DIFF = {"Easy": "#0ca30c", "Moderate": "#fab219", "Hard": "#ec835a", "Very Hard": "#d03b3b"}
-SURF = {"pavement": "#2a78d6", "gravel": "#eb6834", "trail": "#1baf7a"}
+# deliberately outside the difficulty palette (green/yellow/orange/red)
+SURF = {"pavement": "#64748b", "gravel": "#a97142", "trail": "#14919b"}
 
 ELEV, ELEV_META = {}, {}
 for p in ("out/elev.json", "elev.json"):
