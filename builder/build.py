@@ -321,7 +321,8 @@ h1,h2,h3 { line-height:1.15; margin:0 }
 nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bottom:1px solid var(--grid); padding:8px 12px 0 }
 .navrow { display:flex; gap:4px; overflow-x:auto; font-size:12.5px; white-space:nowrap; padding-bottom:8px; align-items:center }
 .navrow a, .navrow button { text-decoration:none; color:var(--ink2); padding:5px 10px; border-radius:99px;
-  border:1px solid var(--grid); background:none; font:inherit; font-size:12.5px; cursor:pointer }
+  border:1px solid var(--grid); background:none; font:inherit; font-size:12.5px; cursor:pointer;
+  -webkit-appearance:none; appearance:none }
 .navrow a:hover, .navrow button:hover { background:var(--card) }
 .navrow .brand { font-weight:800; color:var(--ink); border:none; padding-left:0 }
 .navrow .active { background:var(--ink); color:var(--page); border-color:var(--ink) }
