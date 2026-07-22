@@ -540,7 +540,6 @@ def build_overview():
     <thead><tr><th>Sec</th><th>Legs</th><th>Runs to</th><th class="r">Miles</th><th class="r">Climb</th><th class="r">Race mi at exchange</th></tr></thead>
     <tbody>{sec_overview_rows()}</tbody></table></div>
 </div>
-{how_to_read()}
 <div class="panel" id="plan">
   <h2>Runner planner — who takes which rotation slot?</h2>
   <p class="tiny" style="margin:.2em 0 .6em">With 6 runners, slot <i>N</i> runs legs <i>N, N+6, N+12, N+18, N+24, N+30</i>.</p>
