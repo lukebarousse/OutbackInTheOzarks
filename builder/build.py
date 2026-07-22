@@ -402,8 +402,7 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .steps { margin:8px 0 4px 20px; font-size:13.5px }
 .steps li { margin:7px 0 }
 #map iframe { width:100% !important; max-width:none !important }
-/* let the map break out of the 860px column on wide screens */
-#map { width:min(100vw - 48px, 1240px); margin-inline:calc((100% - min(100vw - 48px, 1240px)) / 2) }
+.wrap.wide { max-width:1240px }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
   border-radius:7px; padding:5px 9px; margin-top:6px }
 .legfoot { margin-top:9px; display:flex; flex-wrap:wrap; gap:7px; align-items:center }
@@ -566,7 +565,7 @@ def rules_panel(with_qr):
 COLOPHON = '''<footer class="colophon">Built for Team Run1 · beta from our 2025 runner · stats from the team Strava sheet ·
 names, routes &amp; rules from outbackintheozarks.com · not an official race document. Go get it. 🤙</footer>'''
 
-def page(title, nav_html, body, script=""):
+def page(title, nav_html, body, script="", wide=False):
     return f'''<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -575,7 +574,7 @@ def page(title, nav_html, body, script=""):
 <style>{css()}</style></head>
 <body>
 {nav_html}
-<div class="wrap" id="top">
+<div class="wrap{" wide" if wide else ""}" id="top">
 {body}
 {COLOPHON}
 </div>
@@ -643,7 +642,7 @@ def build_overview():
 </div>
 {watch_panel()}
 {rules_panel(with_qr=False)}'''
-    return page("RUN1 · OTO 205 — Overview", nav, body, RUNNERS_JS)
+    return page("RUN1 · OTO 205 — Overview", nav, body, RUNNERS_JS, wide=True)
 
 def build_print():
     sections_html = "".join(section_block(i, s) for i, s in enumerate(SECTIONS))
