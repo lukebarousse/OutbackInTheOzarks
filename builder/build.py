@@ -195,12 +195,27 @@ def map_links(n):
                 f'<span class="coords print-only">📍 {label}: {ll}</span>')
     return out
 
-def exchange_strip(after_leg):
-    ex = EXCHANGES[after_leg]
-    mi = [l for l in LEGS if l["n"] == after_leg][0]["end_mi"]
-    return (f'<div class="exchange"><span class="flag">🚩</span><div>'
-            f'<b>MAJOR EXCHANGE — {esc(ex["name"].upper())}</b>'
-            f'<span>mile {fmt_mi(mi)} · {esc(ex["note"])}</span></div></div>')
+def banner_exchange_row(i, first_leg):
+    """Where this section begins (start line / major exchange), with nav links for the van."""
+    if i == 0:
+        head, note, key = "🚩 START — LAKE LEATHERWOOD CITY BALLPARK", "mile 0 · race start", "0"
+    else:
+        ex = EXCHANGES[first_leg - 1]
+        mi = [l for l in LEGS if l["n"] == first_leg - 1][0]["end_mi"]
+        head = f'🚩 MAJOR EXCHANGE {i} — {esc(ex["name"].upper())}'
+        extra = ex["note"].removeprefix(f"Major exchange {i}").strip(" ·")
+        note = f'mile {fmt_mi(mi)}' + (f' · {esc(extra)}' if extra else "")
+        key = str(first_leg - 1)
+    st, links = STARTS.get(key), ""
+    if st:
+        ll = f'{st["lat"]:.6f},{st["lng"]:.6f}'
+        links = (f'<a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination={ll}" '
+                 f'target="_blank" rel="noopener">📍 Google Maps ↗</a>'
+                 f'<a class="bannerbtn web-only" href="https://maps.apple.com/?daddr={ll}" '
+                 f'target="_blank" rel="noopener">📍 Apple Maps ↗</a>'
+                 f'<span class="coords print-only">📍 {ll}</span>')
+    return (f'<div class="secex"><div><b>{head}</b><span>{note}</span></div>'
+            f'<div class="mapwrap">{links}</div></div>')
 
 def section_block(i, sec):
     a, b = sec["legs"]
@@ -208,7 +223,7 @@ def section_block(i, sec):
     mi = sum(l["dist"] for l in legs); gain = sum(l["gain"] for l in legs)
     origin = "Lake Leatherwood (START)" if i == 0 else SECTIONS[i - 1]["dest"]
     cards = "".join(leg_card(l) for l in legs)
-    ex = exchange_strip(b) if b in EXCHANGES else (
+    ex = "" if b in EXCHANGES else (
         '<div class="exchange finish"><span class="flag">🏁</span><div>'
         f'<b>FINISH — PRAIRIE GROVE BATTLEFIELD STATE PARK</b><span>mile {fmt_mi(TOTAL_MI)} · you did the thing</span></div></div>')
     return f'''
@@ -217,6 +232,7 @@ def section_block(i, sec):
     <div class="secno">SECTION {i+1}</div>
     <h2>Legs {a}–{b} · {esc(origin)} → {esc(sec["dest"])}</h2>
     <div class="sectotals">{mi:.1f} mi · +{gain:,} ft</div>
+    {banner_exchange_row(i, a)}
   </div>
   {cards}
   {ex}
@@ -346,6 +362,14 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .secbanner .secno { font-size:11px; letter-spacing:.18em; opacity:.7; font-weight:700 }
 .secbanner h2 { font-size:19px; margin:2px 0 }
 .secbanner .sectotals { font-size:13px; opacity:.85 }
+.secex { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; justify-content:space-between;
+  margin-top:11px; padding-top:11px; border-top:1px solid color-mix(in srgb, currentColor 25%, transparent) }
+.secex b { display:block; font-size:12.5px; letter-spacing:.05em }
+.secex > div > span { font-size:11.5px; opacity:.75 }
+.secex .mapwrap { display:flex; gap:7px; flex-wrap:wrap; align-items:center }
+.secex .coords { color:inherit; opacity:.7 }
+.bannerbtn { display:inline-block; text-decoration:none; font-weight:700; font-size:12px; color:inherit;
+  border:1.5px solid color-mix(in srgb, currentColor 45%, transparent); border-radius:8px; padding:4px 11px }
 .leg { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:13px 15px; margin:10px 0 }
 .leg.hidden, .hiddenx { display:none !important }
 .leghead { display:flex; gap:12px; align-items:flex-start }

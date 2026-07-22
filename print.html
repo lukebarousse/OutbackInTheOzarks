@@ -58,6 +58,14 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .secbanner .secno { font-size:11px; letter-spacing:.18em; opacity:.7; font-weight:700 }
 .secbanner h2 { font-size:19px; margin:2px 0 }
 .secbanner .sectotals { font-size:13px; opacity:.85 }
+.secex { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; justify-content:space-between;
+  margin-top:11px; padding-top:11px; border-top:1px solid color-mix(in srgb, currentColor 25%, transparent) }
+.secex b { display:block; font-size:12.5px; letter-spacing:.05em }
+.secex > div > span { font-size:11.5px; opacity:.75 }
+.secex .mapwrap { display:flex; gap:7px; flex-wrap:wrap; align-items:center }
+.secex .coords { color:inherit; opacity:.7 }
+.bannerbtn { display:inline-block; text-decoration:none; font-weight:700; font-size:12px; color:inherit;
+  border:1.5px solid color-mix(in srgb, currentColor 45%, transparent); border-radius:8px; padding:4px 11px }
 .leg { background:var(--card); border:1px solid var(--ring); border-radius:12px; padding:13px 15px; margin:10px 0 }
 .leg.hidden, .hiddenx { display:none !important }
 .leghead { display:flex; gap:12px; align-items:flex-start }
@@ -200,6 +208,7 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="secno">SECTION 1</div>
     <h2>Legs 1–6 · Lake Leatherwood (START) → Hobbs State Park</h2>
     <div class="sectotals">37.5 mi · +3,140 ft</div>
+    <div class="secex"><div><b>🚩 START — LAKE LEATHERWOOD CITY BALLPARK</b><span>mile 0 · race start</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=36.421913,-93.767937" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=36.421913,-93.767937" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 36.421913,-93.767937</span></div></div>
   </div>
   
 <article class="leg" id="leg-1" data-slot="1">
@@ -358,13 +367,14 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADuElEQVR4nO2dQXLlIAxEk9Qsuf9J2f9smYWqpEjCbnhvOUOw4y65IyzB9+fz+QJNfp6+Afg7iCcM4gmDeMIgnjCIJwziCfPP+o8xRvnF5pzlcw7Hfa7XtcZ77m39WWv8zudG5AmDeMIg3omeV+VVHg/weEnUz6bj36P3aY235ux+bkSeMIgnDOKd7nmZvCqDJycbxpio13rm91w3ei3ruh6IPGEQTxjEu8nzOoh6STSfG8H1zEy+uBMiTxjEEwbxhHmF53V8kxsJ76z6ttcNkScM4gmDeDd53s51y+g80+FbVWuVUTp8kcgTBvGEQbzTPW+nH1StW46NdTFPPTciTxjEEwbxhPl+Q0961fe2bu9527c9Ik8YxBMG8U70vGh9f+Z7W2aNcRb1JFTlmjt9kcgTBvGEQbzT87yMP2Vyte7+8ZWqNVWLTD5KT/qB8NoUBvFO34clk8NV5TpV/d2zwc8yzyHzfIg8YRBPGMS79Xte93c4z8+OonyrY6+Wjh7BFSJPGMQTBvGEKcvzPPNkxnTs77VSlYNauV0HRJ4wiCcM4p3oeR4PiI6J+kFVH/pM5JSeeXb+fbBC5AmDeMIg3k3nKuys4cxc96m9sDv6IiyIPGEQTxjEOz3Pq6rp6KjbnEU1KVX7dmb+VohC5AmDeMIgnjDt5+d15z0jmOdF11oz9Zbde5sRecIgnjCId9P5eVUeY9FdhzmKeu2jPld1DytEnjCIJwzi3VrDYlF17oE1Z8eeJqPIn1YyvuiByBMG8YRBvNP3Huuuk6y67lPfIzPzWJDnHQ6vTWEQ76a9xyx21nrs3BtsFP0uHXkqkScM4gmDeLd6XlXfm8XOMxM87OwF9MxJ5AmDeMIgnjBldZvdeZWVJ82GHoNMP34mn4vmqUSeMIgnDOIJ84pzFazxO89VWOnI4fieB//Ba1MYxLvp/LydNSZV5++Mhl71btiH5XB4bQqDeMI8dk56d+/aG/Iwa3zV+iqRJwziCYN4N/UqZOg4N7WKN9SRRv2PyBMG8YRBvJv2YYlSVZMSnX+lO1/0XCs6xgORJwziCYN4p3telcdEx2SuOxr2C63qT6/yWiJPGMQTBvFu8rwqMucHPbV/2Giul4lC5AmDeMIgnjCPeV7Hniwz0Q9nze+hqrcvCpEnDOIJg3g3eV53LUmmZqS73jJzZkLU46nbPBxem8Ig3ume17EulzmXfGdt50ycJVT1+1oQecIgnjCIJ8xj/XmQh8gTBvGEQTxhEE8YxBMG8YRBvC9dfgHH8/fTFs/5LQAAAABJRU5ErkJggg==" alt="QR: Strava route leg 6"><span>Strava route</span></div>
   </div>
 </article>
-  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — HOBBS STATE PARK</b><span>mile 37.55 · Major exchange 1 · official van-swap point</span></div></div>
+  
 </section>
 <section class="chapter" id="sec2">
   <div class="secbanner">
     <div class="secno">SECTION 2</div>
     <h2>Legs 7–12 · Hobbs State Park → Withrow Springs State Park</h2>
     <div class="sectotals">38.8 mi · +2,544 ft</div>
+    <div class="secex"><div><b>🚩 MAJOR EXCHANGE 1 — HOBBS STATE PARK</b><span>mile 37.55 · official van-swap point</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=36.285895,-93.939375" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=36.285895,-93.939375" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 36.285895,-93.939375</span></div></div>
   </div>
   
 <article class="leg" id="leg-7" data-slot="1">
@@ -523,13 +533,14 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADrklEQVR4nO2du47kMAwEdw8X6v+/VPlc6kSAeOy2p62qcNe2PFPgEHpQ+v18Pj+QyZ+nXwD+H+QFg7xgkBcM8oJBXjDIC+bv6h9jDHljc075M8fGe17bXV2/827Xe1fX3/m9EXnBIC8Y5L0x56lyVTUH7OSVnXw2N/7ufk/390bkBYO8YJD39pzX6VdVn1ntk43FNTvvWX3+TrvVtlbt7kDkBYO8YJB3Us5zo8pDszGe2ekv3gmRFwzygkFeMF+X8zpjj7PYD1vlMNXcnhsiLxjkBYO8k3Ke6vddtdZjFPOWaqyyiiMvEnnBIC8Y5L09592ZD6prQ8bGfF4136jm89zfG5EXDPKCQV4wv99Qk66ab3Pnnm+Yw7tC5AWDvGCQ9/b6PNU4Yaf/pJqfG+Y1MneueSHygkFeMMh7Y85T/XarxhV3njk33lm1VrOTm1dUPy+RFwzygkHeSfuwVOfPOv1FR333NNTe7XwuR1+QyAsGecEg743zeU+NAXba2qGTdzt15Y45SyIvGOQFg7yT1rB8256Td6Lqs6quIfKCQV4wyDu1Pq8zJqnau2uK9o+utrVz/eoa1XdC5AWDvGCQF4xsbHPnGtW9q/ecN+6F7WbnsxB5wSAvGOSdtG7TsR90J1dN0ZyfI0873vMKkRcM8oJB3knrNt1nJlTbGqKzhzrrUattqSDygkFeMMgLxrKGZefeK3eOeQ7zve53uELkBYO8YJAXjGy/zU6/Zyc3uPc0GYb6uU7t/A5EXjDICwZ5wVjq8zp0+oKOcUV3vcEK+nkvh5/NYJB36thmlTv3qByGWvVvqykk8oJBXjDIe3vOc683cdRxO+isQXXkTiIvGOQFg7xgZOs2OzXmjnqGaV4X03mOqm6ByAsGecEg76T6vCqqfThVuWSFKu866vBWEHnBIC8Y5L19DUtnTb9j/+XqvePLauxU+ZXICwZ5wSAvmMfOSVedUTANZww57nWsgyXygkFeMMg7qVahg+qMHsceZkN01o97/7MrRF4wyAsGeW+vSXfkElUdnvuMuirVOb8ORF4wyAsGeSedJaSqW6jue1l9/hD1Ux01EqpcS+QFg7xgkHdSzlOhyiXjoTqEalvVPax3IPKCQV4wyAvmsZxXHcN0n0N0Z7+NsU3gZzMZct6p56Q7UPXPVrjPRlj9vVO3voLICwZ5wSAvGNm5ClU6z3T0+VaoclVnLc8KIi8Y5AWDvGAeq8+DPkReMMgLBnnBIC8Y5AWDvGCQ95PLPxi9BN4V18uyAAAAAElFTkSuQmCC" alt="QR: Strava route leg 12"><span>Strava route</span></div>
   </div>
 </article>
-  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — WITHROW SPRINGS STATE PARK</b><span>mile 76.35 · Major exchange 2</span></div></div>
+  
 </section>
 <section class="chapter" id="sec3">
   <div class="secbanner">
     <div class="secno">SECTION 3</div>
     <h2>Legs 13–18 · Withrow Springs State Park → Elkins (Bunch City Park)</h2>
     <div class="sectotals">32.3 mi · +2,354 ft</div>
+    <div class="secex"><div><b>🚩 MAJOR EXCHANGE 2 — WITHROW SPRINGS STATE PARK</b><span>mile 76.35</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=36.154356,-93.730908" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=36.154356,-93.730908" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 36.154356,-93.730908</span></div></div>
   </div>
   
 <article class="leg" id="leg-13" data-slot="1">
@@ -688,13 +699,14 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsUlEQVR4nO2dwXLkIAwFk609+v+/lHtyZQ9USSs9PA+6jwlje6ZLVgECvn9+fr7Akz9vPwD8P8gzBnnGIM8Y5BmDPGOQZ8zf1T+e52m/2Rij/ZpP4Dnn+67aR55t/uyq/c7fjcgzBnnGIO/EnNeVq7I5IJJXIvlsBP6ufk7170bkGYM8Y5B3es6r9Kuy18z2yZ5Fm8hzZq8fuW/2Xqv7RiDyjEGeMci7Keep6cpDozCeWekv7oTIMwZ5xiDPmI/LeTPZftVItl/lsK65PTVEnjHIMwZ5N+W8rvd7pZakkreeprHKLIq8SOQZgzxjkHd6ztuZD7K1IU9gPi+bb7rm89S/G5FnDPKMQZ4x35+wJr1SqzKS45AKGNuENLw2jUHeiTkvW99fqbesjDGOpjUJXTUyO2teiDxjkGcM8k7v51XyUzZfrtpErjmTzTddtaArKv1R1qQfCK9NY5B305r0Sv2k4r0fQZ3PFM8QgcgzBnnGIM8Y+dhm1/o5dX/rEezVolgjOEPkGYM8Y5BnTFvdZjYnVa45M5rmyT5hjXkWIs8Y5BmDvFvrNtVzZqvPKmo7Z7rmKSPtK58l8oxBnjHIM6btXAV17WJlDDBCZQ6vMm65IvJdiDxjkGcM8oyR1G2qz+VR7LEyxOczKNY2EHnGIM8Y5N3Uz6vM231CP28snrnyfSv7xVQg8oxBnjHIu6lus5LDKu/9Sn9rbPys+hlmiDxjkGcM8k7s56nrPhR1nhXU45mrv7M+71J4bRqDPGPa6jbVZy8o1v9FUMzbRaCfdzi8No1B3uljmyu69iGL0LWfywr1OnT224R/4LVpDPJurdvMsjMvKqjsHZNts2o/Q+QZgzxjkGeMvG5zhXrt2mja2yxC1/qN7O9J5BmDPGOQd1M/L8vO8c8ZRX3pzv3JmM87HF6bxiDPmNfOz1tdJ9I++9lHfBZSlq5+IZFnDPKMQZ4xr52Trt6rLIK6rnLVfoZ9WC6F16YxyDOmbb/NCPP7XbE/2XhpHq7yPJXcT+QZgzxjkHfTmbFZFGvMs9cc4v2pI/fKtolA5BmDPGOQd3rOU9dVRu6lOLsgguIs2a5cS+QZgzxjkHdTzuti55jks/F8vp3zlESeMcgzBnnGvJbzFGf9ZHmr39Y1d0jkGYM8Y5B3U85T11IqzsZT72FWWW8e2Yd6BZFnDPKMQd7pOU9Rw9m1j6U6H3ftVd1VdzND5BmDPGOQZ8xr6/OgDpFnDPKMQZ4xyDMGecYgzxjkffnyC21m6VdnMvcjAAAAAElFTkSuQmCC" alt="QR: Strava route leg 18"><span>Strava route</span></div>
   </div>
 </article>
-  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — ELKINS — BUNCH CITY PARK</b><span>mile 108.62 · Major exchange 3 · team note says “Elkins”, official guide says “Bunch City Park” (same stop, in Elkins)</span></div></div>
+  
 </section>
 <section class="chapter" id="sec4">
   <div class="secbanner">
     <div class="secno">SECTION 4</div>
     <h2>Legs 19–24 · Elkins (Bunch City Park) → Lake Fort Smith State Park</h2>
     <div class="sectotals">32.0 mi · +2,380 ft</div>
+    <div class="secex"><div><b>🚩 MAJOR EXCHANGE 3 — ELKINS — BUNCH CITY PARK</b><span>mile 108.62 · team note says “Elkins”, official guide says “Bunch City Park” (same stop, in Elkins)</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=36.001715,-94.007044" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=36.001715,-94.007044" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 36.001715,-94.007044</span></div></div>
   </div>
   
 <article class="leg" id="leg-19" data-slot="1">
@@ -853,13 +865,14 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADsUlEQVR4nO2dsXIkIQxEbdeF/P+Xkq9TEuqEpWam4b1wjXfY6RIqhCS+P5/PF3jy8/QE4O8gnjGIZwziGYN4xiCeMYhnzL/ZH1pr5Q/rvf/3WeOYyOcjkTGz8SOz50bY+d6wPGMQzxjEO9Hnjayu+xEfsOobMn6oB3xh5vsjz10l8n6wPGMQzxjEO93njWT2T5Hxq3u7Nhk/m0PmOyP7y53vDcszBvGMQbybfJ6aqj1WW/RbszlkvkcNlmcM4hmDeMY85vNWz9Iye6kWiFuOYyLjq3xzBizPGMQzBvFu8nnqtT6yx8qMz/jCzG9XvDcszxjEMwbxTvd5ijheJldz5+dV/lIBlmcM4hmDeMZ8P1WTXlUP0BM5JpnxxDYhBcumMYh3os+rWt/f4J8iZPycYm6Rd47lGYN4xiDeTT4vExtUjJmhztVU1KpTq3ARLJvGIJ4x8timYj+XOSfrgl4wVZ+vzhnLMwbxjEG8033eqh+qygHJ/G9LxDar9rIZiG0eDsumMYh3er/N2bofWd935n00wR5rpOo8b8ZqjSCWZwziGYN4N9UqqGOSihjgSFW9eWZfWwWWZwziGYN4t/bbnPVJqdr3zFDv1Xpgnoo7HCLjR7A8YxDPGMQzRn6vgqJ/tOJ8cUbGF65+z+r8sTxjEM8YxLu136Yix/KpGoMuiE+q7y3C8oxBPGMQ7/T6vBF1DFNde/e2OvfV/x3B8oxBPGMQ79aa9BFF/Xgmnqkmk+dS5TuxPGMQzxjEM6bsXoWq+1TVZ4c7c02r4rQzsDxjEM8YxLupD0tV7XkmD0Udz2ziPmqc5wHLpjP4vNNr0iM8df43ksmrjIxZ3fOpwfKMQTxjEO+mWoWML1zt51J1VteKzhQj8686gySH5XBYNo1BvFvP8zIxxp21Ab2oFrAqllu1r8XyjEE8YxDv1lqFt92r0DfWnitimNwldBEsm8YgnjGvuCd9RF0XMUNRS6Co/RjB8oxBPGMQz5iyHJYIiv6cTdxvs+r8cnVu9B47HJZNYxDPGHm/zSrfWVWf0MR34GX89Kq/xPKMQTxjEO/WexVmVOVoVNVxd/F9Dk/FVLE8YxDPGMS7tcf0G2hF/VYUOZnqGgwszxjEMwbxjHmFz6vK6W+BurrI+KfmuRqDxfKMQTxjEM+Ysn6bCtT35PWNvyXyXGoVLoJl0xjEO93nKXI4M3faRXJAZlTtyd7QmxvLMwbxjEE8Yx6rz4M8WJ4xiGcM4hmDeMYgnjGIZwziffnyC3vb90k/3gitAAAAAElFTkSuQmCC" alt="QR: Strava route leg 24"><span>Strava route</span></div>
   </div>
 </article>
-  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — LAKE FORT SMITH STATE PARK</b><span>mile 140.6 · Major exchange 4</span></div></div>
+  
 </section>
 <section class="chapter" id="sec5">
   <div class="secbanner">
     <div class="secno">SECTION 5</div>
     <h2>Legs 25–30 · Lake Fort Smith State Park → Devil's Den State Park</h2>
     <div class="sectotals">40.5 mi · +3,681 ft</div>
+    <div class="secex"><div><b>🚩 MAJOR EXCHANGE 4 — LAKE FORT SMITH STATE PARK</b><span>mile 140.6</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=35.695695,-94.118580" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=35.695695,-94.118580" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 35.695695,-94.118580</span></div></div>
   </div>
   
 <article class="leg" id="leg-25" data-slot="1">
@@ -1018,13 +1031,14 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
     <div class="qrbox print-only"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAIAAAD6XpeDAAADqklEQVR4nO2dwXLkIAwFk6098v9fyj25cqEWFj172u4+Jg4w80pWBEj6/vn5+RImf+5egPw/igdG8cAoHhjFA6N4YBQPzN/ZL1pr5ZP13v851+yZk3X2YczZ8yvzrqzzyu9NywOjeGAU74k+b2TXD1X5pJV5+8LfJnzVypjp703LA6N4YBTv6T7vxIftjrkbk7XJMyvr3B1/Zd7duWbzrqDlgVE8MIr3Jp+XpsoP9YP9zJN48Uq0PDCKB0bxwHycz0uf243MfFjV2V4aLQ+M4oFRvDf5vKr3+0nsdeK3WtFe5S4Jv6jlgVE8MIr3dJ93pT/YvRvSNn1h1XpOzgur0PLAKB4YxQPz/Qk56VXnbTOuzB+4Ei0PjOKBUbyn5+dV7ROexE9V53MtvLYr77xoeWAUD4ziPdHnVb27q/YVV8bsC2uuuqt54ptn7H5eLQ+M4oFRvDfFebvv+pN4MZHf3QO5dyufKxELanlgFA+M4j3xPK/KV608n9hHnXHyWU7yyhNnlloeGMUDo3hv2tvc5eQMbIVedE5WtWebvqs5ouWBUTwwigcmkpO+GzNV1eRsB/WjZ2vbfT4dR45oeWAUD4zivbWvQlV959mYJ/PuUhWfpfdIR7Q8MIoHRvGenp+X2G+867zwrv4Mif8PtDwwigdG8cBE4rzZOIk8h1bUeyiRe5eubablgVE8MIr3pjosV/aoS/cn6uG+Cok1jGh5YBQPjOKBKau3mfAfK3FYD9S8Tufjm58nvjbJ6PPe2lchse+XqCvdbsqjT+faa3lgFA+M4r21Dkvi5yPpeysjVfuxVed23mF5OL42wSgemEv7KlTdi7my791IVa3qqn1jLQ+M4oFRPDDxe5uz51fmTfdD6OE8hF12x9HywCgeGMUDE8nPG0nfb5xR9bcjd63BOO+B+NoEo3hvqjFdFetUxYgtEP+drHOFqnppWh4YxQOjeGBu65Oezl1b4co4smp/dUTLA6N4YBTv6XFeFYm88pFEvc2qvMOq+mcjWh4YxQOjeE/Pz0v4kk/2WydU1dFeQcsDo3hgFO9NOelV9zPTdS/bh/VJ2B1zBS0PjOKBUTwwkf55V56HjVzZD2HlmUTPoxEtD4zigVE8MLf5vF1fkvAf/aa4zThPfG2S0ee9KVdhl/Q9zBbIHazav51RdZap5YFRPDCKB6asr8IuJ2OmeyyMVPnplT1PcxVehK9NMIoH5rb8PDlHywOjeGAUD4zigVE8MIoHRvG+uPwCZZgCULzWxpwAAAAASUVORK5CYII=" alt="QR: Strava route leg 30"><span>Strava route</span></div>
   </div>
 </article>
-  <div class="exchange"><span class="flag">🚩</span><div><b>MAJOR EXCHANGE — DEVIL'S DEN STATE PARK</b><span>mile 181.13 · Major exchange 5</span></div></div>
+  
 </section>
 <section class="chapter" id="sec6">
   <div class="secbanner">
     <div class="secno">SECTION 6</div>
     <h2>Legs 31–36 · Devil's Den State Park → FINISH — Prairie Grove Battlefield</h2>
     <div class="sectotals">26.0 mi · +1,952 ft</div>
+    <div class="secex"><div><b>🚩 MAJOR EXCHANGE 5 — DEVIL'S DEN STATE PARK</b><span>mile 181.13</span></div><div class="mapwrap"><a class="bannerbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination=35.777074,-94.253379" target="_blank" rel="noopener">📍 Google Maps ↗</a><a class="bannerbtn web-only" href="https://maps.apple.com/?daddr=35.777074,-94.253379" target="_blank" rel="noopener">📍 Apple Maps ↗</a><span class="coords print-only">📍 35.777074,-94.253379</span></div></div>
   </div>
   
 <article class="leg" id="leg-31" data-slot="1">
