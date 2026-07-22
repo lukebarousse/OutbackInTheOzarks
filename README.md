@@ -24,4 +24,4 @@ Static two-page site + print PDF for the 2026 OTO 205-mile relay.
 
 ## Data sources
 
-Leg beta, ratings and surface notes: our 2025 runner's notes. Distances/gain/mile markers: the team's 2025 Strava sheet. Leg names, Strava routes, exchange stations and rules: outbackintheozarks.com. Not an official race document.
+Leg beta, ratings and surface notes: our 2025 runner's notes. Distances/gain/mile markers: the team's 2025 Strava sheet. Leg names, Strava routes, exchange stations and rules: outbackintheozarks.com. Leg start/exchange coordinates (`builder/starts.json`, the 📍 map links): the race's official "Google Maps Exchange Zones" My Maps, exported as KML July 2026 and sanity-checked against leg distances + reverse-geocoded landmarks. Not an official race document.

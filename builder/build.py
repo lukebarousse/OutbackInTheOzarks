@@ -14,6 +14,13 @@ DIFF = {"Easy": "#0ca30c", "Moderate": "#fab219", "Hard": "#ec835a", "Very Hard"
 # deliberately outside the difficulty palette (green/yellow/orange/red)
 SURF = {"pavement": "#64748b", "gravel": "#a97142", "trail": "#14919b"}
 
+# starts.json: leg start/exchange coordinates from the race's official
+# "Google Maps Exchange Zones" My Maps (mid=1S3rWAD35CEJBqz6sRkXKpyRrL0PEO_w),
+# exported as KML July 2026. Key k = exchange zone k = start of leg k+1;
+# key 0 = start line, 36 = finish line. Verified against leg distances +
+# reverse-geocoded landmarks (Hobbs, Withrow, Elkins, L. Ft. Smith, Devil's Den).
+STARTS = json.load(open("starts.json")) if os.path.exists("starts.json") else {}
+
 ELEV, ELEV_META = {}, {}
 for p in ("out/elev.json", "elev.json"):
     if os.path.exists(p):
@@ -169,9 +176,24 @@ def leg_card(l):
   {foot}
   <div class="legfoot">
     <a class="stravabtn web-only" href="{url}" target="_blank" rel="noopener">View route on Strava ↗</a>
+    {map_links(n)}
     <div class="qrbox print-only"><img src="{qr_datauri(url)}" alt="QR: Strava route leg {n}"><span>Strava route</span></div>
   </div>
 </article>'''
+
+def map_links(n):
+    """Navigation links to the leg's start (official exchange-zone coords)."""
+    out = ""
+    for key, label in ((n - 1, "start"), *(((36, "finish"),) if n == 36 else ())):
+        st = STARTS.get(str(key))
+        if not st: continue
+        ll = f'{st["lat"]:.6f},{st["lng"]:.6f}'
+        out += (f'<a class="stravabtn mapbtn web-only" href="https://www.google.com/maps/dir/?api=1&amp;destination={ll}" '
+                f'target="_blank" rel="noopener">📍 {label.title()} · Google Maps ↗</a>'
+                f'<a class="stravabtn mapbtn web-only" href="https://maps.apple.com/?daddr={ll}" '
+                f'target="_blank" rel="noopener">📍 {label.title()} · Apple Maps ↗</a>'
+                f'<span class="coords print-only">📍 {label}: {ll}</span>')
+    return out
 
 def exchange_strip(after_leg):
     ex = EXCHANGES[after_leg]
@@ -236,6 +258,19 @@ def planner_table():
 <thead><tr><th>Rank</th><th>Slot</th><th>Runner</th><th>Legs</th><th class="r">Miles</th><th class="r">Climb ft</th><th>Leg ratings</th><th>Difficulty</th><th>Toughest assignment</th></tr></thead>
 <tbody>{rows}</tbody></table></div>
 <p class="tiny" style="margin:.6em 0 0">Sorted hardest → easiest. Difficulty = equal parts total miles, total climb, and summed leg ratings (Easy 1 → Very Hard 4, team rating where it differs), scaled so the hardest slot = 100. Rating dots are in leg order<span class="web-only"> — hover for the leg</span>.</p>'''
+
+def watch_panel(legs_href="index.html"):
+    return f'''<div class="panel" id="watch">
+  <h2>Get your legs on your Garmin watch</h2>
+  <p class="tiny" style="margin:.2em 0 .6em">Cell signal is spotty on the course — load your legs as courses <b>before race weekend</b> so the watch can guide you (route line, off-course alerts, climb profile) with no phone needed.</p>
+  <ol class="steps">
+    <li><b>Link Strava to Garmin (one-time).</b> Garmin Connect app → <i>Settings → Connected Apps → Strava</i> → sign in and enable the <b>Courses</b> permission.</li>
+    <li><b>Save each of your legs on Strava.</b> Open the leg's Strava route from its card on the <a href="{legs_href}">Legs page</a> and tap the ☆ <b>star / save</b> icon so it lights up.</li>
+    <li><b>Sync your watch</b> with the Garmin Connect app. Starred Strava routes are pushed to the watch automatically and land in <i>Courses</i>.</li>
+    <li><b>Race day:</b> start a Run activity → hold <b>UP/MENU</b> → <i>Navigation → Courses</i> → pick your leg → <i>Do Course</i>. (Menu names vary slightly by model.)</li>
+  </ol>
+  <p class="tiny">Apple Watch has no native course-following — the WorkOutDoors app can import the same routes (export GPX from Strava), or use the map links on each leg card and run from the phone.</p>
+</div>'''
 
 def index_table(legs_href="index.html"):
     rows = ""
@@ -342,11 +377,15 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
   border-radius:4px; padding:1px 5px; margin-right:7px; vertical-align:1px }
 .tiny { font-size:11px; color:var(--muted) }
 .nowrap { white-space:nowrap }
+.steps { margin:8px 0 4px 20px; font-size:13.5px }
+.steps li { margin:7px 0 }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
   border-radius:7px; padding:5px 9px; margin-top:6px }
-.legfoot { margin-top:9px }
+.legfoot { margin-top:9px; display:flex; flex-wrap:wrap; gap:7px; align-items:center }
 .stravabtn { display:inline-block; text-decoration:none; font-weight:700; font-size:12.5px;
   border:1.5px solid var(--accent); border-radius:8px; padding:5px 12px }
+.mapbtn { border-color:var(--grid); color:var(--ink2) }
+.coords { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums }
 .qrbox { display:flex; align-items:center; gap:8px }
 .qrbox img { width:62px; height:62px; image-rendering:pixelated }
 .qrbox span { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em }
@@ -494,6 +533,7 @@ def page(title, nav_html, body, script=""):
     return f'''<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">%F0%9F%8F%83%F0%9F%8F%BB</text></svg>'>
 <title>{esc(title)}</title>
 <style>{css()}</style></head>
 <body>
@@ -533,7 +573,7 @@ def build_index():
 def build_overview():
     nav = f'''<nav class="top">
   {nav_tabs("overview")}
-  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#rules">Rules</a></div>
+  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#sections">Sections</a><a href="#plan">Planner</a><a href="#index">All legs</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
 </nav>'''
     body = f'''
 {hero()}
@@ -557,6 +597,7 @@ def build_overview():
   <h2>Every leg on one page</h2>
   {index_table()}
 </div>
+{watch_panel()}
 {rules_panel(with_qr=False)}'''
     return page("RUN1 · OTO 205 — Overview", nav, body, RUNNERS_JS)
 
@@ -586,6 +627,7 @@ def build_print():
   <h2>Every leg on one page</h2>
   {index_table("#")}
 </div>
+{watch_panel("#")}
 {rules_panel(with_qr=True)}'''
     return page("RUN1 · OTO 205 — Race Guide (print)", "", body)
 
