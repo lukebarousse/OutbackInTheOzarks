@@ -107,15 +107,25 @@ def night_group(segs, plot_h):
     for ma, mb, _, _ in regions:
         day_spans.append((cursor, ma)); cursor = mb
     day_spans.append((cursor, TOTAL_MI))
-    for ma, mb, show_a, show_b in regions:
+    for ma, mb, _, _ in regions:
         xa, xb = mile_x(ma, segs), mile_x(mb, segs)
         parts.append(f'<rect x="{xa:.1f}" y="{TOP}" width="{xb-xa:.1f}" height="{plot_h}" fill="var(--nightshade)"/>')
         parts.append(f'<text x="{(xa+xb)/2:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">🌙 night</text>')
-        if show_a: parts.append(f'<text x="{xa:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌇</text>')
-        if show_b: parts.append(f'<text x="{xb:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌅</text>')
     for da, db in day_spans:
         if db - da > 18:
             parts.append(f'<text x="{(mile_x(da,segs)+mile_x(db,segs))/2:.1f}" y="{SKY["TOP"]+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">☀️ day</text>')
+    # estimated clock ticks every 6h along the bottom
+    pace, t0 = PLAN["pace_min_per_mi"], hm(PLAN["start_hhmm"])
+    t1 = t0 + pace * TOTAL_MI
+    tick = (t0 // 360 + 1) * 360
+    while tick < t1:
+        x = mile_x((tick - t0) / pace, segs)
+        d, mm = int(tick // 1440), int(tick % 1440)
+        h = mm // 60
+        lbl = f'{DAYS[min(d, 2)]} {h % 12 or 12} {"AM" if h < 12 else "PM"}'
+        parts.append(f'<line x1="{x:.1f}" y1="{TOP+plot_h}" x2="{x:.1f}" y2="{TOP+plot_h+4}" stroke="var(--axis)" stroke-width="1"/>')
+        parts.append(f'<text x="{x:.1f}" y="{TOP+plot_h+20}" text-anchor="middle" font-size="6.8" fill="var(--muted)">{lbl}</text>')
+        tick += 360
     return f'<g id="nightg">{"".join(parts)}</g>'
 
 def skyline_svg(legs_href="index.html"):
@@ -647,15 +657,22 @@ function renderNight(pace, start) {
   const dayspans = []; let cur = 0;
   for (const r of regions) { dayspans.push([cur, r[0]]); cur = r[1]; }
   dayspans.push([cur, PLAN.total]);
-  for (const [ma, mb, sa, sb] of regions) {
+  for (const [ma, mb] of regions) {
     const xa = mileX(ma), xb = mileX(mb);
     parts.push(`<rect x="${xa}" y="${GEO.top}" width="${xb-xa}" height="${GEO.ploth}" fill="var(--nightshade)"/>`);
     parts.push(`<text x="${(xa+xb)/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">🌙 night</text>`);
-    if (sa) parts.push(`<text x="${xa}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌇</text>`);
-    if (sb) parts.push(`<text x="${xb}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌅</text>`);
   }
   for (const [da, db] of dayspans) {
     if (db-da > 18) parts.push(`<text x="${(mileX(da)+mileX(db))/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">☀️ day</text>`);
+  }
+  let tick = (Math.floor(start/360)+1)*360;
+  while (tick < t1) {
+    const x = mileX((tick-start)/pace);
+    const d = Math.min(Math.floor(tick/1440), 2), h = Math.floor((tick%1440)/60);
+    const lbl = DAYSJS[d]+' '+((h%12)||12)+' '+(h<12?'AM':'PM');
+    parts.push(`<line x1="${x}" y1="${GEO.top+GEO.ploth}" x2="${x}" y2="${GEO.top+GEO.ploth+4}" stroke="var(--axis)" stroke-width="1"/>`);
+    parts.push(`<text x="${x}" y="${GEO.top+GEO.ploth+20}" text-anchor="middle" font-size="6.8" fill="var(--muted)">${lbl}</text>`);
+    tick += 360;
   }
   g.innerHTML = parts.join('');
 }
