@@ -906,8 +906,8 @@ def build_index():
   <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: {diff_legend()} · tap a bar to open that leg</div>
   {plan_ctl()}
 </div>
-{race_day_panel()}
 {how_to_read(compact=True)}
+{race_day_panel()}
 {sections_html}'''
     return page("RUN1 · OTO 205 — Legs", nav, body, runners_js())
 
