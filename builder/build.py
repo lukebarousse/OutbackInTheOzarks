@@ -43,35 +43,44 @@ def strava_url(n): return f"https://www.strava.com/routes/{STRAVA[n]}"
 def ftpmi(l): return l["gain"] / l["dist"]
 
 # ---------------- skyline ----------------
-def skyline_svg():
+def skyline_svg(legs_href="index.html"):
+    """Height = leg distance, width = steepness (ft/mi), color = team-adjusted difficulty."""
     W, H_, PAD_L, PAD_R, TOP, BOT = 760, 200, 30, 8, 40, 26
     plot_w, plot_h = W - PAD_L - PAD_R, H_ - TOP - BOT
-    MAXY = 200.0
-    def x(mi): return PAD_L + mi / TOTAL_MI * plot_w
-    def y(v): return TOP + plot_h - min(v, MAXY) / MAXY * plot_h
-    parts = [f'<svg viewBox="0 0 {W} {H_}" role="img" aria-label="Steepness of each leg, climb feet per mile" style="width:100%;height:auto;display:block">']
-    for gv in (50, 100, 150, 200):
+    total_v = sum(ftpmi(l) for l in LEGS)
+    max_d = max(l["dist"] for l in LEGS)
+    def y(d): return TOP + plot_h - d / max_d * plot_h
+    parts = [f'<svg viewBox="0 0 {W} {H_}" role="img" aria-label="Every leg: bar height is distance in miles, bar width is climb rate" style="width:100%;height:auto;display:block">']
+    for gv in (2, 4, 6, 8):
         parts.append(f'<line x1="{PAD_L}" y1="{y(gv):.1f}" x2="{W-PAD_R}" y2="{y(gv):.1f}" stroke="var(--grid)" stroke-width="1"/>')
         parts.append(f'<text x="{PAD_L-4}" y="{y(gv)+3:.1f}" text-anchor="end" font-size="8" fill="var(--muted)">{gv}</text>')
+    xx = PAD_L
+    edges = {}
     for l in LEGS:
-        x0, x1 = x(l["start_mi"]), x(l["end_mi"])
         v = ftpmi(l)
-        parts.append(f'<a href="index.html#leg-{l["n"]}"><rect x="{x0+0.7:.1f}" y="{y(v):.1f}" width="{max(x1-x0-1.4,2):.1f}" height="{(TOP+plot_h-y(v)):.1f}" rx="2" fill="{DIFF[l["rating"]]}" stroke="rgba(0,0,0,.28)" stroke-width="0.5"><title>Leg {l["n"]} · {NAMES[l["n"]]} · {fmt_mi(l["dist"])} mi · +{l["gain"]:,} ft · {v:.0f} ft/mi · {l["rating"]}</title></rect></a>')
-        parts.append(f'<text x="{(x0+x1)/2:.1f}" y="{TOP+plot_h+9}" text-anchor="middle" font-size="6.2" fill="var(--muted)">{l["n"]}</text>')
+        w = v / total_v * plot_w
+        rating = l["team"] or l["rating"]
+        note = f'{l["rating"]} → {l["team"]} (team)' if l["team"] else l["rating"]
+        slot = (l["n"] - 1) % 6 + 1
+        parts.append(f'<a class="skb" data-slot="{slot}" href="{legs_href}#leg-{l["n"]}">'
+                     f'<rect x="{xx+0.6:.1f}" y="{y(l["dist"]):.1f}" width="{max(w-1.2,1.6):.1f}" height="{(TOP+plot_h-y(l["dist"])):.1f}" rx="2" '
+                     f'fill="{DIFF[rating]}" stroke="rgba(0,0,0,.28)" stroke-width="0.5">'
+                     f'<title>Leg {l["n"]} · {NAMES[l["n"]]} · {fmt_mi(l["dist"])} mi · +{l["gain"]:,} ft · {v:.0f} ft/mi · {note} · {RUNNERS.get(slot, "")}</title></rect>'
+                     + (f'<text x="{xx+w/2:.1f}" y="{TOP+plot_h+9}" text-anchor="middle" font-size="6.2" fill="var(--muted)">{l["n"]}</text>' if w >= 8.5 else "")
+                     + '</a>')
+        xx += w
+        edges[l["n"]] = xx
     parts.append(f'<line x1="{PAD_L}" y1="{TOP+plot_h}" x2="{W-PAD_R}" y2="{TOP+plot_h}" stroke="var(--axis)" stroke-width="1"/>')
-    marks = [(0, "START", False)] + [(k, EXCHANGES[k]["name"].split("—")[0].split("State")[0].strip(), True) for k in sorted(EXCHANGES)] + [(36, "FINISH", False)]
-    for k, label, dash in marks:
-        mi = 0 if k == 0 else [l for l in LEGS if l["n"] == k][0]["end_mi"]
-        xx = x(mi)
-        if dash:
-            parts.append(f'<line x1="{xx:.1f}" y1="{TOP-14}" x2="{xx:.1f}" y2="{TOP+plot_h}" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/>')
-            parts.append(f'<text x="{xx:.1f}" y="{TOP-11}" text-anchor="middle" font-size="7" fill="var(--muted)">mi {fmt_mi(mi)}</text>')
-        anchor = "start" if k == 0 else ("end" if k == 36 else "middle")
-        parts.append(f'<text x="{xx:.1f}" y="{TOP-20}" text-anchor="{anchor}" font-size="8" font-weight="700" fill="var(--ink)">{esc(label)}</text>')
-    for m in range(0, 226, 25):
-        if m > TOTAL_MI: break
-        parts.append(f'<text x="{x(m):.1f}" y="{TOP+plot_h+20}" text-anchor="middle" font-size="7.5" fill="var(--muted)">{m} mi</text>')
-    parts.append(f'<text x="{PAD_L-22}" y="{TOP-2}" font-size="7.5" fill="var(--muted)">ft/mi</text>')
+    parts.append(f'<text x="{PAD_L}" y="{TOP-20}" text-anchor="start" font-size="8" font-weight="700" fill="var(--ink)">START</text>')
+    parts.append(f'<text x="{W-PAD_R}" y="{TOP-20}" text-anchor="end" font-size="8" font-weight="700" fill="var(--ink)">FINISH</text>')
+    for k in sorted(EXCHANGES):
+        label = EXCHANGES[k]["name"].split("—")[0].split("State")[0].strip()
+        mi = [l for l in LEGS if l["n"] == k][0]["end_mi"]
+        ex = edges[k]
+        parts.append(f'<line x1="{ex:.1f}" y1="{TOP-14}" x2="{ex:.1f}" y2="{TOP+plot_h}" stroke="var(--ink2)" stroke-width="0.8" stroke-dasharray="3 3"/>')
+        parts.append(f'<text x="{ex:.1f}" y="{TOP-11}" text-anchor="middle" font-size="7" fill="var(--muted)">mi {fmt_mi(mi)}</text>')
+        parts.append(f'<text x="{ex:.1f}" y="{TOP-20}" text-anchor="middle" font-size="8" font-weight="700" fill="var(--ink)">{esc(label)}</text>')
+    parts.append(f'<text x="{PAD_L-22}" y="{TOP-2}" font-size="7.5" fill="var(--muted)">mi</text>')
     parts.append("</svg>")
     return "".join(parts)
 
@@ -285,13 +294,20 @@ def watch_panel(legs_href="index.html"):
 
 def index_table(legs_href="index.html"):
     rows = ""
+    max_d = max(l["dist"] for l in LEGS)
+    max_g = max(l["gain"] for l in LEGS)
+    max_v = max(ftpmi(l) for l in LEGS)
+    def barcell(val, mx, text):
+        return f'<td class="r bar" style="--p:{val/mx*100:.0f}%">{text}</td>'
     for l in LEGS:
         n = l["n"]
         team = f' → {l["team"]}' if l["team"] else ""
         surf = " / ".join(f"{k[0].upper()}{v}%" for v, k in zip(l["surface"], ("pav", "grav", "trail")) if v > 0)
-        rows += (f'<tr><td class="c">{n}</td><td><a href="{legs_href}#leg-{n}">{esc(NAMES[n])}</a></td>'
-                 f'<td class="r">{fmt_mi(l["dist"])}</td><td class="r">+{l["gain"]:,}</td>'
-                 f'<td class="r">{ftpmi(l):.0f}</td><td>{surf}</td>'
+        rows += (f'<tr data-slot="{(n-1)%6+1}"><td class="c">{n}</td><td><a href="{legs_href}#leg-{n}">{esc(NAMES[n])}</a></td>'
+                 + barcell(l["dist"], max_d, fmt_mi(l["dist"]))
+                 + barcell(l["gain"], max_g, f'+{l["gain"]:,}')
+                 + barcell(ftpmi(l), max_v, f'{ftpmi(l):.0f}')
+                 + f'<td>{surf}</td>'
                  f'<td><span class="dotc" style="background:{DIFF[l["rating"]]}"></span>{l["rating"]}{team}</td>'
                  f'<td class="r">{fmt_mi(l["start_mi"])}</td></tr>')
         if n in EXCHANGES:
@@ -404,6 +420,12 @@ nav.top { position:sticky; top:0; z-index:9; background:var(--page); border-bott
 .steps li { margin:7px 0 }
 #map iframe { width:100% !important; max-width:none !important }
 .wrap.wide { max-width:1240px }
+td.bar { background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent) var(--p), transparent var(--p)); background-repeat:no-repeat }
+.pillrow { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 10px }
+.pillbtn { border:1px solid var(--grid); background:none; color:var(--ink2); font:inherit; font-size:12.5px;
+  padding:5px 10px; border-radius:99px; cursor:pointer; -webkit-appearance:none; appearance:none }
+.pillbtn.active { background:var(--ink); color:var(--page); border-color:var(--ink) }
+.skb.dim { opacity:.15 }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
   border-radius:7px; padding:5px 9px; margin-top:6px }
 .legfoot { margin-top:9px; display:flex; flex-wrap:wrap; gap:7px; align-items:center }
@@ -463,6 +485,9 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
 
 # ---------------- page shells ----------------
 # RUNNERS: set names once assignments are decided; the filter buttons + card labels pick them up.
+def slot_label(s):
+    return f'{s}-{RUNNERS[s]}' if RUNNERS.get(s) else f'Slot {s}'
+
 # runner names come baked into the HTML from data.RUNNERS; JS only handles filtering
 RUNNERS_JS = '''
 function filterSlot(s, btn) {
@@ -472,10 +497,22 @@ function filterSlot(s, btn) {
   document.querySelectorAll('.jumprow a').forEach(el => {
     el.classList.toggle('hiddenx', s !== 0 && Number(el.dataset.slot) !== s);
   });
+  document.querySelectorAll('.skb').forEach(el => {
+    el.classList.toggle('dim', s !== 0 && Number(el.dataset.slot) !== s);
+  });
   document.querySelectorAll('.filterbtn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   window.scrollTo({top: 0});
 }
+document.querySelectorAll('.idxbtn').forEach(b => b.addEventListener('click', () => {
+  const s = Number(b.dataset.slot);
+  document.querySelectorAll('#index tbody tr').forEach(tr => {
+    const match = tr.classList.contains('exrow') ? s === 0 : (s === 0 || Number(tr.dataset.slot) === s);
+    tr.classList.toggle('hiddenx', !match);
+  });
+  document.querySelectorAll('.idxbtn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+}));
 document.querySelectorAll('.filterbtn').forEach(b => {
   b.addEventListener('click', () => filterSlot(Number(b.dataset.slot), b));
 });
@@ -588,8 +625,7 @@ def build_index():
         jump += (f'<a href="#leg-{l["n"]}" data-slot="{slot}" title="{esc(NAMES[l["n"]])}">'
                  f'{l["n"]}<span class="d" style="background:{DIFF[l["rating"]]}"></span></a>')
     filters = '<button class="filterbtn active" data-slot="0">All runners</button>' + "".join(
-        f'<button class="filterbtn" data-slot="{s}">{s}-{esc(RUNNERS[s])}</button>' if RUNNERS.get(s)
-        else f'<button class="filterbtn" data-slot="{s}">Slot {s}</button>' for s in range(1, 7))
+        f'<button class="filterbtn" data-slot="{s}">{esc(slot_label(s))}</button>' for s in range(1, 7))
     nav = f'''<nav class="top">
   {nav_tabs("legs")}
   <div class="navrow"><span class="rowlabel">Runner</span>{filters}</div>
@@ -598,6 +634,11 @@ def build_index():
     sections_html = "".join(section_block(i, s) for i, s in enumerate(SECTIONS))
     body = f'''
 {hero(sub=False)}
+<div class="panel" id="course">
+  <h2>The whole course at a glance</h2>
+  {skyline_svg("")}
+  <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: {diff_legend()} · tap a bar to open that leg</div>
+</div>
 {how_to_read(compact=True)}
 {sections_html}'''
     return page("RUN1 · OTO 205 — Legs", nav, body, RUNNERS_JS)
@@ -605,30 +646,23 @@ def build_index():
 def build_overview():
     nav = f'''<nav class="top">
   {nav_tabs("overview")}
-  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#course">Course chart</a><a href="#map">Map</a><a href="#sections">Sections</a><a href="#index">All legs</a><a href="#plan">Planner</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
+  <div class="navrow"><span class="rowlabel">Jump to</span><a href="#index">All legs</a><a href="#map">Map</a><a href="#plan">Planner</a><a href="#watch">Watch</a><a href="#rules">Rules</a></div>
 </nav>'''
+    pills = ('<div class="pillrow web-only"><button class="pillbtn idxbtn active" data-slot="0">All legs</button>'
+             + "".join(f'<button class="pillbtn idxbtn" data-slot="{s}">{esc(slot_label(s))}</button>' for s in range(1, 7))
+             + '</div>')
     body = f'''
 {hero()}
-<div class="panel" id="course">
-  <h2>The whole course at a glance — steepness of every leg</h2>
-  {skyline_svg()}
-  <div class="legendrow">Bar height = climb per mile (ft/mi) · color = official difficulty: {diff_legend()} · tap a bar to open that leg</div>
+<div class="panel" id="index">
+  <h2>Every leg on one page</h2>
+  {pills}
+  {index_table()}
 </div>
 <div class="panel" id="map">
   <h2>Full course map <span class="tiny">(the race's official all-legs Strava route)</span></h2>
   <div class="strava-embed-placeholder" data-embed-type="route" data-embed-id="3386113643310609494" data-style="standard" data-map-hash="7.42/36.048/-93.997" data-club-id="1634354" data-from-embed="true"></div>
   <script src="https://strava-embeds.com/embed.js"></script>
   <p class="tiny" style="margin:.5em 0 0">Embed not loading? <a href="https://www.strava.com/routes/3386113643310609494" target="_blank" rel="noopener">Open the all-legs route on Strava ↗</a></p>
-</div>
-<div class="panel" id="sections">
-  <h2>Race in six sections</h2>
-  <div class="tscroll"><table class="tbl">
-    <thead><tr><th>Sec</th><th>Legs</th><th>Runs to</th><th class="r">Miles</th><th class="r">Climb</th><th class="r">Race mi at exchange</th></tr></thead>
-    <tbody>{sec_overview_rows()}</tbody></table></div>
-</div>
-<div class="panel" id="index">
-  <h2>Every leg on one page</h2>
-  {index_table()}
 </div>
 <div class="panel" id="plan">
   <h2>Runner planner — who takes which rotation slot?</h2>
@@ -644,9 +678,9 @@ def build_print():
     body = f'''
 {hero()}
 <div class="panel">
-  <h2>The whole course at a glance — steepness of every leg</h2>
-  {skyline_svg()}
-  <div class="legendrow">Bar height = climb per mile (ft/mi) · color = official difficulty: {diff_legend()}</div>
+  <h2>The whole course at a glance</h2>
+  {skyline_svg("")}
+  <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: {diff_legend()}</div>
 </div>
 <div class="panel">
   <h2>Race in six sections</h2>
