@@ -516,8 +516,8 @@ td.bar { background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%,
 .pillbtn.active { background:var(--ink); color:var(--page); border-color:var(--ink) }
 .skb.dim { opacity:.15 }
 .planctl { margin-top:10px; font-size:12.5px; color:var(--ink2); display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center }
-.planctl input { font:inherit; font-size:12.5px; background:var(--surface); color:var(--ink);
-  border:1px solid var(--grid); border-radius:6px; padding:3px 6px }
+.planctl input, .planctl select { font:inherit; font-size:12.5px; background:var(--surface); color:var(--ink);
+  border:1px solid var(--grid); border-radius:6px; padding:3px 6px; max-width:100% }
 .planctl #paceIn { width:52px; text-align:center }
 .planctl .pillbtn { padding:3px 9px }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
@@ -676,7 +676,9 @@ function renderNight(pace, start) {
   }
   g.innerHTML = parts.join('');
 }
+let __plan = {pace: null, start: null};
 function applyPlan(pace, start) {
+  __plan = {pace: pace, start: start};
   document.querySelectorAll('.eststart').forEach(el => {
     const t = start + pace*parseFloat(el.dataset.mi);
     el.textContent = fmtClock(t)+' '+phaseEmoji(t);
@@ -686,6 +688,54 @@ function applyPlan(pace, start) {
 function parsePace(v) { const m = v.trim().match(/^(\\d{1,2}):(\\d{2})$/); return m ? Number(m[1])+Number(m[2])/60 : null; }
 function hmJS(v) { const p = v.split(':').map(Number); return p[0]*60+p[1]; }
 function paceStr(p) { const mm = Math.floor(p), ss = Math.round((p-mm)*60); return mm+':'+String(ss).padStart(2,'0'); }
+__plan = {pace: PLAN.pace, start: PLAN.start};
+// ---- race-day finish estimator ----
+const rdLeg = document.getElementById('rdLeg');
+if (rdLeg) {
+  const rdTime = document.getElementById('rdTime'), rdPace = document.getElementById('rdPace'),
+        rdOut = document.getElementById('rdOut');
+  let rdAnchor = null;
+  const RACE0 = new Date(2026, 9, 9);  // Fri Oct 9, 2026 00:00 local
+  function raceMinToDate(t) { return new Date(RACE0.getTime() + t*60000); }
+  function rdUpdate() {
+    const opt = rdLeg.selectedOptions[0];
+    const pl = parsePace(rdPace.value);
+    if (!opt || !pl || !rdTime.value) return;
+    const dist = parseFloat(opt.dataset.dist), mi = parseFloat(opt.dataset.mi);
+    const clock = hmJS(rdTime.value), est = __plan.start + __plan.pace*mi;
+    let t = clock;
+    for (const cand of [clock, clock+1440, clock+2880]) {
+      if (Math.abs(cand-est) < Math.abs(t-est)) t = cand;
+    }
+    rdAnchor = {mi: mi, t: t};
+    const eta = t + pl*dist;
+    const finish = eta + __plan.pace*(PLAN.total - mi - dist);
+    let count = '';
+    const now = new Date(), real = raceMinToDate(eta);
+    if (Math.abs(now - RACE0) < 4*86400000 && real > now) {
+      const m = Math.round((real - now)/60000);
+      count = ` · in ${m >= 60 ? Math.floor(m/60)+'h ' : ''}${m%60}m`;
+    }
+    rdOut.innerHTML = `<b>${opt.dataset.runner || 'Runner'}</b> reaches <b>${opt.dataset.to}</b> ~<b>${fmtClock(eta)}</b>${count}` +
+      ` · projected race finish <b>${fmtClock(finish)}</b>`;
+  }
+  document.getElementById('rdNow').addEventListener('click', () => {
+    const n = new Date();
+    rdTime.value = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+    rdUpdate();
+  });
+  [rdLeg, rdTime, rdPace].forEach(el => el.addEventListener('change', rdUpdate));
+  document.getElementById('rdApply').addEventListener('click', () => {
+    if (!rdAnchor) { rdUpdate(); if (!rdAnchor) return; }
+    const s = ((rdAnchor.t - __plan.pace*rdAnchor.mi) % 1440 + 1440) % 1440;
+    const startEl = document.getElementById('startIn');
+    if (startEl) {
+      startEl.value = String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.round(s%60)).padStart(2,'0');
+      startEl.dispatchEvent(new Event('change'));
+    }
+    rdUpdate();
+  });
+}
 const paceIn = document.getElementById('paceIn'), startIn = document.getElementById('startIn');
 if (paceIn && startIn) {
   const sp = localStorage.getItem('oto_pace'), st = localStorage.getItem('oto_start');
@@ -717,6 +767,32 @@ addEventListener('resize', setScrollPad);
 
 def diff_legend():
     return "".join(f'<span class="pill" style="--pc:{c}"><span class="dot"></span><b>{k}</b></span>' for k, c in DIFF.items())
+
+def race_day_panel():
+    opts = ""
+    for l in LEGS:
+        n = l["n"]
+        slot = (n - 1) % 6 + 1
+        to = ("the FINISH 🏁" if n == 36
+              else f'Exchange {n} · {EXCHANGES[n]["name"]}' if n in EXCHANGES
+              else f'Exchange zone {n}')
+        opts += (f'<option value="{n}" data-dist="{l["dist"]}" data-mi="{l["start_mi"]}" data-to="{esc(to)}" '
+                 f'data-runner="{esc(RUNNERS.get(slot, ""))}">'
+                 f'Leg {n} · {esc(NAMES[n])} — {esc(RUNNERS.get(slot) or f"slot {slot}")}</option>')
+    p = PLAN["pace_min_per_mi"]
+    pace = f'{int(p)}:{round(p % 1 * 60):02d}'
+    return f'''<details class="legend" id="raceday">
+  <summary>🏁 Race day — who finishes when?</summary>
+  <div class="panel" style="margin-top:8px">
+    <div class="planctl"><select id="rdLeg">{opts}</select></div>
+    <div class="planctl">left the exchange at <input id="rdTime" type="time">
+      <button id="rdNow" class="pillbtn">now</button> · running about
+      <input id="rdPace" value="{pace}" size="4"> min/mi</div>
+    <p id="rdOut" class="beta" style="margin:.6em 0">Pick the leg, tap <b>now</b> at the handoff (or type the time), and the ETA shows here.</p>
+    <div class="planctl"><button id="rdApply" class="pillbtn">↻ re-time the whole schedule from this handoff</button>
+      <span class="tiny">shifts every est. start on this page (and the overview) so this leg's start matches reality — reset with the ⏱ control's reset</span></div>
+  </div>
+</details>'''
 
 def how_to_read(compact=False):
     body = f'''
@@ -830,6 +906,7 @@ def build_index():
   <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: {diff_legend()} · tap a bar to open that leg</div>
   {plan_ctl()}
 </div>
+{race_day_panel()}
 {how_to_read(compact=True)}
 {sections_html}'''
     return page("RUN1 · OTO 205 — Legs", nav, body, runners_js())

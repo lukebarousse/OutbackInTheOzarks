@@ -114,8 +114,8 @@ td.bar { background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%,
 .pillbtn.active { background:var(--ink); color:var(--page); border-color:var(--ink) }
 .skb.dim { opacity:.15 }
 .planctl { margin-top:10px; font-size:12.5px; color:var(--ink2); display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center }
-.planctl input { font:inherit; font-size:12.5px; background:var(--surface); color:var(--ink);
-  border:1px solid var(--grid); border-radius:6px; padding:3px 6px }
+.planctl input, .planctl select { font:inherit; font-size:12.5px; background:var(--surface); color:var(--ink);
+  border:1px solid var(--grid); border-radius:6px; padding:3px 6px; max-width:100% }
 .planctl #paceIn { width:52px; text-align:center }
 .planctl .pillbtn { padding:3px 9px }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
@@ -195,6 +195,18 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
   <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: <span class="pill" style="--pc:#0ca30c"><span class="dot"></span><b>Easy</b></span><span class="pill" style="--pc:#fab219"><span class="dot"></span><b>Moderate</b></span><span class="pill" style="--pc:#ec835a"><span class="dot"></span><b>Hard</b></span><span class="pill" style="--pc:#d03b3b"><span class="dot"></span><b>Very Hard</b></span> · tap a bar to open that leg</div>
   <div class="planctl web-only">⏱ Est. schedule assumes team pace <input id="paceIn" value="9:45" size="4"> min/mi · wave start Fri <input id="startIn" type="time" value="06:00"> <button id="planReset" class="pillbtn">reset</button> <span class="tiny">2025 actual: 34:02 ≈ 9:51/mi · waves 6:00 AM–noon, assigned by Oct 6</span></div>
 </div>
+<details class="legend" id="raceday">
+  <summary>🏁 Race day — who finishes when?</summary>
+  <div class="panel" style="margin-top:8px">
+    <div class="planctl"><select id="rdLeg"><option value="1" data-dist="6.35" data-mi="0.0" data-to="Exchange zone 1" data-runner="Geoff">Leg 1 · Didgeridoo Dash — Geoff</option><option value="2" data-dist="7.53" data-mi="6.35" data-to="Exchange zone 2" data-runner="Jonathan">Leg 2 · Rockhouse Roll — Jonathan</option><option value="3" data-dist="6.81" data-mi="13.88" data-to="Exchange zone 3" data-runner="Luke">Leg 3 · Koala Holler — Luke</option><option value="4" data-dist="5.33" data-mi="20.69" data-to="Exchange zone 4" data-runner="Parker">Leg 4 · Hot Diggity! — Parker</option><option value="5" data-dist="6.49" data-mi="26.02" data-to="Exchange zone 5" data-runner="Sebastian">Leg 5 · Wobble to Cobble — Sebastian</option><option value="6" data-dist="5.04" data-mi="32.51" data-to="Exchange 6 · Hobbs State Park" data-runner="Scott">Leg 6 · Hobb Nob — Scott</option><option value="7" data-dist="4.87" data-mi="37.55" data-to="Exchange zone 7" data-runner="Geoff">Leg 7 · Little Clifty — Geoff</option><option value="8" data-dist="6.08" data-mi="42.42" data-to="Exchange zone 8" data-runner="Jonathan">Leg 8 · War Eagle — Jonathan</option><option value="9" data-dist="8.13" data-mi="48.5" data-to="Exchange zone 9" data-runner="Luke">Leg 9 · Up and At 'em! — Luke</option><option value="10" data-dist="8.73" data-mi="56.63" data-to="Exchange zone 10" data-runner="Parker">Leg 10 · Dingos with Banjos — Parker</option><option value="11" data-dist="7.13" data-mi="65.36" data-to="Exchange zone 11" data-runner="Sebastian">Leg 11 · The Roamin' Forum — Sebastian</option><option value="12" data-dist="3.86" data-mi="72.49" data-to="Exchange 12 · Withrow Springs State Park" data-runner="Scott">Leg 12 · Walkabout to Withrow — Scott</option><option value="13" data-dist="6.09" data-mi="76.35" data-to="Exchange zone 13" data-runner="Geoff">Leg 13 · Lolligaggin' — Geoff</option><option value="14" data-dist="4.89" data-mi="82.44" data-to="Exchange zone 14" data-runner="Jonathan">Leg 14 · Bandicoot — Jonathan</option><option value="15" data-dist="6.95" data-mi="87.33" data-to="Exchange zone 15" data-runner="Luke">Leg 15 · I Ain't Skeerd! — Luke</option><option value="16" data-dist="4.85" data-mi="94.28" data-to="Exchange zone 16" data-runner="Parker">Leg 16 · Playin' Possum — Parker</option><option value="17" data-dist="4.74" data-mi="99.13" data-to="Exchange zone 17" data-runner="Sebastian">Leg 17 · Rip Snorter — Sebastian</option><option value="18" data-dist="4.75" data-mi="103.87" data-to="Exchange 18 · Elkins — Bunch City Park" data-runner="Scott">Leg 18 · Buncha Fun! — Scott</option><option value="19" data-dist="5.72" data-mi="108.62" data-to="Exchange zone 19" data-runner="Geoff">Leg 19 · Tasmanian Devil — Geoff</option><option value="20" data-dist="4.36" data-mi="114.34" data-to="Exchange zone 20" data-runner="Jonathan">Leg 20 · No Worries! — Jonathan</option><option value="21" data-dist="4.23" data-mi="118.7" data-to="Exchange zone 21" data-runner="Luke">Leg 21 · Wallaby — Luke</option><option value="22" data-dist="4.84" data-mi="122.93" data-to="Exchange zone 22" data-runner="Parker">Leg 22 · Plumb Tuckered — Parker</option><option value="23" data-dist="8.17" data-mi="127.77" data-to="Exchange zone 23" data-runner="Sebastian">Leg 23 · Greased Lightnin' — Sebastian</option><option value="24" data-dist="4.66" data-mi="135.94" data-to="Exchange 24 · Lake Fort Smith State Park" data-runner="Scott">Leg 24 · Bushwalker — Scott</option><option value="25" data-dist="8.41" data-mi="140.6" data-to="Exchange zone 25" data-runner="Geoff">Leg 25 · Tester to Chester — Geoff</option><option value="26" data-dist="5.47" data-mi="149.01" data-to="Exchange zone 26" data-runner="Jonathan">Leg 26 · Gumption — Jonathan</option><option value="27" data-dist="7.67" data-mi="154.48" data-to="Exchange zone 27" data-runner="Luke">Leg 27 · Chuck a Wobbly — Luke</option><option value="28" data-dist="5.15" data-mi="162.15" data-to="Exchange zone 28" data-runner="Parker">Leg 28 · Boondocks — Parker</option><option value="29" data-dist="6.27" data-mi="167.3" data-to="Exchange zone 29" data-runner="Sebastian">Leg 29 · Backwoods Boomerang — Sebastian</option><option value="30" data-dist="7.56" data-mi="173.57" data-to="Exchange 30 · Devil's Den State Park" data-runner="Scott">Leg 30 · Holy Hedgehog! — Scott</option><option value="31" data-dist="6.27" data-mi="181.13" data-to="Exchange zone 31" data-runner="Geoff">Leg 31 · Running from the Devil — Geoff</option><option value="32" data-dist="4.62" data-mi="187.4" data-to="Exchange zone 32" data-runner="Jonathan">Leg 32 · Ridgy Didge — Jonathan</option><option value="33" data-dist="3.6" data-mi="192.02" data-to="Exchange zone 33" data-runner="Luke">Leg 33 · Platypus Plod — Luke</option><option value="34" data-dist="3.62" data-mi="195.62" data-to="Exchange zone 34" data-runner="Parker">Leg 34 · Gravel, Grit &amp; Bridge Biz — Parker</option><option value="35" data-dist="3.03" data-mi="199.24" data-to="Exchange zone 35" data-runner="Sebastian">Leg 35 · The Holy Roller — Sebastian</option><option value="36" data-dist="4.89" data-mi="202.27" data-to="the FINISH 🏁" data-runner="Scott">Leg 36 · Finish Line — Scott</option></select></div>
+    <div class="planctl">left the exchange at <input id="rdTime" type="time">
+      <button id="rdNow" class="pillbtn">now</button> · running about
+      <input id="rdPace" value="9:45" size="4"> min/mi</div>
+    <p id="rdOut" class="beta" style="margin:.6em 0">Pick the leg, tap <b>now</b> at the handoff (or type the time), and the ETA shows here.</p>
+    <div class="planctl"><button id="rdApply" class="pillbtn">↻ re-time the whole schedule from this handoff</button>
+      <span class="tiny">shifts every est. start on this page (and the overview) so this leg's start matches reality — reset with the ⏱ control's reset</span></div>
+  </div>
+</details>
 <details class="legend"><summary>How to read this guide (sources + legend)</summary><div class="panel" style="margin-top:8px">
   <p style="margin:.3em 0"><span class="srcbadge">2025 team beta</span>
   Beta boxes, difficulty ratings, surface breakdowns and commentary are from <b>our runner who did this race in 2025</b>.
@@ -1281,7 +1293,9 @@ function renderNight(pace, start) {
   }
   g.innerHTML = parts.join('');
 }
+let __plan = {pace: null, start: null};
 function applyPlan(pace, start) {
+  __plan = {pace: pace, start: start};
   document.querySelectorAll('.eststart').forEach(el => {
     const t = start + pace*parseFloat(el.dataset.mi);
     el.textContent = fmtClock(t)+' '+phaseEmoji(t);
@@ -1291,6 +1305,54 @@ function applyPlan(pace, start) {
 function parsePace(v) { const m = v.trim().match(/^(\d{1,2}):(\d{2})$/); return m ? Number(m[1])+Number(m[2])/60 : null; }
 function hmJS(v) { const p = v.split(':').map(Number); return p[0]*60+p[1]; }
 function paceStr(p) { const mm = Math.floor(p), ss = Math.round((p-mm)*60); return mm+':'+String(ss).padStart(2,'0'); }
+__plan = {pace: PLAN.pace, start: PLAN.start};
+// ---- race-day finish estimator ----
+const rdLeg = document.getElementById('rdLeg');
+if (rdLeg) {
+  const rdTime = document.getElementById('rdTime'), rdPace = document.getElementById('rdPace'),
+        rdOut = document.getElementById('rdOut');
+  let rdAnchor = null;
+  const RACE0 = new Date(2026, 9, 9);  // Fri Oct 9, 2026 00:00 local
+  function raceMinToDate(t) { return new Date(RACE0.getTime() + t*60000); }
+  function rdUpdate() {
+    const opt = rdLeg.selectedOptions[0];
+    const pl = parsePace(rdPace.value);
+    if (!opt || !pl || !rdTime.value) return;
+    const dist = parseFloat(opt.dataset.dist), mi = parseFloat(opt.dataset.mi);
+    const clock = hmJS(rdTime.value), est = __plan.start + __plan.pace*mi;
+    let t = clock;
+    for (const cand of [clock, clock+1440, clock+2880]) {
+      if (Math.abs(cand-est) < Math.abs(t-est)) t = cand;
+    }
+    rdAnchor = {mi: mi, t: t};
+    const eta = t + pl*dist;
+    const finish = eta + __plan.pace*(PLAN.total - mi - dist);
+    let count = '';
+    const now = new Date(), real = raceMinToDate(eta);
+    if (Math.abs(now - RACE0) < 4*86400000 && real > now) {
+      const m = Math.round((real - now)/60000);
+      count = ` · in ${m >= 60 ? Math.floor(m/60)+'h ' : ''}${m%60}m`;
+    }
+    rdOut.innerHTML = `<b>${opt.dataset.runner || 'Runner'}</b> reaches <b>${opt.dataset.to}</b> ~<b>${fmtClock(eta)}</b>${count}` +
+      ` · projected race finish <b>${fmtClock(finish)}</b>`;
+  }
+  document.getElementById('rdNow').addEventListener('click', () => {
+    const n = new Date();
+    rdTime.value = String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+    rdUpdate();
+  });
+  [rdLeg, rdTime, rdPace].forEach(el => el.addEventListener('change', rdUpdate));
+  document.getElementById('rdApply').addEventListener('click', () => {
+    if (!rdAnchor) { rdUpdate(); if (!rdAnchor) return; }
+    const s = ((rdAnchor.t - __plan.pace*rdAnchor.mi) % 1440 + 1440) % 1440;
+    const startEl = document.getElementById('startIn');
+    if (startEl) {
+      startEl.value = String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.round(s%60)).padStart(2,'0');
+      startEl.dispatchEvent(new Event('change'));
+    }
+    rdUpdate();
+  });
+}
 const paceIn = document.getElementById('paceIn'), startIn = document.getElementById('startIn');
 if (paceIn && startIn) {
   const sp = localStorage.getItem('oto_pace'), st = localStorage.getItem('oto_start');
