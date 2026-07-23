@@ -8,7 +8,7 @@ profiles are embedded in each leg card.
 """
 import base64, io, json, os, html as H
 import qrcode
-from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL_GAIN
+from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL_GAIN, RUNNERS
 
 DIFF = {"Easy": "#0ca30c", "Moderate": "#fab219", "Hard": "#ec835a", "Very Hard": "#d03b3b"}
 # deliberately outside the difficulty palette (green/yellow/orange/red)
@@ -159,7 +159,7 @@ def leg_card(l):
     <div class="legnum">{n:02d}</div>
     <div class="titleblock">
       <h3>{esc(NAMES[n])}</h3>
-      <div class="meta">mile {fmt_mi(l["start_mi"])} → {fmt_mi(l["end_mi"])} · rotation slot {slot} · runner <span class="runner-name" data-slot="{slot}">—</span></div>
+      <div class="meta">mile {fmt_mi(l["start_mi"])} → {fmt_mi(l["end_mi"])} · rotation slot {slot} · runner <span class="runner-name" data-slot="{slot}"><b>{esc(RUNNERS.get(slot) or "—")}</b></span></div>
     </div>
     <div class="badges">{badge("official", l["rating"])}{team_b}</div>
   </div>
@@ -258,8 +258,9 @@ def planner_table():
             f'title="Leg {l["n"]} · {esc(NAMES[l["n"]])} · {l["team"] or l["rating"]}"></span>'
             for l in legs)
         rows += (f'<tr><td class="c"><b>{rank}</b></td><td class="c"><b>{s}</b></td>'
-                 f'<td class="blankcell runner-name" data-slot="{s}">&nbsp;</td>'
-                 f'<td>{", ".join(str(l["n"]) for l in legs)}</td><td class="r">{x["mi"]:.1f}</td><td class="r">{x["gain"]:,}</td>'
+                 + (f'<td class="runner-name" data-slot="{s}"><b>{esc(RUNNERS[s])}</b></td>' if RUNNERS.get(s)
+                    else f'<td class="blankcell runner-name" data-slot="{s}">&nbsp;</td>')
+                 + f'<td>{", ".join(str(l["n"]) for l in legs)}</td><td class="r">{x["mi"]:.1f}</td><td class="r">{x["gain"]:,}</td>'
                  f'<td class="nowrap">{dots}</td>'
                  f'<td><div class="meterwrap"><div class="meter"><div class="fill" style="width:{idx}%"></div></div>'
                  f'<span class="mval">{idx}</span></div></td>'
@@ -462,12 +463,8 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
 
 # ---------------- page shells ----------------
 # RUNNERS: set names once assignments are decided; the filter buttons + card labels pick them up.
+# runner names come baked into the HTML from data.RUNNERS; JS only handles filtering
 RUNNERS_JS = '''
-const RUNNERS = {1:"", 2:"", 3:"", 4:"", 5:"", 6:""};  // e.g. {1:"Luke", 2:"Jake", ...}
-document.querySelectorAll('.runner-name').forEach(el => {
-  const nm = RUNNERS[el.dataset.slot];
-  if (nm) el.textContent = nm;
-});
 function filterSlot(s, btn) {
   document.querySelectorAll('.leg').forEach(el => {
     el.classList.toggle('hidden', s !== 0 && Number(el.dataset.slot) !== s);
@@ -480,10 +477,7 @@ function filterSlot(s, btn) {
   window.scrollTo({top: 0});
 }
 document.querySelectorAll('.filterbtn').forEach(b => {
-  const s = Number(b.dataset.slot);
-  const nm = RUNNERS[s];
-  if (nm) b.textContent = nm;
-  b.addEventListener('click', () => filterSlot(s, b));
+  b.addEventListener('click', () => filterSlot(Number(b.dataset.slot), b));
 });
 // keep anchor targets clear of the sticky nav
 const topnav = document.querySelector('nav.top');
@@ -594,7 +588,8 @@ def build_index():
         jump += (f'<a href="#leg-{l["n"]}" data-slot="{slot}" title="{esc(NAMES[l["n"]])}">'
                  f'{l["n"]}<span class="d" style="background:{DIFF[l["rating"]]}"></span></a>')
     filters = '<button class="filterbtn active" data-slot="0">All runners</button>' + "".join(
-        f'<button class="filterbtn" data-slot="{s}">Slot {s}</button>' for s in range(1, 7))
+        f'<button class="filterbtn" data-slot="{s}">{s}-{esc(RUNNERS[s])}</button>' if RUNNERS.get(s)
+        else f'<button class="filterbtn" data-slot="{s}">Slot {s}</button>' for s in range(1, 7))
     nav = f'''<nav class="top">
   {nav_tabs("legs")}
   <div class="navrow"><span class="rowlabel">Runner</span>{filters}</div>

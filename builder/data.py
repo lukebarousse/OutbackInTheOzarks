@@ -234,3 +234,6 @@ def with_cumulative(legs):
 LEGS = with_cumulative(LEGS)
 TOTAL_MI = LEGS[-1]["end_mi"]
 TOTAL_GAIN = sum(l["gain"] for l in LEGS)
+
+# rotation slot -> runner (2026 team)
+RUNNERS = {1: "Geoff", 2: "Jonathan", 3: "Luke", 4: "Parker", 5: "Sebastian", 6: "Scott"}
