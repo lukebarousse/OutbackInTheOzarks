@@ -110,12 +110,12 @@ def night_group(segs, plot_h):
     for ma, mb, show_a, show_b in regions:
         xa, xb = mile_x(ma, segs), mile_x(mb, segs)
         parts.append(f'<rect x="{xa:.1f}" y="{TOP}" width="{xb-xa:.1f}" height="{plot_h}" fill="var(--nightshade)"/>')
-        parts.append(f'<text x="{(xa+xb)/2:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌙 night</text>')
-        if show_a: parts.append(f'<text x="{xa:.1f}" y="{TOP+22}" text-anchor="middle" font-size="8">🌇</text>')
-        if show_b: parts.append(f'<text x="{xb:.1f}" y="{TOP+22}" text-anchor="middle" font-size="8">🌅</text>')
+        parts.append(f'<text x="{(xa+xb)/2:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">🌙 night</text>')
+        if show_a: parts.append(f'<text x="{xa:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌇</text>')
+        if show_b: parts.append(f'<text x="{xb:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌅</text>')
     for da, db in day_spans:
         if db - da > 18:
-            parts.append(f'<text x="{(mile_x(da,segs)+mile_x(db,segs))/2:.1f}" y="{SKY["TOP"]+10}" text-anchor="middle" font-size="8">☀️ day</text>')
+            parts.append(f'<text x="{(mile_x(da,segs)+mile_x(db,segs))/2:.1f}" y="{SKY["TOP"]+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">☀️ day</text>')
     return f'<g id="nightg">{"".join(parts)}</g>'
 
 def skyline_svg(legs_href="index.html"):
@@ -399,12 +399,12 @@ def css():
 :root { color-scheme: light;
   --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
   --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --card:#ffffff; --accent:#2a78d6;
-  --nightshade:rgba(38,52,110,.10) }
+  --nightshade:rgba(38,52,110,.13) }
 @media (prefers-color-scheme: dark) {
   :root:not([data-print]) { color-scheme: dark;
     --surface:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
     --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.12); --card:#232322; --accent:#3987e5;
-    --nightshade:rgba(140,160,255,.13) } }
+    --nightshade:rgba(140,160,255,.18) } }
 * { box-sizing:border-box }
 html { scroll-behavior:smooth }
 body { margin:0; background:var(--page); color:var(--ink);
@@ -650,12 +650,12 @@ function renderNight(pace, start) {
   for (const [ma, mb, sa, sb] of regions) {
     const xa = mileX(ma), xb = mileX(mb);
     parts.push(`<rect x="${xa}" y="${GEO.top}" width="${xb-xa}" height="${GEO.ploth}" fill="var(--nightshade)"/>`);
-    parts.push(`<text x="${(xa+xb)/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌙 night</text>`);
-    if (sa) parts.push(`<text x="${xa}" y="${GEO.top+22}" text-anchor="middle" font-size="8">🌇</text>`);
-    if (sb) parts.push(`<text x="${xb}" y="${GEO.top+22}" text-anchor="middle" font-size="8">🌅</text>`);
+    parts.push(`<text x="${(xa+xb)/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">🌙 night</text>`);
+    if (sa) parts.push(`<text x="${xa}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌇</text>`);
+    if (sb) parts.push(`<text x="${xb}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌅</text>`);
   }
   for (const [da, db] of dayspans) {
-    if (db-da > 18) parts.push(`<text x="${(mileX(da)+mileX(db))/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8">☀️ day</text>`);
+    if (db-da > 18) parts.push(`<text x="${(mileX(da)+mileX(db))/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8" fill="var(--ink2)">☀️ day</text>`);
   }
   g.innerHTML = parts.join('');
 }
