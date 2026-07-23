@@ -237,3 +237,12 @@ TOTAL_GAIN = sum(l["gain"] for l in LEGS)
 
 # rotation slot -> runner (2026 team)
 RUNNERS = {1: "Geoff", 2: "Jonathan", 3: "Luke", 4: "Parker", 5: "Sebastian", 6: "Scott"}
+
+# timeline assumptions (2026) — update start_hhmm when wave assignments land (notified by Oct 6).
+# Official: first wave 6:00 AM Friday, staggered 6:00-12:00 by team 10k pace (race FAQ).
+# pace: team assumed average; 2025 actual was 34:02 for 207.2 mi ≈ 9:51/mi.
+PLAN = dict(
+    start_hhmm="06:00",
+    pace_min_per_mi=9.75,
+    sunrise="07:15", sunset="18:45",   # Eureka Springs/Fayetteville, Oct 9-10
+)

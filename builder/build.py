@@ -8,7 +8,7 @@ profiles are embedded in each leg card.
 """
 import base64, io, json, os, html as H
 import qrcode
-from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL_GAIN, RUNNERS
+from data import LEGS, NAMES, STRAVA, EXCHANGES, SECTIONS, RACE, TOTAL_MI, TOTAL_GAIN, RUNNERS, PLAN
 
 DIFF = {"Easy": "#0ca30c", "Moderate": "#fab219", "Hard": "#ec835a", "Very Hard": "#d03b3b"}
 # deliberately outside the difficulty palette (green/yellow/orange/red)
@@ -43,10 +43,85 @@ def strava_url(n): return f"https://www.strava.com/routes/{STRAVA[n]}"
 def ftpmi(l): return l["gain"] / l["dist"]
 
 # ---------------- skyline ----------------
+# ---------------- timeline estimates ----------------
+def hm(s):
+    h, m = map(int, s.split(":")); return h * 60 + m
+
+DAYS = ["Fri", "Sat", "Sun"]
+def fmt_clock(t):
+    d = int(t // 1440); mm = int(round(t % 1440))
+    h, m = divmod(mm, 60)
+    return f'{DAYS[min(d, 2)]} {h % 12 or 12}:{m:02d} {"AM" if h < 12 else "PM"}'
+
+def phase_emoji(t):
+    c = t % 1440
+    sr, ss = hm(PLAN["sunrise"]), hm(PLAN["sunset"])
+    if sr - 45 <= c < sr + 45: return "🌅"
+    if ss - 45 <= c < ss + 45: return "🌆"
+    if sr + 45 <= c < ss - 45: return "☀️"
+    return "🌙"
+
+def est_start_html(l):
+    t = hm(PLAN["start_hhmm"]) + PLAN["pace_min_per_mi"] * l["start_mi"]
+    return f'<span class="eststart nowrap" data-mi="{l["start_mi"]}">{fmt_clock(t)} {phase_emoji(t)}</span>'
+
+def night_regions(pace, t0):
+    """Night intervals (sunset -> next sunrise) clipped to the race, in race miles."""
+    t1 = t0 + pace * TOTAL_MI
+    out = []
+    for d in range(3):
+        ns, ne = d * 1440 + hm(PLAN["sunset"]), (d + 1) * 1440 + hm(PLAN["sunrise"])
+        a, b = max(ns, t0), min(ne, t1)
+        if b > a:
+            out.append(((a - t0) / pace, (b - t0) / pace, ns >= t0, ne <= t1))
+    return out
+
+# ---------------- skyline ----------------
+SKY = dict(W=760, H=200, PADL=30, PADR=8, TOP=40, BOT=26)
+
+def sky_layout():
+    plot_w = SKY["W"] - SKY["PADL"] - SKY["PADR"]
+    plot_h = SKY["H"] - SKY["TOP"] - SKY["BOT"]
+    total_v = sum(ftpmi(l) for l in LEGS)
+    segs, edges, xx = [], {}, SKY["PADL"]
+    for l in LEGS:
+        w = ftpmi(l) / total_v * plot_w
+        segs.append(dict(a=l["start_mi"], b=l["end_mi"], x0=xx, x1=xx + w))
+        xx += w
+        edges[l["n"]] = xx
+    return plot_w, plot_h, segs, edges
+
+def mile_x(mi, segs):
+    for s in segs:
+        if s["a"] - 1e-9 <= mi <= s["b"] + 1e-9:
+            return s["x0"] + (mi - s["a"]) / (s["b"] - s["a"]) * (s["x1"] - s["x0"])
+    return segs[0]["x0"] if mi < segs[0]["a"] else segs[-1]["x1"]
+
+def night_group(segs, plot_h):
+    """Shade estimated night stretch on the skyline; regenerated live by JS when the plan changes."""
+    TOP = SKY["TOP"]
+    parts = []
+    regions = night_regions(PLAN["pace_min_per_mi"], hm(PLAN["start_hhmm"]))
+    day_spans = []
+    cursor = 0.0
+    for ma, mb, _, _ in regions:
+        day_spans.append((cursor, ma)); cursor = mb
+    day_spans.append((cursor, TOTAL_MI))
+    for ma, mb, show_a, show_b in regions:
+        xa, xb = mile_x(ma, segs), mile_x(mb, segs)
+        parts.append(f'<rect x="{xa:.1f}" y="{TOP}" width="{xb-xa:.1f}" height="{plot_h}" fill="var(--nightshade)"/>')
+        parts.append(f'<text x="{(xa+xb)/2:.1f}" y="{TOP+10}" text-anchor="middle" font-size="8">🌙 night</text>')
+        if show_a: parts.append(f'<text x="{xa:.1f}" y="{TOP+22}" text-anchor="middle" font-size="8">🌇</text>')
+        if show_b: parts.append(f'<text x="{xb:.1f}" y="{TOP+22}" text-anchor="middle" font-size="8">🌅</text>')
+    for da, db in day_spans:
+        if db - da > 18:
+            parts.append(f'<text x="{(mile_x(da,segs)+mile_x(db,segs))/2:.1f}" y="{SKY["TOP"]+10}" text-anchor="middle" font-size="8">☀️ day</text>')
+    return f'<g id="nightg">{"".join(parts)}</g>'
+
 def skyline_svg(legs_href="index.html"):
     """Height = leg distance, width = steepness (ft/mi), color = team-adjusted difficulty."""
-    W, H_, PAD_L, PAD_R, TOP, BOT = 760, 200, 30, 8, 40, 26
-    plot_w, plot_h = W - PAD_L - PAD_R, H_ - TOP - BOT
+    W, H_, PAD_L, PAD_R, TOP, BOT = SKY["W"], SKY["H"], SKY["PADL"], SKY["PADR"], SKY["TOP"], SKY["BOT"]
+    plot_w, plot_h, segs, _ = sky_layout()
     total_v = sum(ftpmi(l) for l in LEGS)
     max_d = max(l["dist"] for l in LEGS)
     def y(d): return TOP + plot_h - d / max_d * plot_h
@@ -54,6 +129,7 @@ def skyline_svg(legs_href="index.html"):
     for gv in (2, 4, 6, 8):
         parts.append(f'<line x1="{PAD_L}" y1="{y(gv):.1f}" x2="{W-PAD_R}" y2="{y(gv):.1f}" stroke="var(--grid)" stroke-width="1"/>')
         parts.append(f'<text x="{PAD_L-4}" y="{y(gv)+3:.1f}" text-anchor="end" font-size="8" fill="var(--muted)">{gv}</text>')
+    parts.append(night_group(segs, plot_h))
     xx = PAD_L
     edges = {}
     for l in LEGS:
@@ -168,7 +244,7 @@ def leg_card(l):
     <div class="legnum">{n:02d}</div>
     <div class="titleblock">
       <h3>{esc(NAMES[n])}</h3>
-      <div class="meta">mile {fmt_mi(l["start_mi"])} → {fmt_mi(l["end_mi"])} · rotation slot {slot} · runner <span class="runner-name" data-slot="{slot}"><b>{esc(RUNNERS.get(slot) or "—")}</b></span></div>
+      <div class="meta">mile {fmt_mi(l["start_mi"])} → {fmt_mi(l["end_mi"])} · rotation slot {slot} · runner <span class="runner-name" data-slot="{slot}"><b>{esc(RUNNERS.get(slot) or "—")}</b></span> · est. start {est_start_html(l)}</div>
     </div>
     <div class="badges">{badge("official", l["rating"])}{team_b}</div>
   </div>
@@ -309,11 +385,12 @@ def index_table(legs_href="index.html"):
                  + barcell(ftpmi(l), max_v, f'{ftpmi(l):.0f}')
                  + f'<td>{surf}</td>'
                  f'<td><span class="dotc" style="background:{DIFF[l["rating"]]}"></span>{l["rating"]}{team}</td>'
-                 f'<td class="r">{fmt_mi(l["start_mi"])}</td></tr>')
+                 f'<td class="r">{fmt_mi(l["start_mi"])}</td>'
+                 f'<td class="nowrap">{est_start_html(l)}</td></tr>')
         if n in EXCHANGES:
-            rows += f'<tr class="exrow"><td colspan="8">🚩 {esc(EXCHANGES[n]["name"])} — mile {fmt_mi(l["end_mi"])}</td></tr>'
+            rows += f'<tr class="exrow"><td colspan="9">🚩 {esc(EXCHANGES[n]["name"])} — mile {fmt_mi(l["end_mi"])}</td></tr>'
     return f'''<div class="tscroll"><table class="tbl small">
-<thead><tr><th>#</th><th>Leg</th><th class="r">Mi</th><th class="r">Gain</th><th class="r">ft/mi</th><th>Surface</th><th>Rating (official → team)</th><th class="r">Starts @ mi</th></tr></thead>
+<thead><tr><th>#</th><th>Leg</th><th class="r">Mi</th><th class="r">Gain</th><th class="r">ft/mi</th><th>Surface</th><th>Rating (official → team)</th><th class="r">Starts @ mi</th><th>Est start</th></tr></thead>
 <tbody>{rows}</tbody></table></div>'''
 
 # ---------------- shared css ----------------
@@ -321,11 +398,13 @@ def css():
     return '''
 :root { color-scheme: light;
   --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
-  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --card:#ffffff; --accent:#2a78d6 }
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10); --card:#ffffff; --accent:#2a78d6;
+  --nightshade:rgba(38,52,110,.10) }
 @media (prefers-color-scheme: dark) {
   :root:not([data-print]) { color-scheme: dark;
     --surface:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
-    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.12); --card:#232322; --accent:#3987e5 } }
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.12); --card:#232322; --accent:#3987e5;
+    --nightshade:rgba(140,160,255,.13) } }
 * { box-sizing:border-box }
 html { scroll-behavior:smooth }
 body { margin:0; background:var(--page); color:var(--ink);
@@ -426,6 +505,11 @@ td.bar { background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%,
   padding:5px 10px; border-radius:99px; cursor:pointer; -webkit-appearance:none; appearance:none }
 .pillbtn.active { background:var(--ink); color:var(--page); border-color:var(--ink) }
 .skb.dim { opacity:.15 }
+.planctl { margin-top:10px; font-size:12.5px; color:var(--ink2); display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center }
+.planctl input { font:inherit; font-size:12.5px; background:var(--surface); color:var(--ink);
+  border:1px solid var(--grid); border-radius:6px; padding:3px 6px }
+.planctl #paceIn { width:52px; text-align:center }
+.planctl .pillbtn { padding:3px 9px }
 .footnote { font-size:11.5px; color:var(--ink2); background:var(--surface); border:1px dashed var(--axis);
   border-radius:7px; padding:5px 9px; margin-top:6px }
 .legfoot { margin-top:9px; display:flex; flex-wrap:wrap; gap:7px; align-items:center }
@@ -488,7 +572,25 @@ footer.colophon { margin-top:36px; font-size:11.5px; color:var(--muted); border-
 def slot_label(s):
     return f'{s}-{RUNNERS[s]}' if RUNNERS.get(s) else f'Slot {s}'
 
-# runner names come baked into the HTML from data.RUNNERS; JS only handles filtering
+def plan_ctl():
+    p = PLAN["pace_min_per_mi"]
+    pace = f'{int(p)}:{round(p % 1 * 60):02d}'
+    return (f'<div class="planctl web-only">⏱ Est. schedule assumes team pace '
+            f'<input id="paceIn" value="{pace}" size="4"> min/mi · wave start Fri '
+            f'<input id="startIn" type="time" value="{PLAN["start_hhmm"]}"> '
+            f'<button id="planReset" class="pillbtn">reset</button> '
+            f'<span class="tiny">2025 actual: 34:02 ≈ 9:51/mi · waves 6:00 AM–noon, assigned by Oct 6</span></div>')
+
+def runners_js():
+    plan = dict(start=hm(PLAN["start_hhmm"]), pace=PLAN["pace_min_per_mi"],
+                sr=hm(PLAN["sunrise"]), ss=hm(PLAN["sunset"]), total=TOTAL_MI)
+    _, plot_h, segs, _ = sky_layout()
+    return ("const PLAN=" + json.dumps(plan)
+            + ";const SEGS=" + json.dumps([{k: round(v, 3) for k, v in s.items()} for s in segs])
+            + ";const GEO=" + json.dumps(dict(top=SKY["TOP"], ploth=plot_h)) + ";"
+            + RUNNERS_JS)
+
+# runner names come baked into the HTML from data.RUNNERS; JS handles filtering + plan recompute
 RUNNERS_JS = '''
 function filterSlot(s, btn) {
   document.querySelectorAll('.leg').forEach(el => {
@@ -516,6 +618,77 @@ document.querySelectorAll('.idxbtn').forEach(b => b.addEventListener('click', ()
 document.querySelectorAll('.filterbtn').forEach(b => {
   b.addEventListener('click', () => filterSlot(Number(b.dataset.slot), b));
 });
+// ---- pace / timeline estimator ----
+const DAYSJS = ['Fri','Sat','Sun'];
+function fmtClock(t) {
+  const d = Math.min(Math.floor(t/1440), 2); const mm = Math.round(t%1440);
+  const h = Math.floor(mm/60), m = mm%60;
+  return DAYSJS[d]+' '+((h%12)||12)+':'+String(m).padStart(2,'0')+' '+(h<12?'AM':'PM');
+}
+function phaseEmoji(t) {
+  const c = t%1440;
+  if (c >= PLAN.sr-45 && c < PLAN.sr+45) return '🌅';
+  if (c >= PLAN.ss-45 && c < PLAN.ss+45) return '🌆';
+  if (c >= PLAN.sr+45 && c < PLAN.ss-45) return '☀️';
+  return '🌙';
+}
+function mileX(mi) {
+  for (const s of SEGS) { if (mi >= s.a-1e-9 && mi <= s.b+1e-9) return s.x0+(mi-s.a)/(s.b-s.a)*(s.x1-s.x0); }
+  return mi < SEGS[0].a ? SEGS[0].x0 : SEGS[SEGS.length-1].x1;
+}
+function renderNight(pace, start) {
+  const g = document.getElementById('nightg'); if (!g) return;
+  const t1 = start + pace*PLAN.total; const parts = []; const regions = [];
+  for (let d = 0; d < 3; d++) {
+    const ns = d*1440+PLAN.ss, ne = (d+1)*1440+PLAN.sr;
+    const a = Math.max(ns, start), b = Math.min(ne, t1);
+    if (b > a) regions.push([(a-start)/pace, (b-start)/pace, ns >= start, ne <= t1]);
+  }
+  const dayspans = []; let cur = 0;
+  for (const r of regions) { dayspans.push([cur, r[0]]); cur = r[1]; }
+  dayspans.push([cur, PLAN.total]);
+  for (const [ma, mb, sa, sb] of regions) {
+    const xa = mileX(ma), xb = mileX(mb);
+    parts.push(`<rect x="${xa}" y="${GEO.top}" width="${xb-xa}" height="${GEO.ploth}" fill="var(--nightshade)"/>`);
+    parts.push(`<text x="${(xa+xb)/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8">🌙 night</text>`);
+    if (sa) parts.push(`<text x="${xa}" y="${GEO.top+22}" text-anchor="middle" font-size="8">🌇</text>`);
+    if (sb) parts.push(`<text x="${xb}" y="${GEO.top+22}" text-anchor="middle" font-size="8">🌅</text>`);
+  }
+  for (const [da, db] of dayspans) {
+    if (db-da > 18) parts.push(`<text x="${(mileX(da)+mileX(db))/2}" y="${GEO.top+10}" text-anchor="middle" font-size="8">☀️ day</text>`);
+  }
+  g.innerHTML = parts.join('');
+}
+function applyPlan(pace, start) {
+  document.querySelectorAll('.eststart').forEach(el => {
+    const t = start + pace*parseFloat(el.dataset.mi);
+    el.textContent = fmtClock(t)+' '+phaseEmoji(t);
+  });
+  renderNight(pace, start);
+}
+function parsePace(v) { const m = v.trim().match(/^(\\d{1,2}):(\\d{2})$/); return m ? Number(m[1])+Number(m[2])/60 : null; }
+function hmJS(v) { const p = v.split(':').map(Number); return p[0]*60+p[1]; }
+function paceStr(p) { const mm = Math.floor(p), ss = Math.round((p-mm)*60); return mm+':'+String(ss).padStart(2,'0'); }
+const paceIn = document.getElementById('paceIn'), startIn = document.getElementById('startIn');
+if (paceIn && startIn) {
+  const sp = localStorage.getItem('oto_pace'), st = localStorage.getItem('oto_start');
+  if (sp) paceIn.value = sp;
+  if (st) startIn.value = st;
+  const upd = () => {
+    const p = parsePace(paceIn.value); const t = startIn.value ? hmJS(startIn.value) : PLAN.start;
+    if (p) { localStorage.setItem('oto_pace', paceIn.value); localStorage.setItem('oto_start', startIn.value); applyPlan(p, t); }
+  };
+  paceIn.addEventListener('change', upd);
+  startIn.addEventListener('change', upd);
+  const rst = document.getElementById('planReset');
+  if (rst) rst.addEventListener('click', () => {
+    localStorage.removeItem('oto_pace'); localStorage.removeItem('oto_start');
+    paceIn.value = paceStr(PLAN.pace);
+    startIn.value = String(Math.floor(PLAN.start/60)).padStart(2,'0')+':'+String(PLAN.start%60).padStart(2,'0');
+    applyPlan(PLAN.pace, PLAN.start);
+  });
+  if (sp || st) upd();
+}
 // keep anchor targets clear of the sticky nav
 const topnav = document.querySelector('nav.top');
 function setScrollPad() {
@@ -638,10 +811,11 @@ def build_index():
   <h2>The whole course at a glance</h2>
   {skyline_svg("")}
   <div class="legendrow">Bar height = leg distance (mi) · bar width = steepness (ft/mi) · color = difficulty, team-adjusted: {diff_legend()} · tap a bar to open that leg</div>
+  {plan_ctl()}
 </div>
 {how_to_read(compact=True)}
 {sections_html}'''
-    return page("RUN1 · OTO 205 — Legs", nav, body, RUNNERS_JS)
+    return page("RUN1 · OTO 205 — Legs", nav, body, runners_js())
 
 def build_overview():
     nav = f'''<nav class="top">
@@ -657,6 +831,7 @@ def build_overview():
   <h2>Every leg on one page</h2>
   {pills}
   {index_table()}
+  {plan_ctl()}
 </div>
 <div class="panel" id="map">
   <h2>Full course map <span class="tiny">(the race's official all-legs Strava route)</span></h2>
@@ -671,7 +846,7 @@ def build_overview():
 </div>
 {watch_panel()}
 {rules_panel(with_qr=False)}'''
-    return page("RUN1 · OTO 205 — Overview", nav, body, RUNNERS_JS, wide=True)
+    return page("RUN1 · OTO 205 — Overview", nav, body, runners_js(), wide=True)
 
 def build_print():
     sections_html = "".join(section_block(i, s) for i, s in enumerate(SECTIONS))
