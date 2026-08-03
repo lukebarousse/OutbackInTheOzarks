@@ -2,6 +2,8 @@
 
 Static two-page site + print PDF for the 2026 OTO 205-mile relay.
 
+> **Want this for your own team?** Don't fork this repo — it's full of Team Run1's own notes and roster. Use the clean template instead: **[OutbackInTheOzarks-Template](https://github.com/lukebarousse/OutbackInTheOzarks-Template)** — all the official course data pre-filled, ready for your team's knowledge (AI-assisted setup supported).
+
 | File | What it is |
 |---|---|
 | `index.html` | **Home: the legs page.** All 36 legs by exchange section, sticky leg-jump bar, runner filter, beta + stats per leg |
