@@ -2,6 +2,11 @@
 
 Static two-page site + print PDF for the 2026 OTO 205-mile relay.
 
+> **This app has been superseded.** Run1 now uses the official multi-team app at
+> [teamguide.outbackintheozarks.com/t/run1](https://teamguide.outbackintheozarks.com/t/run1)
+> (source: [oto-guide](https://github.com/lukebarousse/oto-guide)). run1.fun redirects there;
+> `print.html` and the PDF remain here with the team's roster baked in.
+
 > **Want this for your own team?** Don't fork this repo — it's Team Run1's private guide. The multi-team app lives at **[oto-guide](https://github.com/lukebarousse/oto-guide)** — ask the race director for your team's link.
 
 | File | What it is |
