@@ -1,34 +1,35 @@
-# Team Run1 — Outback in the Ozarks 205 Race Guide
+# ⚠️ Retired — but load-bearing. Do not delete this repo.
 
-Static two-page site + print PDF for the 2026 OTO 205-mile relay.
+This was Team Run1's original race guide for the Outback in the Ozarks 205-mile relay.
+Active development moved to **[oto-guide](https://github.com/lukebarousse/oto-guide)** — the official
+multi-team app at [teamguide.outbackintheozarks.com](https://teamguide.outbackintheozarks.com), where
+Run1's roster, paces and leg assignments are now managed (Team settings page, backed by a database).
 
-> **This app has been superseded.** Run1 now uses the official multi-team app at
-> [teamguide.outbackintheozarks.com/t/run1](https://teamguide.outbackintheozarks.com/t/run1)
-> (source: [oto-guide](https://github.com/lukebarousse/oto-guide)). run1.fun redirects there;
-> `print.html` and the PDF remain here with the team's roster baked in.
+## What this repo still does (why it must stay alive)
 
-> **Want this for your own team?** Don't fork this repo — it's Team Run1's private guide. The multi-team app lives at **[oto-guide](https://github.com/lukebarousse/oto-guide)** — ask the race director for your team's link.
+1. **Serves `run1.fun`** via GitHub Pages. The domain's DNS points here; `index.html` and
+   `overview.html` are now redirect stubs that forward to
+   [teamguide.outbackintheozarks.com/t/run1](https://teamguide.outbackintheozarks.com/t/run1).
+   Deleting this repo (or disabling Pages, or removing the `CNAME` file) kills run1.fun.
+2. **Serves the printable guide**: [`print.html`](https://run1.fun/print.html) and
+   `run1-oto-guide.pdf` — the offline/van version with Run1's roster baked in. The multi-team
+   app's print page is generic, so this is still the best paper artifact.
 
-| File | What it is |
-|---|---|
-| `index.html` | **Home: the legs page.** All 36 legs by exchange section, sticky leg-jump bar, runner filter, beta + stats per leg |
-| `overview.html` | Dashboard: course steepness chart, section table, runner planner, all-legs table, night rules |
-| `print.html` | Everything on one page with QR codes — print this (Cmd+P) to regenerate the PDF |
-| `run1-oto-guide.pdf` | The print version, pre-rendered |
-| `builder/` | Python generator (`data.py` = all leg data, `build.py` = HTML/SVG builder) |
+## Maintenance
 
-## Deploy to GitHub Pages
+- **Normally: none.** Leave it alone and run1.fun keeps working.
+- **If the redirect target ever changes** (new domain/slug): edit the URLs in `index.html`
+  and `overview.html`, push.
+- **To reprint with an updated roster/paces** before race day: edit `RUNNERS`/`PLAN` in
+  `builder/data.py`, then
+  ```bash
+  python3 -m venv .venv && .venv/bin/pip install qrcode pillow
+  cd builder && ../.venv/bin/python build.py && cp out/print.html ..
+  ```
+  and regenerate the PDF from `print.html` with headless Chrome. Do **not** copy
+  `out/index.html` / `out/overview.html` to the root — that would overwrite the redirects.
 
-1. Push this repo to GitHub (public)
-2. Settings → Pages → Deploy from branch → `main` / root
-3. Live at `https://YOURUSERNAME.github.io/OutbackInTheOzarks/` (or add a custom domain like run1.run via Settings → Pages → Custom domain + a CNAME record at your registrar)
+## For other teams
 
-## Updating
-
-- **Runner names:** edit the `RUNNERS` dict at the bottom of `builder/data.py` (slot → name) and rebuild — filter buttons, leg cards and the planner all pick the names up at build time.
-- **Rebuild from source:** `pip install qrcode pillow` then `python3 builder/build.py` (run from `builder/`; outputs land in `builder/out/`, copy to repo root).
-- **Elevation profiles:** `builder/elev.json` holds per-leg distance/elevation arrays pulled from the official Strava routes (July 2026); `build.py` bakes them in as SVG charts. `builder/elev_meta.json` carries the 2026 route distances used for the 🔄 route-change flags on legs 1, 8, 30, 31.
-
-## Data sources
-
-Leg beta, ratings and surface notes: our 2025 runner's notes. Distances/gain/mile markers: the team's 2025 Strava sheet. Leg names, Strava routes, exchange stations and rules: outbackintheozarks.com. Leg start/exchange coordinates (`builder/starts.json`, the 📍 map links): the race's official "Google Maps Exchange Zones" My Maps, exported as KML July 2026 and sanity-checked against leg distances + reverse-geocoded landmarks. Not an official race document.
+Don't fork this. Ask the race director for your team's link on the official app
+([oto-guide](https://github.com/lukebarousse/oto-guide)).
